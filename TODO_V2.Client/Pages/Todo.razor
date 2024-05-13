@@ -1,0 +1,363 @@
+﻿@* @page "/Todo"
+<PageTitle>ToDo List!</PageTitle>
+
+@inject HttpClient Http
+@inject IJSRuntime JS
+@using TODO_V2.Shared
+
+<Modal @ref="modal" Title="Formulario" Size="ModalSize.ExtraLarge">
+    <BodyTemplate>
+        <div id="formDiv">   
+            <label for="formTextBox">TaskName</label>
+            <input type="text" id="formTextBox" Placeholder='Campo de texto de prueba'
+                   @bind="@NuevaTasks.TaskName" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
+        </div>
+
+        <div id="formDiv">
+            <label for="textasks">
+                Descripción
+            </label>
+            <textasks name="textasks" rows="20" id="formTextBox" Placeholder='Descripcion de prueba'
+                      @bind="@NuevaTasks.Descripcion" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
+
+        </div>
+
+        <div id="formDiv">
+            <input type="checkbox" id="finalizadoCheckBox" name="Finalizado" @bind="NuevaTasks.Finalizado" />
+            <label id="checkBoxLabel" for="finalizadoCheckBox">Finalizado</label>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <div id="FormButtons">
+            <button class="btn btn-success" @onclick="execTasks" disabled="@IsDisabled">Aceptar</button>
+            <button class="btn btn-danger" @onclick="HideModal">Cancelar</button>
+        </div>
+    </FooterTemplate>
+</Modal>
+
+<nav class="navbar-inverse">
+    <div class="topButtons">
+        <ul class="navbar-nav">
+            <li><button class="btn btn-success" @onclick="(() => OnClickShowModal(Accion.Crear))">Nueva Tasks</button></li>
+            <li><button class="btn btn-danger" @onclick="@Delete" disabled="@IsDisabledEdit">Borrar</button></li>
+            <li><button class="btn btn-warning" @onclick="(() => OnClickShowModal(Accion.Editar))" disabled="@IsDisabledEdit">Editar</button></li>
+
+            <li id="SearchBox">
+                <AutoComplete @bind-Value="@nuevaTasks.TaskName"
+                              TItem="Tasks"
+                              DataProvider="TaskssDataProvider"
+                              PropertyName="TaskName"
+                              Placeholder="Buscar tasks"
+                              OnChanged="(Tasks tasks) => OnAutoCompleteChanged(tasks)"
+                              Size="AutoCompleteSize.Default" />
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="scroll">
+
+    <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.BottomRight" />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>TaskName</th>
+                <th>Descripcion</th>
+                <th>Finalizado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tasks in Taskss)
+            {
+                <tr class="@GetRowClass(tasks)" id="fila" @onclick="(() => selectTasks(tasks))">
+                    <td>@tasks.TaskName</td>
+                    <td>@tasks.Descripcion</td>
+                    <td>@(tasks.Finalizado ? IsFinalizado.Si : IsFinalizado.No)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div id="scrollBtnContainer">
+        <button id="scrollBtnDown" onclick="bottomFuction()" title="Scroll to Bottom">
+            <i class="oi oi-chevron-bottom"></i>
+        </button>
+    </div>
+    <div id="scrollBtnContainertop">
+        <button id="scrollBtn" onclick="topFunction()" title="Scroll to Top">
+            <i class="oi oi-chevron-top"></i>
+        </button>
+    </div>
+</div>
+
+<div class="grafica">
+    <div id="chart">
+        <PieChart @ref="pieChart" Width="500" Class="mb-5" />
+    </div>
+</div>
+
+<section id="bottom" />
+
+
+<script>
+    var mybutton = document.getElementById("scrollBtn");
+    var mybuttonTop = document.getElementById("scrollBtnDown");
+
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    window.addEventListener('scroll', (e) => {
+        const body = document.body;
+        const parent = body.parentElement;
+        const pixelsFromBottom = body.scrollHeight - parent.clientHeight - 50;
+
+        if (parent.scrollTop < pixelsFromBottom) {
+            mybuttonTop.style.display = "block";
+        } else {
+            mybuttonTop.style.display = "none";
+        }
+    });
+
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+
+    function bottomFuction() {
+        document.getElementById('bottom').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // function searchFuction() {
+
+    //     var w = $(window);
+    //     var row = $('#tableid').find('tr').eq(fila);
+
+    //     // var row = table.find('tr')
+    //     //     .removeClass('active')
+    //     //     .eq(+$('#fila').val())
+    //     //     .addClass('active');
+
+    //     if (row.length) {
+    //         $('html,body').animate({ scrollTop: row.offset().top - (w.height() / 2) }, 1000);
+    //     }
+    // }
+
+    // function CalculatePositionOfTR() {
+    //     return $('tr:eq(' + i + ')').offset().top;
+    // }
+
+    // function searchFuction(i) {
+    //     var position = CalculatePositionOfTD(i);
+    //     var timer = setTimeout(function () {
+    //         ScrollDownALittle(position);
+    //         if (CenterOfVerticalWindowPosition > position)
+    //             clearInterval(timer);
+    //     }, 100);
+    // }
+</script>
+
+
+<style>
+
+    .grafica {
+        display: flex;
+        width: 100%;
+    }
+
+    #chart {
+        display: flex;
+        position: relative;
+        margin: auto;
+    }
+
+    .scroll {
+        margin: 2%;
+    }
+
+    .navbar-inverse {
+        position: fixed;
+        background-image: linear-gradient( rgb(48, 48, 48) 13%, rgb(30, 30, 30) 40%, #0c0d11 86% );
+        color: rgba(255, 255, 255, 0.6);
+        text-shadow: 0 -2px 0 black;
+        box-shadow: 1px 2px 4px rgb(20, 20, 20), 0 4px 12px rgb(10, 10, 10);
+        text-align: left;
+        width: 100%;
+    }
+
+    .topButtons button {
+        border-radius: 8px;
+        border: 1px solid white;
+    }
+
+    .navbar-nav {
+        display: inline;
+        list-style-type: none;
+    }
+
+    .navbar-inverse li {
+        display: inline-flex;
+        margin: 25px 3%;
+    }
+
+    *,
+    *:before,
+    *:after {
+        box-sizing: border-box;
+    }
+
+    input[type="checkbox"] {
+        appearance: none;
+        background-color: #fff;
+        margin: 0;
+        font: inherit;
+        width: 1.15em;
+        height: 1.15em;
+        border: 0.15em solid rebeccapurple;
+        border-radius: 0.18em;
+        transform: translateY(-0.075em);
+        display: grid;
+        place-content: center;
+    }
+
+        input[type="checkbox"]::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em rebeccapurple;
+            transform-origin: bottom left;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+
+        input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+
+        input[type="checkbox"]:hover {
+            border: 0.18em solid rebeccapurple;
+            border-radius: 0.20em;
+            box-shadow: 0px 0px 12px 4px rgba(153,102,204,1);
+        }
+
+    #formTextBox {
+        width: 100%;        
+    }
+
+    #scrollBtn, #scrollBtnDown {
+        position: fixed;
+        right: 2%;
+        border: 1px solid white;
+        z-index: 99;
+        background: linear-gradient(145deg, rgba(7,54,141,1) 0%, rgba(42,33,121,1) 33%, rgba(81,9,99,1) 70%, rgba(81,9,99,1) 100%);
+        color: white;
+        cursor: pointer;
+        padding: 10px 15px 10px 15px;
+        border-radius: 12px;
+        font-size: 18px;
+        box-shadow: 1px 1px 20px 4px rgba(107,11,131,1);
+    }
+
+    #scrollBtn {
+        /* position: fixed; */
+        display: none;
+        bottom: 5%;
+    }
+
+    #scrollBtnDown {
+        display: block;
+        top: 20px;
+    }
+
+        #scrollBtn:hover, #scrollBtnDown:hover {
+            background: linear-gradient(290deg, rgba(9,72,190,1) 0%, rgba(55,43,162,1) 33%, rgba(107,11,131,1) 70%, rgba(107,11,131,1) 100%);
+        }
+
+
+    body {
+        background: linear-gradient(160deg, rgba(27,58,117,0.7624299719887955) 0%, rgba(80,21,94,0.7344187675070029) 47%, rgba(239,222,246,1) 100%);
+    }
+
+    textasks {
+        width: 90%;
+        resize: none;
+    }
+
+    #formDiv {
+        display: flex;
+        flex-direction: row;
+        margin: 2% 5% 5%;
+    }
+
+        #formDiv label {
+            display: inline-block;
+            width: 10%;
+            font-size: 14px;
+            margin-right:5%;
+        }
+
+    label textasks {
+        vertical-align: top;
+    }
+
+    label {
+        text-align: left;
+    }
+
+    #FormButtons {
+        display: flex;
+        margin: 5%;
+        text-align: right;
+    }
+
+        #FormButtons button {
+            box-shadow: 1px 1px 22px 4px rgba(66,52,66,0.69);
+            margin-right: 2%;
+            border-radius: 8px;
+            border: 1px solid white;
+        }
+
+    .btn {
+        width: 165px;
+    }
+
+    #finalizadoCheckBox {
+        margin-right: 15px;
+    }
+
+    .table {
+        margin-top: 100px;
+    }
+
+    .table, th, td {
+        border: 1px solid black;
+    }
+
+        .table th {
+            background-color: #E0E0E0;
+        }
+
+    tr:not(.selected-row) {
+        cursor: pointer;
+        background-color: white;
+    }
+
+    tr:hover:not(.selected-row) {
+        background-color: lightcyan;
+    }
+
+    .selected-row {
+        background-color: #9ed9e0;
+    }
+
+</style>
+
+ *@

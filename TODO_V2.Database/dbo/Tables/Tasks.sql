@@ -1,0 +1,15 @@
+﻿CREATE TABLE [dbo].[Tasks]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	[CategoryID] INT NOT NULL,
+	[UserID] INT NOT NULL,
+	[TaskName] VARCHAR(50) NOT NULL,
+	[State] VARCHAR(50) NOT NULL,
+
+	[CreationDate] DATE NOT NULL DEFAULT GETDATE(),
+	[ExpirationDate] DATE,	
+
+	Deleted BIT NOT NULL DEFAULT(0),
+	FOREIGN KEY (CategoryId) REFERENCES Categories(ID),
+	FOREIGN KEY (UserID) REFERENCES Users(ID)
+)

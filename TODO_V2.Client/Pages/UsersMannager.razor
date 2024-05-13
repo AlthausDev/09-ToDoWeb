@@ -1,0 +1,11 @@
+﻿@page "/Users"
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inject NavigationManager NavManager
+@inject ILocalStorageService storageService
+
+<PageTitle>TODO APP</PageTitle>
+
+<div>
+    <Button Color="ButtonColor.Primary" @onclick="IniciarSesion">Nuevo Usuario</Button>
+</div>

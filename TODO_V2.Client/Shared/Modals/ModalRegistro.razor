@@ -1,0 +1,80 @@
+﻿@* @using TODO_V2.Client.Pages
+@using TODO_V2.Shared
+
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
+
+<div id="formDiv">
+    <label for="formTextBox">Username: </label>
+    <input autofocus type="text" id="formTextBox" Placeholder='Introduzca al menos 3 caracteres'
+           @bind="UserName" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
+</div>
+
+<div id="formDiv">
+    <label for="formTextBox">Contraseña: </label>
+    <input type="text" id="checkPassword" Placeholder='Introduzca al menos 3 caracteres'
+           @bind="Password" @bind:event="oninput" style="--my-color: @color" @onkeyup="ValueChangeHandler" />
+</div>
+
+<div id="formDiv">
+    <label for="formTextBox">Repetir Contraseña: </label>
+    <input type="text" id="checkPassword" Placeholder='Campo de texto de prueba'
+           @bind="checkPassword" @bind:event="oninput" style="--my-color: @color" @onkeyup="ValueChangeHandler" />
+</div>
+
+<div id="formDiv">
+    <label for="formTextBox">TaskName: </label>
+    <input type="text" id="formTextBox" Placeholder='Opcional'
+           @bind="TaskName" @bind:event="oninput" />
+</div>
+
+<div id="formDiv">
+    <label for="formTextBox">Email: </label>
+    <input type="text" id="formTextBox" Placeholder='Opcional'
+           @bind="Email" @bind:event="oninput" />
+</div>
+
+<div id="FormButtons">
+    <button class="btn btn-success" @onclick="OnClickRegistro" disabled="@IsDisabled">Registrarse</button>
+    <button class="btn btn-danger" @onclick="OnClickClose">Cancelar</button>
+</div>
+
+<style>
+    div {
+        display: block;
+    }
+
+    label {
+        text-align: right;
+        width: 40%;
+        margin: 5%;
+    }
+
+    input {
+        width: 45%;
+        border-radius: 5px;
+    }
+
+    #FormButtons {
+        display: block;
+        text-align: center;
+        margin: 10%;
+    }
+
+        #FormButtons button {
+            box-shadow: 1px 1px 18px 4px rgba(66,52,66,0.69);
+            margin-right: 5%;
+            margin-left: 5%;
+            width: 135px;
+            border-radius: 8px;
+            border: 1px solid white;
+        }
+
+    #checkPassword {
+        border-color: var(--my-color);
+    }
+
+    :root {
+        --my-color: black;
+    }
+</style>
+ *@

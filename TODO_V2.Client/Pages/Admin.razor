@@ -1,0 +1,53 @@
+﻿@page "/admin"
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inject NavigationManager NavManager
+@inject ILocalStorageService storageService
+
+<PageTitle>TODO APP</PageTitle>
+
+<div class="mainContainer">
+    <div class="NavButtons">
+        <Button Color="ButtonColor.Primary" @onclick="OnClickShowCategories">Gestión Categorias</Button>
+        <Button Color="ButtonColor.Primary" @onclick="OnClickShowUsers">Gestión Usuarios</Button>
+    </div>
+
+    <div class="container">
+        <div class="usersContainer">
+            <UsersMannager/>     
+        </div>
+
+        <div class="categoriesContainer">
+            <CategoryMannager/>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .NavButtons{
+        margin: 1%;
+
+        .btn{
+
+        }
+    }
+   
+    .container{
+        position: fixed;
+        border: solid 2px black;
+        height: 88%;
+        padding: 2%;
+        margin: 1%;
+        min-width: -webkit-fill-available;
+        
+
+        .usersContainer{
+            display: @ShowUsersMannager;
+        }
+    
+        .categoriesContainer{
+            display: @ShowCategoriesMannager;
+        }
+    }
+</style>

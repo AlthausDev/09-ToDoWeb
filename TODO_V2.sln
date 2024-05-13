@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TODO_V2.Client", "TODO_V2.Client\TODO_V2.Client.csproj", "{C7EADE8C-5022-4B3B-A433-C5CB947D3B48}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "TODO_V2.Database", "TODO_V2.Database\TODO_V2.Database.sqlproj", "{18C147EA-C424-4F60-B3A3-6AFA51A32EC4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TODO_V2.Server", "TODO_V2.Server\TODO_V2.Server.csproj", "{CE153D0F-0765-42CF-B495-7E457D57EA8C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TODO_V2.Shared", "TODO_V2.Shared\TODO_V2.Shared.shproj", "{EA3725C4-A9C7-44F6-A105-0A55784A2206}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7EADE8C-5022-4B3B-A433-C5CB947D3B48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7EADE8C-5022-4B3B-A433-C5CB947D3B48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7EADE8C-5022-4B3B-A433-C5CB947D3B48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7EADE8C-5022-4B3B-A433-C5CB947D3B48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18C147EA-C424-4F60-B3A3-6AFA51A32EC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18C147EA-C424-4F60-B3A3-6AFA51A32EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18C147EA-C424-4F60-B3A3-6AFA51A32EC4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{18C147EA-C424-4F60-B3A3-6AFA51A32EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18C147EA-C424-4F60-B3A3-6AFA51A32EC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18C147EA-C424-4F60-B3A3-6AFA51A32EC4}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{CE153D0F-0765-42CF-B495-7E457D57EA8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE153D0F-0765-42CF-B495-7E457D57EA8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE153D0F-0765-42CF-B495-7E457D57EA8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE153D0F-0765-42CF-B495-7E457D57EA8C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5EEF0AA2-DFAB-4CD3-B24D-6C1E6CA9204D}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		TODO_V2.Shared\TODO_V2.Shared.projitems*{c7eade8c-5022-4b3b-a433-c5cb947d3b48}*SharedItemsImports = 5
+		TODO_V2.Shared\TODO_V2.Shared.projitems*{ce153d0f-0765-42cf-b495-7e457d57ea8c}*SharedItemsImports = 5
+		TODO_V2.Shared\TODO_V2.Shared.projitems*{ea3725c4-a9c7-44f6-a105-0a55784a2206}*SharedItemsImports = 13
+	EndGlobalSection
+EndGlobal

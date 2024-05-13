@@ -1,0 +1,13 @@
+﻿@page "/"
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inject NavigationManager NavManager
+@inject ILocalStorageService storageService
+
+<PageTitle>TODO APP</PageTitle>
+
+<h1>Login Page</h1>
+
+<div>
+    <Button Color="ButtonColor.Primary" @onclick="IniciarSesion">Registrarse</Button>
+</div>
