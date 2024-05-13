@@ -15,7 +15,7 @@
 //        private string UserName { get; set; } = string.Empty;
 //        private string Password { get; set; } = string.Empty;
 //        private string? TaskName { get; set; } = string.Empty;
-//        private string? Email { get; set; } = string.Empty;
+//        private string? UserType { get; set; } = string.Empty;
 
 //        private bool IsDisabled = true;
 //        private string color = "black";
@@ -32,7 +32,7 @@
 //        {
 //            //if (CheckFormat(UserName) && CheckFormat(Password))
 //            //{
-//            //    User user = new(UserName, Password, TaskName, Email, DateTimeOffset.Now.ToString("dd-MM-yyyy"));
+//            //    User user = new(UserName, Password, TaskName, UserType, DateTimeOffset.Now.ToString("dd-MM-yyyy"));
 //            //    Home.NewUser = user;
 //            //    Registrar.InvokeAsync();
 //            //}
@@ -44,7 +44,7 @@
 //            Password = string.Empty;
 //            checkPassword = string.Empty;
 //            TaskName = string.Empty;
-//            Email = string.Empty;
+//            UserType = string.Empty;
 //            Cerrar.InvokeAsync();
 //        }
 

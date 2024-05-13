@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Repository\" />
   </ItemGroup>
 
   <Import Project="..\TODO_V2.Shared\TODO_V2.Shared.projitems" Label="Shared" />

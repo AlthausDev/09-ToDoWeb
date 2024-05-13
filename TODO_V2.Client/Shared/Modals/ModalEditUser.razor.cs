@@ -22,7 +22,7 @@
 //        public string TaskName { get; set; } = string.Empty;
 
 //        [Parameter]
-//        public string Email { get; set; } = string.Empty;
+//        public string UserType { get; set; } = string.Empty;
 
 //        private bool IsDisabled = true;
 //        private string color = "black";
@@ -35,7 +35,7 @@
 //        #region Handlers
 //        protected void OnClickEdit()
 //        {
-//            //User user = new(Id, UserName, Password, TaskName, Email, DateTimeOffset.Now.ToString("dd-MM-yyyy"));
+//            //User user = new(Id, UserName, Password, TaskName, UserType, DateTimeOffset.Now.ToString("dd-MM-yyyy"));
 //            //Sesion.user = user;
 //            Editar.InvokeAsync();
 //        }

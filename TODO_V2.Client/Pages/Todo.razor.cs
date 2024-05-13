@@ -7,37 +7,37 @@
 //{
 //    public partial class Todo
 //    {
-//        public List<Tasks> Taskss { get; set; } = new List<Tasks>();
+//        public List<Chore> Chores { get; set; } = new List<Chore>();
 
-//        private Tasks nuevaTasks { get; set; } = new Tasks();
-//        private Tasks NuevaTasks
+//        private Chore nuevaChore { get; set; } = new Chore();
+//        private Chore NuevaChore
 //        {
 //            get
 //            {
-//                return nuevaTasks;
+//                return nuevaChore;
 //            }
 //            set
 //            {
-//                if (nuevaTasks != value)
+//                if (nuevaChore != value)
 //                {
-//                    nuevaTasks = value;
+//                    nuevaChore = value;
 //                }
 //            }
 //        }
 
 
-//        private Tasks? selectedTasks { get; set; } = null;
-//        public Tasks? SelectedTasks
+//        private Chore? selectedChore { get; set; } = null;
+//        public Chore? SelectedChore
 //        {
 //            get
 //            {
-//                return selectedTasks;
+//                return selectedChore;
 //            }
 //            set
 //            {
-//                if (selectedTasks != value)
+//                if (selectedChore != value)
 //                {
-//                    selectedTasks = value;
+//                    selectedChore = value;
 //                    SelectedChangeHandler();
 //                }
 //            }
@@ -66,39 +66,39 @@
 //        #region ApiOperations    
 //        private async Task getData()
 //        {
-//            Tasks[]? taskssArray = await Http.GetFromJsonAsync<Tasks[]>("tasks");
+//            Chore[]? choresArray = await Http.GetFromJsonAsync<Chore[]>("chore");
 
-//            if (taskssArray is not null)
+//            if (choresArray is not null)
 //            {
-//                Taskss = [.. taskssArray];
+//                Chores = [.. choresArray];
 //            }
 //        }
 
 
 //        private async Task Post()
 //        {
-//            Taskss.Add(nuevaTasks);
-//            await Http.PostAsJsonAsync("Tasks", NuevaTasks);
+//            Chores.Add(nuevaChore);
+//            await Http.PostAsJsonAsync("Chore", NuevaChore);
 //            await getData();
 //        }
       
 //        private async Task Put()
 //        {
-//            await Http.PutAsJsonAsync("Tasks", NuevaTasks);
+//            await Http.PutAsJsonAsync("Chore", NuevaChore);
 
-//            Taskss.Insert(Taskss.IndexOf(selectedTasks), nuevaTasks);
-//            Taskss.Remove(selectedTasks);
+//            Chores.Insert(Chores.IndexOf(selectedChore), nuevaChore);
+//            Chores.Remove(selectedChore);
 //        }
 
 //        private async Task Delete()
 //        {
-//            if (selectedTasks != null)
+//            if (selectedChore != null)
 //            {
-//                Taskss.Remove(selectedTasks);
-//                HttpResponseMessage httpResponseMessage = await Http.DeleteAsync($"/DelTask/{selectedTasks.Id}");            
+//                Chores.Remove(selectedChore);
+//                HttpResponseMessage httpResponseMessage = await Http.DeleteAsync($"/DelTask/{selectedChore.Id}");            
                 
 //                await getData();
-//                SelectedTasks = null;
+//                SelectedChore = null;
 
 //                if (accion.Equals(Accion.Espera))
 //                {
@@ -109,7 +109,7 @@
 //        #endregion ApiOperations
 
 //        #region Modal
-//        private async Task execTasks()
+//        private async Task execChore()
 //        {
 //            if (accion.Equals(Accion.Crear))
 //            {
@@ -131,12 +131,12 @@
 
 //            if (accion.Equals(Accion.Editar))
 //            {
-//                NuevaTasks = selectedTasks;
+//                NuevaChore = selectedChore;
 //            }
 
 //            if (accion.Equals(Accion.Crear))
 //            {
-//                NuevaTasks = new Tasks();
+//                NuevaChore = new Chore();
 //            }
 
 //            await modal.ShowAsync();
@@ -145,29 +145,29 @@
 //        private async Task HideModal()
 //        {
 //            accion = Accion.Espera;
-//            SelectedTasks = null;
-//            NuevaTasks = new Tasks();
+//            SelectedChore = null;
+//            NuevaChore = new Chore();
 //            await modal.HideAsync();
 //        }
 //        #endregion Modal       
 
 //        #region SelectRow
-//        private void selectTasks(Tasks tasks)
+//        private void selectChore(Chore chore)
 //        {
-//            SelectedTasks = tasks;
-//            //Console.WriteLine(tasks.Name);
+//            SelectedChore = chore;
+//            //Console.WriteLine(chore.Name);
 //        }
 
-//        private string GetRowClass(Tasks tasks)
+//        private string GetRowClass(Chore chore)
 //        {
-//            return tasks == SelectedTasks ? "selected-row" : "";
+//            return chore == SelectedChore ? "selected-row" : "";
 //        }
 //        #endregion SelectRow
 
 //        #region AutoComplete
-//        private async Task<AutoCompleteDataProviderResult<Tasks>> TaskssDataProvider(AutoCompleteDataProviderRequest<Tasks> request)
+//        private async Task<AutoCompleteDataProviderResult<Chore>> ChoresDataProvider(AutoCompleteDataProviderRequest<Chore> request)
 //        {
-//            return await Task.FromResult(request.ApplyTo(Taskss.OrderBy(tasks => tasks.TaskName)));
+//            return await Task.FromResult(request.ApplyTo(Chores.OrderBy(chore => chore.TaskName)));
 //        }
 
 //        #endregion AutoComplete
@@ -195,7 +195,7 @@
 //            {
 //                Responsive = true
 //            };
-//            pieChartOptions.Plugins.Title!.Text = "Taskss Finalizadas";
+//            pieChartOptions.Plugins.Title!.Text = "Chores Finalizadas";
 //            pieChartOptions.Plugins.Title.Display = true;
 //            pieChartOptions.Plugins.Title.Font.Size = 18;
 //            pieChartOptions.Plugins.Legend.Display = false;
@@ -226,11 +226,11 @@
 //        {
 //            List<double> data = new();
 
-//            //double count = (from Tasks tasks in Taskss
-//            //                where tasks
-//            //                select tasks).Count();
+//            //double count = (from Chore chore in Chores
+//            //                where chore
+//            //                select chore).Count();
 
-//            //data.Add(Taskss.Count - count);
+//            //data.Add(Chores.Count - count);
 //            //data.Add(count);
 
 //            return data;
@@ -262,19 +262,19 @@
 //        #region Handlers
 //        private void SelectedChangeHandler()
 //        {
-//            IsDisabledEdit = selectedTasks == null;
+//            IsDisabledEdit = selectedChore == null;
 //        }
 
 //        private void ValueChangeHandler()
 //        {
-//            IsDisabled = (String.IsNullOrWhiteSpace(NuevaTasks.TaskName) || String.IsNullOrWhiteSpace(NuevaTasks.State));
+//            IsDisabled = (String.IsNullOrWhiteSpace(NuevaChore.TaskName) || String.IsNullOrWhiteSpace(NuevaChore.State));
 //        }
 
-//        private async Task OnAutoCompleteChanged(Tasks tasks)
+//        private async Task OnAutoCompleteChanged(Chore chore)
 //        {
-//            SelectedTasks = tasks;
-//            //await JS.InvokeVoidAsync($"searchFuction('{SelectedTasks.TaskName}')");
-//            Console.WriteLine($"'{tasks?.TaskName}' selected.");
+//            SelectedChore = chore;
+//            //await JS.InvokeVoidAsync($"searchFuction('{SelectedChore.TaskName}')");
+//            Console.WriteLine($"'{chore?.TaskName}' selected.");
 //        }
 //        #endregion Handlers
 

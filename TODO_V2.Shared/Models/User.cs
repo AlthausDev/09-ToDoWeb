@@ -7,7 +7,6 @@ namespace TODO_V2.Shared.Models
     public class User
     {
         public int Id { get; set; }
-
         public string Name { get; set; }
         public string Surname { get; set; }
         public string UserName { get; set; }

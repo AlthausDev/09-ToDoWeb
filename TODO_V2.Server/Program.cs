@@ -5,10 +5,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using TODO_V2.Server.Repository.Impl;
+using TODO_V2.Server.Repository.Interfaces;
+using TODO_V2.Server.Utils;
+using TODO_V2.Server.Services.Impl;
+using TODO_V2.Server.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.AddQuickGridEntityFrameworkAdapter();;
+// Configuración de JWT desde appsettings.json
+var jwtKey = builder.Configuration["JWT:Key"];
+var jwtIssuer = builder.Configuration["JWT:Issuer"];
+var jwtAudience = builder.Configuration["JWT:Audience"];
+var jwtExpirationHours = int.Parse(builder.Configuration["JWT:ExpirationHours"]);
 
 // Añadir servicios.
 builder.Services.AddScoped<AuthenticationService>();
@@ -22,6 +33,34 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddHttpClient();
+
+builder.Services.AddAuthentication()
+        .AddCookie(options =>
+        {
+            options.LoginPath = "/Account/Unauthorized/";
+            options.AccessDeniedPath = "/Account/Forbidden/";
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                ClockSkew = TimeSpan.Zero
+            };
+        });
+
+// Configurar Dependencias
+builder.Services.AddTransient<IChoreRepository, ChoreRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+
+builder.Services.AddTransient<IChoreService, ChoreService>();
+builder.Services.AddTransient<IUserService, UserService>();
+
+builder.Services.AddTransient<EncryptionUtil> ();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
