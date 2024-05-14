@@ -6,7 +6,8 @@
 
 <PageTitle>TODO APP</PageTitle>
 
-<Modal @ref="ModalInstance" Size="ModalSize.Regular" />
+<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false"/>
+
 <div class="login-box">
     <h2>Login</h2>
     <form>
@@ -35,6 +36,7 @@
     </form>
 </div>
 
+
 <style>  
     .login-box {
         position: fixed;
@@ -44,13 +46,15 @@
         padding: 40px;
         transform: translate(-50%, -50%);
         background: rgba(0,0,0,.5);
-        box-sizing: border-box;
-        box-shadow: 0 15px 25px rgba(0,0,0,.6);
+        box-sizing: border-box;     
+        box-shadow: 0 15px 25px rgba(3,233,244,.5);
         border-radius: 10px;
+        border: 1px solid #03e9f4;
     }
 
         .login-box h2 {
-            margin: 0 0 30px;
+            margin: 0 0 20%; 
+            font-size: 2em;
             padding: 0;
             color: #fff;
             text-align: center;

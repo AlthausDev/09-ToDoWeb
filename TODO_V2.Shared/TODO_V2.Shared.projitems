@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Models\Categories.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Chore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Colores.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TokenResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\UserType.cs" />

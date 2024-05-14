@@ -1,43 +1,33 @@
 ﻿using BlazorBootstrap;
 using TODO_V2.Client.Shared.Modals;
-using TODO_V2.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Net.Http.Json;
-using ToastType = BlazorBootstrap.ToastType;
-using Blazored.LocalStorage;
 using Microsoft.JSInterop;
 using TODO_V2.Shared.Models;
-using TODO_V2.Client.Shared;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using TODO_V2.Shared.Model;
+using System.Net.Http;
 
 namespace TODO_V2.Client.Pages
 {
     public partial class Login
     {
-    
+
         private Modal ModalInstance = default!;
         private string? Message = string.Empty;
-        private User user = new();    
+        private User user = new();
 
         private string UserName { get; set; } = string.Empty;
         private string Password { get; set; } = string.Empty;
 
         protected override async Task OnInitializedAsync()
         {
-            try
-            {
-               
-            }
-            catch { }
         }
 
 
         private void IniciarSesion()
         {
-            NavManager.NavigateTo($"/admin/", false);
+            NavManager.NavigateTo($"/admin/", true);
         }
 
         #region Registro
