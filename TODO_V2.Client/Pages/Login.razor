@@ -6,15 +6,16 @@
 
 <PageTitle>TODO APP</PageTitle>
 
+<Modal @ref="ModalInstance" Size="ModalSize.Regular" />
 <div class="login-box">
     <h2>Login</h2>
     <form>
         <div class="user-box">
-            <input autofocus type="text" name="" required="true" @bind="UserName" @bind:event="oninput" @onkeyup="ValueChangeHandler">
+            <input autofocus type="text" name="" required="true" @bind="UserName" @bind:event="oninput">
             <label>Username</label>
         </div>
         <div class="user-box">
-            <input type="password" name="" required="true" @bind="UserName" @bind:event="oninput" @onkeyup="ValueChangeHandler">
+            <input type="password" name="" required="true" @bind="Password" @bind:event="oninput" >
             <label>Contraseña</label>
         </div>
         <a href="" @onclick="IniciarSesion">
@@ -24,7 +25,7 @@
             <span></span>
             Login
         </a>
-        <a href="" @onclick="IniciarSesion">
+        <a href="" @onclick="Registro">
             <span></span>
             <span></span>
             <span></span>

@@ -4,13 +4,15 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using TODO_V2.Shared.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Data.Common;
 
 namespace TODO_V2.Server.Repository.Impl
 {
     public class ChoreRepository : IChoreRepository
     {
         private readonly IConfiguration _configuration;
-        private string ConnectionString => _configuration.GetConnectionString("TODO_V2DB");
+        private string ConnectionString => _configuration.GetConnectionString("TODO_V2");
 
         public ChoreRepository(IConfiguration configuration)
         {
@@ -21,8 +23,18 @@ namespace TODO_V2.Server.Repository.Impl
         {        
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                //string query = @$"INSERT INTO Chore (Name, Descripcion, Finalizado) VALUES ('{chore.Name}', '{chore.Descripcion}', {(chore.Finalizado ? 1 : 0)});";
-                //dbConnection.Query(query);
+                string query = @$"INSERT INTO Tasks (CategoryID, UserID, State, TaskName, ExpirationDate) VALUES ('{chore.CategoryID}', '{chore.UserID}', '{chore.State}', '{chore.TaskName}';";
+                dbConnection.Query(query);
+            }
+        }
+
+        public IEnumerable<Chore> GetAllAdmin()
+        {
+            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            {
+                string query = @"SELECT * FROM Tasks;";
+
+                return dbConnection.Query<Chore>(query);
             }
         }
 
@@ -30,7 +42,7 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                string query = @"SELECT * FROM Chore;";
+                string query = @"SELECT * FROM Tasks WHERE Deleted = 0;";
                 return dbConnection.Query<Chore>(query);
             }
         }
@@ -39,33 +51,38 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                string query = $"SELECT * FROM Chore WHERE Id = {id};";
+                string query = $"SELECT * FROM Tasks WHERE Id = {id};";
                 return dbConnection.QueryFirstOrDefault<Chore>(query);
             }
         }
-      
-        public void Remove(int id)
-        {
-            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
-            {
-                string query = $"DELETE FROM Chore WHERE Id = {id};";
-                dbConnection.Execute(query);
-            }
-        }
-
 
         public void Update(Chore chore)
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                //string query = @$"UPDATE Chore SET Name = '{chore.Name}', Descripcion = '{chore.Descripcion}', Finalizado = '{(chore.Finalizado ? 1 : 0)}' WHERE Id = '{chore.Id}';";
-                //dbConnection.Execute(query);
+                string query = @$"UPDATE Tasks SET CategoryID = '{chore.CategoryID}', UserID = '{chore.UserID}', State = '{chore.State}', TaskName = '{chore.TaskName}';";
+                dbConnection.Execute(query);
             }
         }
 
+        public void Remove(int id)
+        {
+            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            {
+                string query = $"DELETE FROM Tasks WHERE Id = {id};";
+                dbConnection.Execute(query);
+            }
+        }
+
+
         public void LogicRemove(int id)
         {
-            throw new NotImplementedException();
+            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            {
+                string query = $"UPDATE Tasks SET Deleted = 1 WHERE Id = {id};";
+
+                dbConnection.Execute(query);
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace TODO_V2.Server.Repository.Impl
     public class UserRepository : IUserRepository
     {
         private readonly IConfiguration _configuration;
-        private string ConnectionString => _configuration.GetConnectionString("TODO_V2DB");
+        private string ConnectionString => _configuration.GetConnectionString("TODO_V2");
 
         public UserRepository(IConfiguration configuration)
         {
@@ -25,8 +25,8 @@ namespace TODO_V2.Server.Repository.Impl
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
                 try { 
-                string query = @$"INSERT INTO Usuarios (UserName, Password, Name, UserType) 
-                                VALUES ('{user.UserName}', '{user.Password}', '{user.Name}', '{user.UserType}');";
+                string query = @$"INSERT INTO Users (Name, Surname, UserName, Password, UserType) 
+                                VALUES ('{user.Name}, '{user.Surname}', '{user.UserName}', '{user.Password}', '{user.UserType}');";
                 dbConnection.Execute(query);
                 }
                 catch
@@ -40,7 +40,7 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                string query = @"SELECT * FROM Usuarios;";
+                string query = @"SELECT * FROM Users;";
 
                 return dbConnection.Query<User>(query);
             }
@@ -51,7 +51,7 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                string query = @"SELECT * FROM Usuarios WHERE Deleted = 0;";
+                string query = @"SELECT * FROM Users WHERE Deleted = 0;";
 
                 return dbConnection.Query<User>(query);
             }
@@ -61,7 +61,7 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                string query = $"SELECT * FROM Usuarios WHERE Id = {id} AND Deleted = 0;";
+                string query = $"SELECT * FROM Users WHERE Id = {id} AND Deleted = 0;";
 
                 User aux = dbConnection.QuerySingle<User>(query);
                 User user = aux;
@@ -74,7 +74,7 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                string query = $"DELETE FROM Usuarios WHERE Id = {id};";
+                string query = $"DELETE FROM Users WHERE Id = {id};";
 
                 dbConnection.Execute(query);
             }
@@ -84,7 +84,7 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                string query = $"UPDATE Usuarios SET Deleted = 1 WHERE Id = {id};";
+                string query = $"UPDATE Users SET Deleted = 1 WHERE Id = {id};";
 
                 dbConnection.Execute(query);
             }
@@ -94,7 +94,7 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                string query = @$"UPDATE Usuarios SET Username = '{user.UserName}', Password ='{user.Password}', Name = '{user.Name}', UserType = '{user.UserType}' WHERE Id = '{user.Id}';";
+                string query = @$"UPDATE Users SET Name = '{user.Name}', Surname ='{user.Surname}, Username = '{user.UserName}', Password ='{user.Password}', UserType = '{user.UserType}' WHERE Id = '{user.Id}';";
 
                 dbConnection.Execute(query);
             }

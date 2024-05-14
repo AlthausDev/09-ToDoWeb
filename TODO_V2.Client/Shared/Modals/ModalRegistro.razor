@@ -1,7 +1,7 @@
-﻿@* @using TODO_V2.Client.Pages
+﻿@using TODO_V2.Client.Pages
 @using TODO_V2.Shared
 
-<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
+@* <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" /> *@
 
 <div id="formDiv">
     <label for="formTextBox">Username: </label>
@@ -33,10 +33,10 @@
            @bind="UserType" @bind:event="oninput" />
 </div>
 
-<div id="FormButtons">
+@* <div id="FormButtons">
     <button class="btn btn-success" @onclick="OnClickRegistro" disabled="@IsDisabled">Registrarse</button>
     <button class="btn btn-danger" @onclick="OnClickClose">Cancelar</button>
-</div>
+</div> *@
 
 <style>
     div {
@@ -77,4 +77,3 @@
         --my-color: black;
     }
 </style>
- *@

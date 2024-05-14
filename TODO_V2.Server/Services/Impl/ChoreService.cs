@@ -14,6 +14,11 @@ namespace TODO_V2.Server.Services.Impl
             this.choreRepository = choreRepository;
         }
 
+        public IEnumerable<Chore> GetAllAdmin()
+        {
+            return choreRepository.GetAllAdmin();
+        }
+
         public IEnumerable<Chore> GetAll()
         {
             return choreRepository.GetAll();
@@ -38,15 +43,10 @@ namespace TODO_V2.Server.Services.Impl
         {
             choreRepository.Remove(id);
         }
-
-        public Chore GetById(User user)
-        {
-            throw new NotImplementedException();
-        }
-
+              
         public void LogicRemove(int id)
         {
-            throw new NotImplementedException();
+            choreRepository.LogicRemove(id);
         }
     }
 }
