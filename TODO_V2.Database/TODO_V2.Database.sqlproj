@@ -64,6 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Categories.sql" />
-    <Build Include="dbo\Tables\Tasks.sql" />
+    <Build Include="dbo\Tables\Chores.sql" />
   </ItemGroup>
 </Project>

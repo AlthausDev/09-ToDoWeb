@@ -1,6 +1,8 @@
 ﻿using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Shared;
+using System.Data.Common;
+using TODO_V2.Server.Utils;
 using TODO_V2.Shared.Models;
 
 namespace TODO_V2.Server.Services.Impl
@@ -14,39 +16,40 @@ namespace TODO_V2.Server.Services.Impl
             this.choreRepository = choreRepository;
         }
 
-        public IEnumerable<Chore> GetAllAdmin()
+        public Task<Chore> Add(Chore chore)
         {
-            return choreRepository.GetAllAdmin();
+            return choreRepository.Add(chore);
         }
 
-        public IEnumerable<Chore> GetAll()
-        {
-            return choreRepository.GetAll();
+        public Task<Chore> Update(Chore chore)
+        {           
+            return choreRepository.Update(chore);
         }
 
-        public Chore GetById(int id)
+        public void Delete(int choreId)
         {
-            return choreRepository.GetById(id);
+            choreRepository.Delete(choreId);
         }
 
-        public void Add(Chore chore)
+        public void LogicDelete(int choreId)
         {
-            choreRepository.Add(chore);
+            choreRepository.LogicDelete(choreId);
         }
 
-        public void Update(Chore chore)
+        public Task<IEnumerable<Chore>> GetAll(GetRequest<Chore>? request)
         {
-            choreRepository.Update(chore);
+            return choreRepository.GetAll(request);
         }
 
-        public void Remove(int id)
+        public Task<IEnumerable<Chore>> GetAllLogic(GetRequest<Chore>? request)
         {
-            choreRepository.Remove(id);
+            return choreRepository.GetAllLogic(request);
         }
-              
-        public void LogicRemove(int id)
-        {
-            choreRepository.LogicRemove(id);
+
+        public Chore GetById(int choreId)
+        {  
+            return choreRepository.GetById(choreId).Result;
         }
+
     }
 }

@@ -10,8 +10,12 @@ using System.Text;
 using TODO_V2.Server.Repository.Impl;
 using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Server.Utils;
-using TODO_V2.Server.Services.Impl;
 using TODO_V2.Server.Services.Interfaces;
+using TODO_V2.Server.Services.Impl;
+using TODO_V2.Shared.Models;
+using BlazorBootstrap;
+using TODO_V2.Server.Controllers.Impl;
+using TODO_V2.Server.Controllers.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +26,19 @@ var jwtAudience = builder.Configuration["JWT:Audience"];
 var jwtExpirationHours = int.Parse(builder.Configuration["JWT:ExpirationHours"]);
 
 // Añadir servicios.
+//builder.Services.AddScoped<AuthenticationService>();
+//builder.Services.AddControllersWithViews();
+//builder.Services.AddRazorPages();
+//builder.Services.AddServerSideBlazor();
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddMvc();
+//builder.Services.AddBlazoredLocalStorage();
+//builder.Services.AddAuthorizationCore();
+builder.Services.AddBlazorBootstrap();
+builder.Services.AddHttpClient();
+
 builder.Services.AddScoped<AuthenticationService>();
+builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -30,9 +46,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMvc();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthorizationCore();
-builder.Services.AddBlazorBootstrap();
-builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddHttpClient();
+
+//builder.Services.AddHttpClient<UserService>(client =>
+//{
+//    client.BaseAddress = new Uri("https://localhost:7216/api/");
+//});
+
+builder.Services.AddHttpClient<UserService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7216/");
+});
+
 
 builder.Services.AddAuthentication()
         .AddCookie(options =>
@@ -54,6 +78,9 @@ builder.Services.AddAuthentication()
         });
 
 // Configurar Dependencias
+//builder.Services.AddDbContext<UserContext>();
+//builder.Services.AddDbContext<ChoreContext>();
+
 builder.Services.AddTransient<IChoreRepository, ChoreRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 

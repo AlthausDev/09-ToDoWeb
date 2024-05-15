@@ -1,9 +1,7 @@
 ﻿using BlazorBootstrap;
 using TODO_V2.Client.Pages;
-using TODO_V2.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Models.Enum;
 using TODO_V2.Shared.Utils;
 
@@ -18,24 +16,17 @@ namespace TODO_V2.Client.Shared.Modals
         public string CheckPassword { get; set; } = string.Empty;
         public string Clave { get; set; } = string.Empty;
         private string? UserType { get; set; } = TODO_V2.Shared.Models.Enum.UserType.USUARIO.ToString();
-
-
-        private bool IsInputValid = false;
-
-        private string PasswordColor = "#fff";
-        private string UserNameColor = "#fff";
-        private string NameColor = "#fff";
-        private string SurnameColor = "#fff";
-        private string ClaveColor = "#fff";
-
+        
+        private string PasswordColor, UserNameColor, NameColor, SurnameColor, ClaveColor;
+        private bool IsInputValid = false; 
 
         List<ToastMessage> messages = new();
-
 
         [Parameter] public EventCallback<MouseEventArgs> Registrar { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> Cerrar { get; set; }
 
-        #region Handlers
+
+        #region OnClick
         protected async Task OnClickRegistro()
         {
             if (IsInputValid)
@@ -63,6 +54,9 @@ namespace TODO_V2.Client.Shared.Modals
             Cerrar.InvokeAsync();
         }
 
+        #endregion OnClick
+
+        #region Handlers
         private void ValueChangeHandler()
         {
             IsInputValid = CheckPasswordHandler();
@@ -146,6 +140,7 @@ namespace TODO_V2.Client.Shared.Modals
         }
         #endregion Handlers
 
+        #region Toast
         private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
 
         private ToastMessage CreateToastMessage(ToastType toastType, string message)
@@ -156,5 +151,6 @@ namespace TODO_V2.Client.Shared.Modals
 
             return toastMessage;
         }
+        #endregion Toast
     }
 }

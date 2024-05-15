@@ -15,7 +15,6 @@ namespace TODO_V2.Client.Pages
     {
 
         private Modal ModalInstance = default!;
-        private string? Message = string.Empty;
         public static User user = new();
 
         private string UserName { get; set; } = string.Empty;
@@ -23,29 +22,31 @@ namespace TODO_V2.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            //await GetUserById(1);
         }
 
-
-        private void IniciarSesion()
+        #region Login     
+        private async Task OnClickLogin()
         {
             NavManager.NavigateTo($"/admin/", true);
         }
+        #endregion Login
 
-        #region Registro
-        private async Task Registro()
+
+        #region Register
+        private async Task OnClickRegister()
         {
             var parameters = new Dictionary<string, object>
-    {
-        { "Registrar", EventCallback.Factory.Create<MouseEventArgs>(this, NuevoUsuario) },
-        { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
-    };
-
+            {
+                { "Registrar", EventCallback.Factory.Create<MouseEventArgs>(this, NewUser) },
+                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
+            };
             await ModalInstance.ShowAsync<ModalRegistro>(title: "Registrarse", parameters: parameters);
         }
 
 
-        private async Task NuevoUsuario()
-        {   
+        private async Task NewUser()
+        {
             user.ToString();
             //bool existe = Usuarios.Any(user => user.UserName == NewUser.UserName || (user.Email == NewUser.Email && !string.IsNullOrEmpty(NewUser.Email)));
 
@@ -57,44 +58,61 @@ namespace TODO_V2.Client.Pages
             //else
             //{
             //    await PostNewUser();
-            //    ShowMessage(ToastType.Success, "Registro realizado con éxito");
+            //    ShowMessage(ToastType.Success, "Register realizado con éxito");
             //    await IniciarSesion();
             //}
         }
-        #endregion Registro             
-
 
         private async Task HideModal()
         {
             user = new User();
             await ModalInstance.HideAsync();
         }
+        #endregion Register
 
-        #region Handlers
-        protected void OnClickLogin()
+
+        #region Api       
+        private async Task GetData()
         {
-            //User user = new(UserName, Password);
-            //Home.NewUser = user;
-            //Login.InvokeAsync();
+            User[]? usuariosArray = await Http.GetFromJsonAsync<User[]>("user");
+            if (usuariosArray != null)
+            {
+                List<User> Usuarios = [.. usuariosArray];
+                foreach (User user in Usuarios)
+                {
+                    Debug.WriteLine(user.ToString);
+                }
+            }
         }
 
-        protected void OnClickClose()
+        private async Task<User?> GetUserById(int id)
         {
-            UserName = string.Empty;
-            Password = string.Empty;
-            //Cerrar.InvokeAsync();
+            return await Http.GetFromJsonAsync<User>($"{id}");
         }
 
-
-        #endregion Handlers
-
-
-        private Task OnClickLogin(MouseEventArgs e)
+        private async Task PostNewUser()
         {
-            throw new NotImplementedException();
+            try { 
+            User newUser = new("aaa", "aaa", "aaa", "aaa", "USUARIO");
+            HttpResponseMessage response = await Http.PostAsJsonAsync("user", newUser);
+            await Http.PostAsJsonAsync("user", newUser);
+            await Http.PostAsJsonAsync("Users", newUser);
+            await Http.PostAsJsonAsync("usuarios", newUser);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("\nMessage ---\n{0}", ex.Message);
+                Debug.WriteLine("\nHelpLink ---\n{0}", ex.HelpLink);
+                Debug.WriteLine("\nSource ---\n{0}", ex.Source);
+                Debug.WriteLine("\nStackTrace ---\n{0}", ex.StackTrace);
+                Debug.WriteLine("\nTargetSite ---\n{0}", ex.TargetSite);
+            }
+           
         }
 
-        #region AuxMethods
+        #endregion Api     
+
+        #region Token
 
         private async Task GenerateTokenAsync(User usuario)
         {
@@ -112,6 +130,12 @@ namespace TODO_V2.Client.Pages
             }
         }
 
-        #endregion
+        #endregion Token
+
+        #region Aux
+        #endregion Aux   
+
+        #region Handlers    
+        #endregion Handlers
     }
 }

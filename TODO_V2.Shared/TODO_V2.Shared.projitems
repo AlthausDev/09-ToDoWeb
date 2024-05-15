@@ -9,11 +9,13 @@
     <Import_RootNamespace>TODO_V2.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Models\BaseModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Categories.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Chore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\Colores.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\FieldType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\Keys.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GetRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\TokenResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\UserType.cs" />

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Chore]
+﻿CREATE TABLE [dbo].[Chores]
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
 	[CategoryID] INT NOT NULL,

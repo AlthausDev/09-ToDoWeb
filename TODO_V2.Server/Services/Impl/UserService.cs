@@ -1,7 +1,6 @@
 ﻿using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Shared;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Data.Common;
 using TODO_V2.Server.Utils;
 using TODO_V2.Shared.Models;
@@ -12,51 +11,56 @@ namespace TODO_V2.Server.Services.Impl
     {
         private IUserRepository userRepository;
         private readonly EncryptionUtil encryptionUtil;
-   
+
         public UserService(IUserRepository userRepository, EncryptionUtil encryptionUtil)
         {
             this.userRepository = userRepository;
             this.encryptionUtil = encryptionUtil;
         }
 
-        public IEnumerable<User> GetAllAdmin()
+        public Task<User> Add(User user)
         {
-            return userRepository.GetAllAdmin();
+            //user.Password = encryptionUtil.Encrypt(user.Password);
+            return userRepository.Add(user);
         }
 
-        public IEnumerable<User> GetAll()
+        public Task<User> Update(User user)
         {
-            return userRepository.GetAll();
+            user.Password = encryptionUtil.Encrypt(user.Password);
+            return userRepository.Update(user);
         }
 
-        public User GetById(int id)
+        public void Delete(int userId)
         {
-            User user = userRepository.GetById(id);           
-            user.Password = encryptionUtil.Decrypt(user.Password);         
+            userRepository.Delete(userId);
+        }
 
+        public void LogicDelete(int userId)
+        {
+            userRepository.LogicDelete(userId);
+        }
+
+        public Task<IEnumerable<User>> GetAll(GetRequest<User>? request)
+        {
+            return userRepository.GetAll(request);
+        }
+
+        public Task<IEnumerable<User>> GetAllLogic(GetRequest<User>? request)
+        {
+            return userRepository.GetAllLogic(request);
+        }
+
+        public User GetById(int userId)
+        {
+            User user = userRepository.GetById(userId).Result;
+            
+            //user.Password = encryptionUtil.Decrypt(user.Password);
             return user;
         }
 
-        public void Add(User user)
+        public Task<T> Update<T>(T entity)
         {
-            user.Password = encryptionUtil.Encrypt(user.Password);
-            userRepository.Add(user);
-        }
-
-        public void Update(User user)
-        {
-            user.Password = encryptionUtil.Encrypt(user.Password);
-            userRepository.Update(user);
-        }
-
-        public void Remove(int id)
-        {
-            userRepository.Remove(id);
-        }
-
-        public void LogicRemove(int id)
-        {
-            userRepository.LogicRemove(id);
+            throw new NotImplementedException();
         }
     }
 }

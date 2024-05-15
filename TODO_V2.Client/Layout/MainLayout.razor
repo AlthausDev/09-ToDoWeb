@@ -33,24 +33,24 @@
 
 @code {
 
-    [Inject] protected PreloadService PreloadService { get; set; }
+    // [Inject] protected PreloadService PreloadService { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        ShowLoadingDataAsync();
-    }
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     ShowLoadingDataAsync();
+    // }
 
-    private async Task ShowLoadingDataAsync()
-    {
-        PreloadService.Show(SpinnerColor.Light, "Loading data...");
-        await Task.Delay(3000); // call the service/api
-        PreloadService.Hide();
-    }
+    // private async Task ShowLoadingDataAsync()
+    // {
+    //     PreloadService.Show(SpinnerColor.Light, "Loading data...");
+    //     await Task.Delay(3000); // call the service/api
+    //     PreloadService.Hide();
+    // }
 
-    private async Task ShowSavingDataAsync()
-    {
-        PreloadService.Show(SpinnerColor.Light, "Saving data...");
-        await Task.Delay(3000); // call the service/api
-        PreloadService.Hide();
-    }
+    // private async Task ShowSavingDataAsync()
+    // {
+    //     PreloadService.Show(SpinnerColor.Light, "Saving data...");
+    //     await Task.Delay(3000); // call the service/api
+    //     PreloadService.Hide();
+    // }
 }

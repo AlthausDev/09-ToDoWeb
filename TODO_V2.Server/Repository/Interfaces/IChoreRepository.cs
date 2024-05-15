@@ -5,6 +5,5 @@ namespace TODO_V2.Server.Repository.Interfaces
 {
     public interface IChoreRepository : IGenericRepository<Chore>
     {
-        IEnumerable<Chore> GetAllAdmin();
     }
 }
