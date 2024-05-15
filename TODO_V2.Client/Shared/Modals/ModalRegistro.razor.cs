@@ -4,6 +4,8 @@ using TODO_V2.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using TODO_V2.Shared.Models;
+using TODO_V2.Shared.Models.Enum;
+using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Client.Shared.Modals
 {
@@ -15,18 +17,17 @@ namespace TODO_V2.Client.Shared.Modals
         public string Password { get; set; } = string.Empty;
         public string CheckPassword { get; set; } = string.Empty;
         public string Clave { get; set; } = string.Empty;
-        private string? UserType { get; set; } = "User";
+        private string? UserType { get; set; } = TODO_V2.Shared.Models.Enum.UserType.USUARIO.ToString();
 
-        User user = new();
 
-        private bool IsDisabled = true;
+        private bool IsInputValid = false;
 
-        private string PasswordColor = "#fff";     
-        private string UserNameColor = "#fff";        
+        private string PasswordColor = "#fff";
+        private string UserNameColor = "#fff";
         private string NameColor = "#fff";
         private string SurnameColor = "#fff";
-        private string ClaveColor = "#fff";        
-        
+        private string ClaveColor = "#fff";
+
 
         List<ToastMessage> messages = new();
 
@@ -35,13 +36,18 @@ namespace TODO_V2.Client.Shared.Modals
         [Parameter] public EventCallback<MouseEventArgs> Cerrar { get; set; }
 
         #region Handlers
-        protected void OnClickRegistro()
+        protected async Task OnClickRegistro()
         {
-            if (CheckFormat(UserName) && CheckFormat(Password))
+            if (IsInputValid)
             {
-                user = new(Name, Surname, UserName, Password, UserType);
-                Registrar.InvokeAsync();
+                Login.user = new(Name, Surname, UserName, Password, UserType); 
+                await Registrar.InvokeAsync();
             }
+            else
+            {
+                ShowMessage(ToastType.Danger, "Los datos introducidos no son correctos");
+            }
+
         }
 
         protected void OnClickClose()
@@ -53,86 +59,92 @@ namespace TODO_V2.Client.Shared.Modals
             Surname = string.Empty;
             Clave = string.Empty;
 
-            //UserType = TODO_V2.Shared.UserType.USUARIO.ToString();
-            UserType = "user";
+            UserType = TODO_V2.Shared.Models.Enum.UserType.USUARIO.ToString();
             Cerrar.InvokeAsync();
         }
 
         private void ValueChangeHandler()
         {
-            CheckPasswordHandler();
-            CheckUserNameHandler();
-            CheckNameHandler();
-            CheckSurnameHandler();
+            IsInputValid = CheckPasswordHandler();
+            IsInputValid = CheckUserNameHandler();
+            IsInputValid = CheckNameHandler();
+            IsInputValid = CheckSurnameHandler();
             CheckClaveHandler();
-
-
-            //IsDisabled = CheckPasswordHandler() || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password); 
         }
+
 
         private bool CheckPasswordHandler()
         {
-            if(Password != string.Empty && CheckPassword != string.Empty) { 
+            if (Password != string.Empty && CheckPassword != string.Empty)
+            {
                 if (!Password.Equals(CheckPassword))
-                {                  
+                {
                     PasswordColor = Colores.crimson.ToString();
-                    return true;
+                    return false;
                 }
                 else
                 {
                     PasswordColor = Colores.lime.ToString();
-                    return false;
+                    return true;
                 }
             }
             PasswordColor = Colores.white.ToString();
-            return true;
+            return false;
 
         }
 
-        private void CheckUserNameHandler()
+        private bool CheckUserNameHandler()
         {
-            if (CheckFormat(UserName))
+            if (Validation.CheckFormat(UserName, FieldType.AlphaNumeric.ToString()))
+            {
                 UserNameColor = Colores.lime.ToString();
-            else            
+                return true;
+            }
+            else
                 UserNameColor = Colores.white.ToString();
-            
+            return false;
         }
 
-        private void CheckNameHandler()
-        {         
-            if (CheckFormat(Name))
+        private bool CheckNameHandler()
+        {
+            if (Validation.CheckFormat(Name, FieldType.Alphabetical.ToString()))
+            {
                 NameColor = Colores.lime.ToString();
+                return true;
+            }
             else
                 NameColor = Colores.white.ToString();
+            return false;
         }
 
-        private void CheckSurnameHandler()
-        {
-            if (CheckFormat(Surname))
-                SurnameColor = Colores.lime.ToString();
-            else
-               SurnameColor = Colores.white.ToString();
-        }
 
-        private void CheckClaveHandler()
+        private bool CheckSurnameHandler()
         {
-            CheckFormat(Clave);
-            if (CheckFormat(Clave))
-                ClaveColor = Colores.lime.ToString();
-            else
-                ClaveColor = Colores.white.ToString();
-        }
-        #endregion Handlers
-
-        private bool CheckFormat(string word)
-        {
-            if (string.IsNullOrWhiteSpace(word) || word.Length < 3)
+            if (Validation.CheckFormat(Surname, FieldType.Alphabetical.ToString()))
             {
-                ShowMessage(ToastType.Warning, "El nombre de usuario y la contraseña deben tener al menos 3 caracteres");
+                SurnameColor = Colores.lime.ToString();
+                return true;
+            }
+            else
+                SurnameColor = Colores.white.ToString();
+            return false;
+        }
+
+        private bool CheckClaveHandler()
+        {
+
+            if (Validation.CheckKey(Clave))
+            {
+                ClaveColor = Colores.lime.ToString();
+                return true;
+            }
+            else
+            {
+                ClaveColor = Colores.white.ToString();
                 return false;
             }
-            return true;
         }
+        #endregion Handlers
 
         private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
 

@@ -7,6 +7,7 @@ using Microsoft.JSInterop;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Model;
 using System.Net.Http;
+using System.Diagnostics;
 
 namespace TODO_V2.Client.Pages
 {
@@ -15,7 +16,7 @@ namespace TODO_V2.Client.Pages
 
         private Modal ModalInstance = default!;
         private string? Message = string.Empty;
-        private User user = new();
+        public static User user = new();
 
         private string UserName { get; set; } = string.Empty;
         private string Password { get; set; } = string.Empty;
@@ -44,13 +45,14 @@ namespace TODO_V2.Client.Pages
 
 
         private async Task NuevoUsuario()
-        {
+        {   
+            user.ToString();
             //bool existe = Usuarios.Any(user => user.UserName == NewUser.UserName || (user.Email == NewUser.Email && !string.IsNullOrEmpty(NewUser.Email)));
 
             //if (existe)
             //{
             //    ShowMessage(ToastType.Danger, "El nombre de usuario o email ya está registrado");
-            //    await HideModal();
+            //await HideModal();
             //}
             //else
             //{
