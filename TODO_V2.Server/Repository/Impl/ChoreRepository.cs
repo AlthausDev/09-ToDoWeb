@@ -4,6 +4,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using TODO_V2.Shared.Models;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace TODO_V2.Server.Repository.Impl
@@ -18,7 +19,7 @@ namespace TODO_V2.Server.Repository.Impl
             _configuration = configuration;
         }
 
-        public async Task<Chore> Add(Chore chore)
+        public async Task<bool> Add(Chore chore)
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
@@ -29,12 +30,7 @@ namespace TODO_V2.Server.Repository.Impl
                 }
                 catch (Exception) { }
             }
-
-            //var addedEntity = (await _context.AddAsync(chore)).Entity;
-            //context.SaveChanges();
-            //return addedEntity;
-
-            return chore;
+            return true;
         }
 
         public async Task<Chore> Update(Chore chore)
@@ -45,9 +41,6 @@ namespace TODO_V2.Server.Repository.Impl
 
                 dbConnection.Execute(query);
             }
-            //var updatedEntity = _context.Update(entity).Entity;
-            //await context.SaveChangesAsync();
-            //return updatedEntity;
             return chore;
         }
 
@@ -59,10 +52,6 @@ namespace TODO_V2.Server.Repository.Impl
 
                 dbConnection.Execute(query);
             }
-
-            //var entity = _context.Find<T>(id);
-            //if (entity != null) _context.Remove(entity);
-            //context.SaveChanges();
         }
 
         public void LogicDelete(int id)
@@ -72,10 +61,7 @@ namespace TODO_V2.Server.Repository.Impl
                 string query = $"UPDATE Chores SET Deleted = 1 WHERE Id = {id};";
 
                 dbConnection.Execute(query);
-            }
-            //var entity = _context.Find<T>(id);
-            //if (entity != null) _context.Remove(entity);
-            //context.SaveChanges();
+            }  
         }
 
         public async Task<IEnumerable<Chore>> GetAll(GetRequest<Chore> request)
@@ -150,15 +136,23 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                //string query = $"SELECT * FROM Chores WHERE Id = {id} AND Deleted = 0;";
-                string query = $"SELECT * FROM Chores WHERE Id = {id};";
-
-                Chore chore = dbConnection.QuerySingle<Chore>(query);
-                //return await context.FindAsync<T>(entityId);
+                string query = $"SELECT * FROM Chores WHERE Id = {id} AND Deleted = 0;"; 
+                Chore chore = dbConnection.QuerySingle<Chore>(query);               
 
                 return chore;
             }
         }
 
+        public ActionResult<int> Count()
+        {
+            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            {
+                string query = $"SELECT COUNT(Id) FROM Chores";
+                int count = dbConnection.QuerySingle<int>(query);
+
+                return count;
+            }
+        }
+   
     }
 }

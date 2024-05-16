@@ -39,12 +39,19 @@ namespace TODO_V2.Client.Shared.Modals
             {
                 if (IsInputValid)
                 {
+
+                    NewUser = new(Name, Surname, UserName.ToUpper(), Password, UserTypeEnum.USUARIO.ToString());
+                    Login.user = NewUser;
+                    await RegisterUser();
+                    ClearFields();
+
+                    await Registrar.InvokeAsync();
                     try
                     {
-                        User? userExist = await GetUserByUserName(UserName.ToUpper());
-                        ShowMessage(ToastType.Danger, @"El Username introducido ya existe. 
-                                                    Por favor, introduzca un nuevo Username");
-                        UserNameColor = Colores.crimson.ToString();
+                        //User? userExist = await GetUserByUserName(UserName.ToUpper());
+                        //ShowMessage(ToastType.Danger, @"El Username introducido ya existe. 
+                        //                            Por favor, introduzca un nuevo Username");
+                        //UserNameColor = Colores.crimson.ToString();
                     }
                     catch
                     {
@@ -54,7 +61,6 @@ namespace TODO_V2.Client.Shared.Modals
                         ClearFields();
 
                         await Registrar.InvokeAsync();
-
                     }
                 }
                 else
@@ -153,8 +159,7 @@ namespace TODO_V2.Client.Shared.Modals
             }
             else
             {
-                ClaveColor = Colores.white.ToString();
-                //ClaveColor = Colores.crimson.ToString();
+                ClaveColor = Colores.white.ToString();              
                 return false;
             }
         }
@@ -163,8 +168,16 @@ namespace TODO_V2.Client.Shared.Modals
         #region Api
         private async Task RegisterUser()
         {
-            HttpResponseMessage response = await Http.PostAsJsonAsync("user", NewUser); 
-            Debug.WriteLine(await Http.GetFromJsonAsync<User>($"user/{UserName}"));
+            HttpResponseMessage response = await Http.PostAsJsonAsync("user", NewUser);             
+            Debug.WriteLine(response);
+            
+            var data = await response.Content.ReadAsStringAsync();
+            Debug.WriteLine(data);
+
+            if (data.Equals("false"))
+            {
+                Debug.WriteLine("Es cazable");
+            }
 
             ClearFields();
         }
@@ -199,6 +212,12 @@ namespace TODO_V2.Client.Shared.Modals
             Clave = string.Empty;
 
             UserType = UserTypeEnum.USUARIO.ToString();
+
+            NameColor = Colores.white.ToString();
+            UserNameColor = Colores.white.ToString();
+            PasswordColor = Colores.white.ToString();
+            SurnameColor = Colores.white.ToString();
+            ClaveColor = Colores.white.ToString();            
         }
         #endregion Aux
     }

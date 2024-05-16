@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Shared.Models;
 
@@ -19,11 +20,11 @@ namespace TODO_V2.Server.Controllers.Impl
             Configuration = configuration;
         }
 
-        [HttpPost("GetAll")]
+        [HttpGet("GetAll")]
         public async Task<IEnumerable<User>>? GetAll([FromBody] GetRequest<User>? request = null)
         {
             return await service.GetAll(request);
-        }
+        }      
 
         [HttpGet("{id:int}")]                     
         public ActionResult<User> Get(int id)
@@ -37,15 +38,29 @@ namespace TODO_V2.Server.Controllers.Impl
             return service.GetByUserName(username);
         }
 
+        [HttpGet("login")]
+        public ActionResult<User> Login(string username, string password)
+        {
+            return service.Login(username, password);
+        }
+
+
+        [HttpGet]
+        public ActionResult<int> Count()
+        {
+            return service.Count();
+        }
+
 
         [HttpPost]
-        public async Task<User> Post(User entity)
+        public async Task<bool> Post(User entity)
         {
+
             return await service.Add(entity);
         }
 
         [HttpPut]
-        public async Task<User>? Put(User entity)
+        public async Task<User> Put(User entity)
         {
             return await service.Update(entity);
         }

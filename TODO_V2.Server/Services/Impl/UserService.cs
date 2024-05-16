@@ -4,6 +4,9 @@ using TODO_V2.Shared;
 using System.Data.Common;
 using TODO_V2.Server.Utils;
 using TODO_V2.Shared.Models;
+using Microsoft.AspNetCore.Mvc;
+using BlazorBootstrap;
+using TODO_V2.Shared.Models.Enum;
 
 namespace TODO_V2.Server.Services.Impl
 {
@@ -18,10 +21,14 @@ namespace TODO_V2.Server.Services.Impl
             this.encryptionUtil = encryptionUtil;
         }
 
-        public Task<User> Add(User user)
-        {
-            user.Password = encryptionUtil.Encrypt(user.Password);
-            return userRepository.Add(user);
+        public Task<bool> Add(User user)
+        {      
+            if (GetByUserName(user.UserName) == null)
+            {
+                user.Password = encryptionUtil.Encrypt(user.Password);
+                return userRepository.Add(user);               
+            }
+            return new Task<bool>(() => false);
         }
 
         public Task<User> Update(User user)
@@ -52,16 +59,18 @@ namespace TODO_V2.Server.Services.Impl
 
         public User GetById(int userId)
         {
-            try { 
+            try
+            {
                 User user = userRepository.GetById(userId).Result;
 
                 user.Password = encryptionUtil.Decrypt(user.Password);
                 return user;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return null;
             }
-            
+
         }
 
         public User GetByUserName(string Username)
@@ -78,5 +87,16 @@ namespace TODO_V2.Server.Services.Impl
                 return null;
             }
         }
+        public ActionResult<int> Count()
+        {
+            return userRepository.Count();
+        }
+
+        public ActionResult<User> Login(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+
     }
 }

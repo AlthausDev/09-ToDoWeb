@@ -2,15 +2,16 @@
     position: relative;
     display: flex;
     flex-direction: column;
-   
-    font-family: monospace;   
+
+    font-family: monospace;
     font-weight: bold;
     text-align: center;
     user-select: none;
+    
 }
 
 main {
-    flex: 1;
+    flex: 1;   
 }
 
 .sidebar {

@@ -4,6 +4,7 @@ using TODO_V2.Shared;
 using System.Data.Common;
 using TODO_V2.Server.Utils;
 using TODO_V2.Shared.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TODO_V2.Server.Services.Impl
 {
@@ -16,7 +17,7 @@ namespace TODO_V2.Server.Services.Impl
             this.choreRepository = choreRepository;
         }
 
-        public Task<Chore> Add(Chore chore)
+        public Task<bool> Add(Chore chore)
         {
             return choreRepository.Add(chore);
         }
@@ -51,5 +52,9 @@ namespace TODO_V2.Server.Services.Impl
             return choreRepository.GetById(choreId).Result;
         }
 
+        public ActionResult<int> Count()
+        {
+           return choreRepository.Count();
+        }
     }
 }

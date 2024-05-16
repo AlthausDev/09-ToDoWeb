@@ -8,6 +8,7 @@ using static Dapper.SqlMapper;
 using System.Linq;
 using System.Collections.Generic;
 using TODO_V2.Shared.Models.Enum;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace TODO_V2.Server.Repository.Impl
@@ -17,32 +18,34 @@ namespace TODO_V2.Server.Repository.Impl
         private readonly IConfiguration _configuration;
         private string ConnectionString => _configuration.GetConnectionString("TODO_V2DB");
 
-        //private readonly UserContext context;
 
         public UserRepository(IConfiguration configuration)
         {
-            //this.context = context;
             _configuration = configuration;
         }
 
 
-        public async Task<User> Add(User user)
+        //public async Task<User> Add(User user)
+        //{
+        //    using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+        //    {
+        //        string query = @$"INSERT INTO Users (Name, Surname, UserName, Password, UserType) 
+        //                            VALUES ('{user.Name}', '{user.Surname}', '{user.UserName}', '{user.Password}', '{user.UserType}');";
+        //        dbConnection.Execute(query);
+
+        //        return user;
+        //    }
+        //}
+
+        public async Task<bool> Add(User user)
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                try { 
                 string query = @$"INSERT INTO Users (Name, Surname, UserName, Password, UserType) 
-                                VALUES ('{user.Name}', '{user.Surname}', '{user.UserName}', '{user.Password}', '{user.UserType}');";               
+                                    VALUES ('{user.Name}', '{user.Surname}', '{user.UserName}', '{user.Password}', '{user.UserType}');";
                 dbConnection.Execute(query);
-                }
-                catch (Exception) { }
             }
-
-            //var addedEntity = (await _context.AddAsync(user)).Entity;
-            //context.SaveChanges();
-            //return addedEntity;
-
-            return user;
+            return true;
         }
 
         public async Task<User> Update(User user)
@@ -52,10 +55,7 @@ namespace TODO_V2.Server.Repository.Impl
                 string query = @$"UPDATE Users SET Name = '{user.Name}', Surname ='{user.Surname}, Username = '{user.UserName}', Password ='{user.Password}', UserType = '{user.UserType}' WHERE Id = '{user.Id}';";
 
                 dbConnection.Execute(query);
-            }
-            //var updatedEntity = _context.Update(entity).Entity;
-            //await context.SaveChangesAsync();
-            //return updatedEntity;
+            }         
             return user;
         }
 
@@ -67,10 +67,6 @@ namespace TODO_V2.Server.Repository.Impl
 
                 dbConnection.Execute(query);
             }
-
-            //var entity = _context.Find<T>(id);
-            //if (entity != null) _context.Remove(entity);
-            //context.SaveChanges();
         }
 
         public void LogicDelete(int id)
@@ -81,9 +77,6 @@ namespace TODO_V2.Server.Repository.Impl
 
                 dbConnection.Execute(query);
             }
-            //var entity = _context.Find<T>(id);
-            //if (entity != null) _context.Remove(entity);
-            //context.SaveChanges();
         }
 
         public  async Task<IEnumerable<User>> GetAll(GetRequest<User> request)
@@ -158,12 +151,9 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                //string query = $"SELECT * FROM Users WHERE Id = {id} AND Deleted = 0;";
-                string query = $"SELECT * FROM Users WHERE Id = {id};";
+                string query = $"SELECT * FROM Users WHERE Id = {id} AND Deleted = 0;";                
 
                 User user = dbConnection.QuerySingle<User>(query);
-                //return await context.FindAsync<T>(entityId);
-
                 return user;
             }
         }
@@ -171,14 +161,22 @@ namespace TODO_V2.Server.Repository.Impl
         public async Task<User?> GetByUserName(string username)
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
-            {
-                //string query = $"SELECT * FROM Users WHERE Id = {id} AND Deleted = 0;";
-                string query = $"SELECT * FROM Users WHERE UserName = '{username}';";
+            {           
+                string query = $"SELECT * FROM Users WHERE UserName = '{username}' AND Deleted = 0;";
 
                 User user = dbConnection.QuerySingle<User>(query);
-                //return await context.FindAsync<T>(entityId);
-
                 return user;
+            }
+        }
+
+        public ActionResult<int> Count()
+        {
+            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            {
+                string query = $"SELECT COUNT(Id) FROM Users";
+                int count = dbConnection.QuerySingle<int>(query);
+
+                return count;
             }
         }
     }

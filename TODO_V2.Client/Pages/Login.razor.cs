@@ -1,12 +1,13 @@
 ﻿using BlazorBootstrap;
-using TODO_V2.Client.Shared.Modals;
+using BlazorWebPage.Shared.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System.Net.Http.Json;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.JSInterop;
-using TODO_V2.Shared.Models;
 using System.Diagnostics;
-using BlazorWebPage.Shared.Data;
+using System.Net.Http.Json;
+using TODO_V2.Client.Shared.Modals;
+using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Client.Pages
@@ -23,34 +24,18 @@ namespace TODO_V2.Client.Pages
         private string Password { get; set; } = string.Empty;
 
 
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    base.OnInitialized();
-
-        //    Debug.WriteLine(await GetUserById(1));
-        //    Debug.WriteLine(await GetUserById(1));
-        //    Debug.WriteLine(await GetUserById(1));
-        //    Debug.WriteLine(await GetUserById(1));
-        //}
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             //Si no hay usuarios, cargarlos
-            try
-            {
-                Debug.WriteLine(await GetUserById(1));
-            }
-            catch
-            {
+            if(!await ExistAnyData())            
                 await UserData.CargarDatosAsync(Http);
-
-            }
+                        
         }
 
         #region Login     
         private async Task OnClickLogin()
         {
-            NavManager.NavigateTo($"/admin/", true);
+            //NavManager.NavigateTo($"/admin/", true);    
         }
         #endregion Login
 
@@ -70,7 +55,7 @@ namespace TODO_V2.Client.Pages
         private async Task Registro()
         {
             ShowMessage(ToastType.Success, "El Registro se ha realizado exitosamente");
-            await HideModal();        
+            await HideModal();
         }
 
         private async Task HideModal()
@@ -82,28 +67,10 @@ namespace TODO_V2.Client.Pages
 
 
         #region Api       
-        private async Task GetData()
-        {
-            User[]? usuariosArray = await Http.GetFromJsonAsync<User[]>("user");
-            if (usuariosArray != null)
-            {
-                List<User> Usuarios = [.. usuariosArray];
-                foreach (User user in Usuarios)
-                {
-                    //Debug.WriteLine(user.ToString);
-                }
-            }
-        }
-
-        private async Task<User?> GetUserById(int id)
-        {
-            return await Http.GetFromJsonAsync<User>($"user/{id}");
-        }
-
-        private async Task<User?> GetUserByUserName(string Username)
-        {
-            return await Http.GetFromJsonAsync<User>($"user/{Username}");
-        }
+        private async Task<bool> ExistAnyData()
+        {   
+            return await Http.GetFromJsonAsync<int>("user") > 0;
+        }      
 
         #endregion Api     
 

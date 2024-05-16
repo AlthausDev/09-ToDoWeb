@@ -32,7 +32,7 @@ namespace TODO_V2.Server.Controllers.Impl
         }
 
         [HttpPost]
-        public async Task<Chore> Post(Chore entity)
+        public async Task<bool> Post(Chore entity)
         {
             return await service.Add(entity);
         }
