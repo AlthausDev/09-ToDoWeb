@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TODO_V2.Shared.Models.Enum
 {
-    public enum UserType
+    public enum UserTypeEnum
     {
         ADMINISTRADOR,
         USUARIO

@@ -6,7 +6,7 @@ namespace TODO_V2.Server.Controllers.Impl
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController 
+    public class UserController
     {
         private readonly ILogger<UserController> Logger;
         private readonly IUserService service;
@@ -25,11 +25,18 @@ namespace TODO_V2.Server.Controllers.Impl
             return await service.GetAll(request);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]                     
         public ActionResult<User> Get(int id)
         {
             return service.GetById(id);
         }
+
+        [HttpGet("{username}")]        
+        public ActionResult<User> Get(string username)
+        {
+            return service.GetByUserName(username);
+        }
+
 
         [HttpPost]
         public async Task<User> Post(User entity)
@@ -50,3 +57,4 @@ namespace TODO_V2.Server.Controllers.Impl
         }
     }
 }
+

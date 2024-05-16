@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Components.Web;
 using System.Net.Http.Json;
 using Microsoft.JSInterop;
 using TODO_V2.Shared.Models;
-using TODO_V2.Shared.Model;
-using System.Net.Http;
 using System.Diagnostics;
+using BlazorWebPage.Shared.Data;
+using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Client.Pages
 {
@@ -17,12 +17,34 @@ namespace TODO_V2.Client.Pages
         private Modal ModalInstance = default!;
         public static User user = new();
 
+        List<ToastMessage> messages = new();
+
         private string UserName { get; set; } = string.Empty;
         private string Password { get; set; } = string.Empty;
 
-        protected override async Task OnInitializedAsync()
+
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    base.OnInitialized();
+
+        //    Debug.WriteLine(await GetUserById(1));
+        //    Debug.WriteLine(await GetUserById(1));
+        //    Debug.WriteLine(await GetUserById(1));
+        //    Debug.WriteLine(await GetUserById(1));
+        //}
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            Console.WriteLine(await GetUserById(9));            
+            //Si no hay usuarios, cargarlos
+            try
+            {
+                Debug.WriteLine(await GetUserById(1));
+            }
+            catch
+            {
+                await UserData.CargarDatosAsync(Http);
+
+            }
         }
 
         #region Login     
@@ -38,30 +60,17 @@ namespace TODO_V2.Client.Pages
         {
             var parameters = new Dictionary<string, object>
             {
-                { "Registrar", EventCallback.Factory.Create<MouseEventArgs>(this, NewUser) },
+                { "Registrar", EventCallback.Factory.Create<MouseEventArgs>(this, Registro) },
                 { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
             };
             await ModalInstance.ShowAsync<ModalRegistro>(title: "Registrarse", parameters: parameters);
         }
 
 
-        private async Task NewUser()
+        private async Task Registro()
         {
-            user.ToString();
-            //bool existe = Usuarios.Any(user => user.UserName == NewUser.UserName || (user.Email == NewUser.Email && !string.IsNullOrEmpty(NewUser.Email)));
-
-            //if (existe)
-            //{
-            //    ShowMessage(ToastType.Danger, "El nombre de usuario o email ya está registrado");
-            
-            //}
-            //else
-            //{
-            await PostNewUser();
-            await HideModal();
-            //ShowMessage(ToastType.Success, "Register realizado con éxito");
-            await OnClickLogin();
-            //}
+            ShowMessage(ToastType.Success, "El Registro se ha realizado exitosamente");
+            await HideModal();        
         }
 
         private async Task HideModal()
@@ -81,7 +90,7 @@ namespace TODO_V2.Client.Pages
                 List<User> Usuarios = [.. usuariosArray];
                 foreach (User user in Usuarios)
                 {
-                    Debug.WriteLine(user.ToString);
+                    //Debug.WriteLine(user.ToString);
                 }
             }
         }
@@ -91,28 +100,14 @@ namespace TODO_V2.Client.Pages
             return await Http.GetFromJsonAsync<User>($"user/{id}");
         }
 
-        private async Task PostNewUser()
+        private async Task<User?> GetUserByUserName(string Username)
         {
-            try { 
-            HttpResponseMessage response = await Http.PostAsJsonAsync("user", user); 
-            Debug.WriteLine(user.ToString());
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("\nMessage ---\n{0}", ex.Message);
-                Debug.WriteLine("\nHelpLink ---\n{0}", ex.HelpLink);
-                Debug.WriteLine("\nSource ---\n{0}", ex.Source);
-                Debug.WriteLine("\nStackTrace ---\n{0}", ex.StackTrace);
-                Debug.WriteLine("\nTargetSite ---\n{0}", ex.TargetSite);
-            }
-           
+            return await Http.GetFromJsonAsync<User>($"user/{Username}");
         }
 
         #endregion Api     
 
         #region Token
-
         private async Task GenerateTokenAsync(User usuario)
         {
             HttpResponseMessage response = await Http.PostAsJsonAsync("user/login", usuario);
@@ -128,8 +123,21 @@ namespace TODO_V2.Client.Pages
                 Console.WriteLine("Error al generar el token");
             }
         }
-
         #endregion Token
+
+
+        #region Toast
+        private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
+
+        private ToastMessage CreateToastMessage(ToastType toastType, string message)
+        {
+            var toastMessage = new ToastMessage();
+            toastMessage.Type = toastType;
+            toastMessage.Message = message;
+
+            return toastMessage;
+        }
+        #endregion Toast
 
         #region Aux
         #endregion Aux   

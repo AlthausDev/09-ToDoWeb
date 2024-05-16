@@ -52,15 +52,31 @@ namespace TODO_V2.Server.Services.Impl
 
         public User GetById(int userId)
         {
-            User user = userRepository.GetById(userId).Result;
+            try { 
+                User user = userRepository.GetById(userId).Result;
+
+                user.Password = encryptionUtil.Decrypt(user.Password);
+                return user;
+            } catch (Exception ex)
+            {
+                return null;
+            }
             
-            user.Password = encryptionUtil.Decrypt(user.Password);
-            return user;
         }
 
-        public Task<T> Update<T>(T entity)
+        public User GetByUserName(string Username)
         {
-            throw new NotImplementedException();
+            try
+            {
+                User user = userRepository.GetByUserName(Username).Result;
+
+                user.Password = encryptionUtil.Decrypt(user.Password);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

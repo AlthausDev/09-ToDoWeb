@@ -166,6 +166,20 @@ namespace TODO_V2.Server.Repository.Impl
 
                 return user;
             }
-        }       
+        }
+
+        public async Task<User?> GetByUserName(string username)
+        {
+            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            {
+                //string query = $"SELECT * FROM Users WHERE Id = {id} AND Deleted = 0;";
+                string query = $"SELECT * FROM Users WHERE UserName = '{username}';";
+
+                User user = dbConnection.QuerySingle<User>(query);
+                //return await context.FindAsync<T>(entityId);
+
+                return user;
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\GetRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\TokenResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\UserType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\UserTypeEnum.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Validation.cs" />
   </ItemGroup>
 </Project>

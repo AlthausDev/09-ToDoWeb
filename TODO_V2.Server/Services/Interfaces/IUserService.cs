@@ -5,6 +5,6 @@ namespace TODO_V2.Server.Services.Interfaces
 {
     public interface IUserService : IGenericService<User>
     {
-        Task<T> Update<T>(T entity);
+        User GetByUserName(string Username);
     }
 }
