@@ -47,14 +47,9 @@ builder.Services.AddMvc();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthorizationCore();
 
-//builder.Services.AddHttpClient<UserService>(client =>
-//{
-//    client.BaseAddress = new Uri("https://localhost:7216/api/");
-//});
-
-builder.Services.AddHttpClient<UserService>(client =>
+builder.Services.AddScoped(client => new HttpClient
 {
-    client.BaseAddress = new Uri("https://localhost:7216/");
+    BaseAddress = new Uri("https://localhost:7216/")
 });
 
 

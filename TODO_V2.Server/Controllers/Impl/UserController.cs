@@ -6,53 +6,47 @@ namespace TODO_V2.Server.Controllers.Impl
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController : CrudGenericController<User>
+    public class UserController 
     {
+        private readonly ILogger<UserController> Logger;
+        private readonly IUserService service;
+        private readonly IConfiguration Configuration;
 
-        public UserController(ILogger<CrudGenericController<User>> logger, IConfiguration configuration, IUserService service) : base(logger, configuration, service)
+        public UserController(ILogger<UserController> logger, IUserService userService, IConfiguration configuration)
         {
+            Logger = logger;
+            service = userService;
+            Configuration = configuration;
         }
 
-        //private readonly ILogger<UserController> Logger;
-        //private readonly IUserService service;       
-        //private readonly IConfiguration Configuration;
+        [HttpPost("GetAll")]
+        public async Task<IEnumerable<User>>? GetAll([FromBody] GetRequest<User>? request = null)
+        {
+            return await service.GetAll(request);
+        }
 
-        //public UserController(ILogger<UserController> logger, IUserService userService, IConfiguration configuration)
-        //{
-        //    Logger = logger;
-        //    service = userService;
-        //    Configuration = configuration;
-        //}
+        [HttpGet("{id}")]
+        public ActionResult<User> Get(int id)
+        {
+            return service.GetById(id);
+        }
 
-        //[HttpPost("GetAll")]
-        //public async Task<IEnumerable<User>>? GetAll([FromBody] GetRequest<User>? request = null)
-        //{
-        //    return await service.GetAll(request);
-        //}
+        [HttpPost]
+        public async Task<User> Post(User entity)
+        {
+            return await service.Add(entity);
+        }
 
-        //[HttpGet("{id}")]
-        //public ActionResult<User> Get(int id)
-        //{
-        //    return service.GetById(id);
-        //}
+        [HttpPut]
+        public async Task<User>? Put(User entity)
+        {
+            return await service.Update(entity);
+        }
 
-        //[HttpPost]
-        //public async Task<User> Post(User entity)
-        //{
-        //    return await service.Add(entity);
-        //}
-
-        //[HttpPut]
-        //public async Task<User>? Put(User entity)
-        //{
-        //    return await service.Update(entity);
-        //}
-
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //    service.Delete(id);
-        //}
-
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            service.Delete(id);
+        }
     }
 }

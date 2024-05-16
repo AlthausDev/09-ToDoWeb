@@ -22,7 +22,7 @@ namespace TODO_V2.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            //await GetUserById(1);
+            Console.WriteLine(await GetUserById(9));            
         }
 
         #region Login     
@@ -53,13 +53,14 @@ namespace TODO_V2.Client.Pages
             //if (existe)
             //{
             //    ShowMessage(ToastType.Danger, "El nombre de usuario o email ya está registrado");
-            //await HideModal();
+            
             //}
             //else
             //{
-            //    await PostNewUser();
-            //    ShowMessage(ToastType.Success, "Register realizado con éxito");
-            //    await IniciarSesion();
+            await PostNewUser();
+            await HideModal();
+            //ShowMessage(ToastType.Success, "Register realizado con éxito");
+            await OnClickLogin();
             //}
         }
 
@@ -87,17 +88,15 @@ namespace TODO_V2.Client.Pages
 
         private async Task<User?> GetUserById(int id)
         {
-            return await Http.GetFromJsonAsync<User>($"{id}");
+            return await Http.GetFromJsonAsync<User>($"user/{id}");
         }
 
         private async Task PostNewUser()
         {
             try { 
-            User newUser = new("aaa", "aaa", "aaa", "aaa", "USUARIO");
-            HttpResponseMessage response = await Http.PostAsJsonAsync("user", newUser);
-            await Http.PostAsJsonAsync("user", newUser);
-            await Http.PostAsJsonAsync("Users", newUser);
-            await Http.PostAsJsonAsync("usuarios", newUser);
+            HttpResponseMessage response = await Http.PostAsJsonAsync("user", user); 
+            Debug.WriteLine(user.ToString());
+
             }
             catch (Exception ex)
             {

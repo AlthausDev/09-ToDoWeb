@@ -20,7 +20,7 @@ namespace TODO_V2.Server.Services.Impl
 
         public Task<User> Add(User user)
         {
-            //user.Password = encryptionUtil.Encrypt(user.Password);
+            user.Password = encryptionUtil.Encrypt(user.Password);
             return userRepository.Add(user);
         }
 
@@ -54,7 +54,7 @@ namespace TODO_V2.Server.Services.Impl
         {
             User user = userRepository.GetById(userId).Result;
             
-            //user.Password = encryptionUtil.Decrypt(user.Password);
+            user.Password = encryptionUtil.Decrypt(user.Password);
             return user;
         }
 

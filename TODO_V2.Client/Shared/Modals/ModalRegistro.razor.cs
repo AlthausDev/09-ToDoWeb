@@ -31,7 +31,7 @@ namespace TODO_V2.Client.Shared.Modals
         {
             if (IsInputValid)
             {
-                Login.user = new(Name, Surname, UserName, Password, UserType); 
+                Login.user = new(Name, Surname, UserName, Password, "UserType"); 
                 await Registrar.InvokeAsync();
             }
             else

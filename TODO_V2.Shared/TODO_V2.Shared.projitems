@@ -9,6 +9,7 @@
     <Import_RootNamespace>TODO_V2.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Data\UserData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\BaseModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Categories.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Chore.cs" />

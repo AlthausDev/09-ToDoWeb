@@ -6,6 +6,8 @@ using TODO_V2.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using static Dapper.SqlMapper;
 using System.Linq;
+using System.Collections.Generic;
+using TODO_V2.Shared.Models.Enum;
 
 
 namespace TODO_V2.Server.Repository.Impl
@@ -30,7 +32,7 @@ namespace TODO_V2.Server.Repository.Impl
             {
                 try { 
                 string query = @$"INSERT INTO Users (Name, Surname, UserName, Password, UserType) 
-                                VALUES ('{user.Name}, '{user.Surname}', '{user.UserName}', '{user.Password}', '{user.UserType}');";
+                                VALUES ('{user.Name}', '{user.Surname}', '{user.UserName}', '{user.Password}', '{user.UserType}');";               
                 dbConnection.Execute(query);
                 }
                 catch (Exception) { }
