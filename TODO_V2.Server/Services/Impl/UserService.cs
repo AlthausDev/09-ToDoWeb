@@ -1,102 +1,167 @@
-﻿using TODO_V2.Server.Repository.Interfaces;
-using TODO_V2.Server.Services.Interfaces;
-using TODO_V2.Shared;
-using System.Data.Common;
-using TODO_V2.Server.Utils;
-using TODO_V2.Shared.Models;
+﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Mvc;
-using BlazorBootstrap;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using TODO_V2.Server.Repository.Interfaces;
+using TODO_V2.Server.Services.Interfaces;
+using TODO_V2.Server.Utils;
+using TODO_V2.Shared;
+using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Models.Enum;
 
 namespace TODO_V2.Server.Services.Impl
 {
     public class UserService : IUserService
     {
-        private IUserRepository userRepository;
-        private readonly EncryptionUtil encryptionUtil;
+        private readonly IUserRepository UserRepository;
+        private readonly EncryptionUtil EncryptionUtil;
+        private readonly IConfiguration configuration;
+        private readonly ILocalStorageService localStorageService;
 
-        public UserService(IUserRepository userRepository, EncryptionUtil encryptionUtil)
+        public UserService(IUserRepository userRepository, EncryptionUtil encryptionUtil, IConfiguration configuration, ILocalStorageService localStorageService)
         {
-            this.userRepository = userRepository;
-            this.encryptionUtil = encryptionUtil;
+            UserRepository = userRepository;
+            EncryptionUtil = encryptionUtil;
+            this.configuration = configuration;
+            this.localStorageService = localStorageService;
         }
 
-        public Task<bool> Add(User user)
-        {      
-            if (GetByUserName(user.UserName) == null)
+
+        public async Task<bool> Add(User user)
+        {
+            if (await GetByUserName(user.UserName) == null)
             {
-                user.Password = encryptionUtil.Encrypt(user.Password);
-                return userRepository.Add(user);               
+                user.Password = EncryptionUtil.Encrypt(user.Password);
+                return await UserRepository.Add(user);
             }
-            return new Task<bool>(() => false);
+            return false;
         }
 
-        public Task<User> Update(User user)
+        public async Task<User> Update(User user)
         {
-            user.Password = encryptionUtil.Encrypt(user.Password);
-            return userRepository.Update(user);
+            user.Password = EncryptionUtil.Encrypt(user.Password);
+            return await UserRepository.Update(user);
         }
 
         public void Delete(int userId)
         {
-            userRepository.Delete(userId);
+            UserRepository.Delete(userId);
         }
 
         public void LogicDelete(int userId)
         {
-            userRepository.LogicDelete(userId);
+            UserRepository.LogicDelete(userId);
         }
 
         public Task<IEnumerable<User>> GetAll(GetRequest<User>? request)
         {
-            return userRepository.GetAll(request);
+            return UserRepository.GetAll(request);
         }
 
         public Task<IEnumerable<User>> GetAllLogic(GetRequest<User>? request)
         {
-            return userRepository.GetAllLogic(request);
+            return UserRepository.GetAllLogic(request);
         }
 
-        public User GetById(int userId)
+        public async Task<User?> GetById(int userId)
         {
             try
             {
-                User user = userRepository.GetById(userId).Result;
+                User? user = await UserRepository.GetById(userId);
 
-                user.Password = encryptionUtil.Decrypt(user.Password);
+                if (user != null)
+                {
+                    user.Password = EncryptionUtil.Decrypt(user.Password);
+                }
+
                 return user;
             }
-            catch (Exception ex)
-            {
-                return null;
-            }
-
-        }
-
-        public User GetByUserName(string Username)
-        {
-            try
-            {
-                User user = userRepository.GetByUserName(Username).Result;
-
-                user.Password = encryptionUtil.Decrypt(user.Password);
-                return user;
-            }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
         }
-        public ActionResult<int> Count()
+
+        public async Task<User?> GetByUserName(string username)
         {
-            return userRepository.Count();
+            try
+            {
+                User? user = await UserRepository.GetByUserName(username);
+
+                if (user != null)
+                {
+                    user.Password = EncryptionUtil.Decrypt(user.Password);
+                }
+
+                return user;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
-        public ActionResult<User> Login(string username, string password)
+        public Task<int> Count()
         {
-            throw new NotImplementedException();
+            return UserRepository.Count();      
         }
 
+        public async Task<ActionResult<User>> Login(string username, string password)
+        {
+            try
+            {
+                var user = await UserRepository.GetByUserName(username);
+
+                if (user == null)
+                {
+                    return new UnauthorizedResult();
+                }
+
+                var decryptedPassword = EncryptionUtil.Decrypt(user.Password);
+                if (password != decryptedPassword)
+                {
+                    return new UnauthorizedResult();
+                }
+
+
+                var token = await EncryptionUtil.GenerateTokenAsync(user, configuration);
+
+                if (token == null)
+                {
+                    return new StatusCodeResult(500);
+                }
+                
+                return user;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al intentar iniciar sesión: {ex.Message}");
+                return new StatusCodeResult(500);
+            }
+        }
+
+        public async Task<bool> Logout()
+        {
+            try
+            {
+                await localStorageService.ClearAsync();
+                await localStorageService.RemoveItemAsync("Token");
+                await localStorageService.RemoveItemAsync("token");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al intentar cerrar sesión: {ex.Message}");
+                return false;
+            }
+        }
 
     }
 }

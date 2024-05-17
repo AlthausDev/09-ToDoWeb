@@ -20,7 +20,7 @@ namespace TODO_V2.Client.Shared.Modals
         public string CheckPassword { get; set; } = string.Empty;
         public string Clave { get; set; } = string.Empty;
         private string UserType { get; set; } = UserTypeEnum.USUARIO.ToString();
-        
+
         private User? NewUser;
 
         private string? PasswordColor, UserNameColor, NameColor, SurnameColor, ClaveColor;
@@ -35,45 +35,44 @@ namespace TODO_V2.Client.Shared.Modals
         #region OnClick
         protected async Task OnClickRegistro()
         {
-            if (CheckClaveHandler())
+            bool isPasswordValid = CheckPasswordHandler();
+            bool isUserNameValid = CheckUserNameHandler();
+            bool isNameValid = CheckNameHandler();
+            bool isSurnameValid = CheckSurnameHandler();
+            bool isClaveValid = CheckClaveHandler();
+
+            if (!isPasswordValid || !isUserNameValid || !isNameValid || !isSurnameValid || !isClaveValid)
             {
-                if (IsInputValid)
-                {
+                ShowMessage(ToastType.Danger, "Por favor, complete todos los campos correctamente.");
+                if (!isPasswordValid) PasswordColor = Colores.crimson.ToString();
+                if (!isUserNameValid) UserNameColor = Colores.crimson.ToString();
+                if (!isNameValid) NameColor = Colores.crimson.ToString();
+                if (!isSurnameValid) SurnameColor = Colores.crimson.ToString();
+                if (!isClaveValid) ClaveColor = Colores.crimson.ToString();
+                return;
+            }
 
-                    NewUser = new(Name, Surname, UserName.ToUpper(), Password, UserTypeEnum.USUARIO.ToString());
-                    Login.user = NewUser;
-                    await RegisterUser();
-                    ClearFields();
+            if (!IsInputValid)
+            {
+                ShowMessage(ToastType.Danger, "Los datos introducidos no son correctos.");
+                return;
+            }
 
-                    await Registrar.InvokeAsync();
-                    try
-                    {
-                        //User? userExist = await GetUserByUserName(UserName.ToUpper());
-                        //ShowMessage(ToastType.Danger, @"El Username introducido ya existe. 
-                        //                            Por favor, introduzca un nuevo Username");
-                        //UserNameColor = Colores.crimson.ToString();
-                    }
-                    catch
-                    {
-                        NewUser = new(Name, Surname, UserName.ToUpper(), Password, UserTypeEnum.USUARIO.ToString());
-                        Login.user = NewUser;
-                        await RegisterUser();
-                        ClearFields();
+            NewUser = new(Name, Surname, UserName.ToUpper(), Password, UserTypeEnum.USUARIO.ToString());
 
-                        await Registrar.InvokeAsync();
-                    }
-                }
-                else
-                {
-                    ShowMessage(ToastType.Danger, "Los datos introducidos no son correctos.");
-                }               
+            if (await RegisterUser())
+            {
+                Login.user = NewUser;
+                ClearFields();
+                await Registrar.InvokeAsync();
             }
             else
             {
-                ShowMessage(ToastType.Danger, "La clave introducida es incorrecta.");
-                ClaveColor = Colores.crimson.ToString();
+                ShowMessage(ToastType.Danger, "El Username introducido ya existe. Por favor, introduzca un nuevo Username");
+                UserNameColor = Colores.crimson.ToString();
             }
         }
+
 
         protected void OnClickClose()
         {
@@ -84,102 +83,80 @@ namespace TODO_V2.Client.Shared.Modals
         #endregion OnClick
 
         #region Handlers
+
         private void ValueChangeHandler()
         {
-            IsInputValid = CheckPasswordHandler();
-            IsInputValid = CheckUserNameHandler();
-            IsInputValid = CheckNameHandler();
-            IsInputValid = CheckSurnameHandler();
+            bool isPasswordValid = CheckPasswordHandler();
+            bool isUserNameValid = CheckUserNameHandler();
+            bool isNameValid = CheckNameHandler();
+            bool isSurnameValid = CheckSurnameHandler();
+
+            IsInputValid = isPasswordValid && isUserNameValid && isNameValid && isSurnameValid;
             CheckClaveHandler();
         }
 
-
         private bool CheckPasswordHandler()
         {
-            if (Password != string.Empty && CheckPassword != string.Empty)
+            if (string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(CheckPassword))
             {
-                if (!Password.Equals(CheckPassword))
-                {
-                    PasswordColor = Colores.crimson.ToString();
-                    return false;
-                }
-                else
-                {
-                    PasswordColor = Colores.lime.ToString();
-                    return true;
-                }
+                PasswordColor = Colores.white.ToString();
+                return false;
             }
-            PasswordColor = Colores.white.ToString();
-            return false;
 
+            if (!CheckFieldFormat(Password, FieldType.AlphaNumeric.ToString(), ref PasswordColor))
+            {
+                return false;
+            }
+
+            bool passwordsMatch = Password.Equals(CheckPassword);
+            PasswordColor = passwordsMatch ? Colores.lime.ToString() : Colores.crimson.ToString();
+            return passwordsMatch;
         }
+
 
         private bool CheckUserNameHandler()
         {
-            if (Validation.CheckFormat(UserName, FieldType.AlphaNumeric.ToString()))
-            {
-                UserNameColor = Colores.lime.ToString();
-                return true;
-            }
-            else
-                UserNameColor = Colores.white.ToString();
-            return false;
+            return CheckFieldFormat(UserName, FieldType.AlphaNumeric.ToString(), ref UserNameColor);
         }
 
         private bool CheckNameHandler()
         {
-            if (Validation.CheckFormat(Name, FieldType.Alphabetical.ToString()))
-            {
-                NameColor = Colores.lime.ToString();
-                return true;
-            }
-            else
-                NameColor = Colores.white.ToString();
-            return false;
+            return CheckFieldFormat(Name, FieldType.Alphabetical.ToString(), ref NameColor);
         }
-
 
         private bool CheckSurnameHandler()
         {
-            if (Validation.CheckFormat(Surname, FieldType.Alphabetical.ToString()))
-            {
-                SurnameColor = Colores.lime.ToString();
-                return true;
-            }
-            else
-                SurnameColor = Colores.white.ToString();
-            return false;
+            return CheckFieldFormat(Surname, FieldType.Alphabetical.ToString(), ref SurnameColor);
         }
 
         private bool CheckClaveHandler()
         {
             if (Validation.CheckKey(Clave))
-            {               
+            {
                 return true;
             }
             else
             {
-                ClaveColor = Colores.white.ToString();              
+                ClaveColor = Colores.white.ToString();
                 return false;
             }
         }
+
         #endregion Handlers
 
         #region Api
-        private async Task RegisterUser()
+        private async Task<bool> RegisterUser()
         {
-            HttpResponseMessage response = await Http.PostAsJsonAsync("user", NewUser);             
-            Debug.WriteLine(response);
-            
+            HttpResponseMessage response = await Http.PostAsJsonAsync("user", NewUser);
             var data = await response.Content.ReadAsStringAsync();
-            Debug.WriteLine(data);
 
             if (data.Equals("false"))
             {
-                Debug.WriteLine("Es cazable");
+                return false;
             }
 
             ClearFields();
+            return true;
         }
 
         private async Task<User?> GetUserByUserName(string Username)
@@ -193,7 +170,7 @@ namespace TODO_V2.Client.Shared.Modals
 
         private ToastMessage CreateToastMessage(ToastType toastType, string message)
         {
-            var toastMessage = new ToastMessage();
+            ToastMessage toastMessage = new();
             toastMessage.Type = toastType;
             toastMessage.Message = message;
 
@@ -202,22 +179,17 @@ namespace TODO_V2.Client.Shared.Modals
         #endregion Toast
 
         #region Aux
+        private bool CheckFieldFormat(string fieldValue, string fieldType, ref string fieldColor)
+        {
+            bool isValid = Validation.CheckFormat(fieldValue, fieldType);
+            fieldColor = isValid ? Colores.lime.ToString() : Colores.white.ToString();
+            return isValid;
+        }
+
         private void ClearFields()
         {
-            UserName = string.Empty;
-            Password = string.Empty;
-            CheckPassword = string.Empty;
-            Name = string.Empty;
-            Surname = string.Empty;
-            Clave = string.Empty;
-
-            UserType = UserTypeEnum.USUARIO.ToString();
-
-            NameColor = Colores.white.ToString();
-            UserNameColor = Colores.white.ToString();
-            PasswordColor = Colores.white.ToString();
-            SurnameColor = Colores.white.ToString();
-            ClaveColor = Colores.white.ToString();            
+            UserName = Password = CheckPassword = Name = Surname = Clave = string.Empty;
+            PasswordColor = UserNameColor = NameColor = SurnameColor = ClaveColor = Colores.white.ToString();
         }
         #endregion Aux
     }

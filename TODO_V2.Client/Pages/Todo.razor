@@ -1,11 +1,13 @@
-﻿@* @page "/Todo"
+﻿@page "/Todo"
 <PageTitle>ToDo List!</PageTitle>
 
 @inject HttpClient Http
 @inject IJSRuntime JS
+@inject NavigationManager NavManager
+@inject ILocalStorageService storageService
 @using TODO_V2.Shared
 
-<Modal @ref="modal" Title="Formulario" Size="ModalSize.ExtraLarge">
+@* <Modal @ref="modal" Title="Formulario" Size="ModalSize.ExtraLarge">
     <BodyTemplate>
         <div id="formDiv">   
             <label for="formTextBox">TaskName</label>
@@ -33,7 +35,7 @@
             <button class="btn btn-danger" @onclick="HideModal">Cancelar</button>
         </div>
     </FooterTemplate>
-</Modal>
+</Modal> *@
 
 <nav class="navbar-inverse">
     <div class="topButtons">
@@ -41,15 +43,19 @@
             <li><button class="btn btn-success" @onclick="(() => OnClickShowModal(Accion.Crear))">Nueva Chore</button></li>
             <li><button class="btn btn-danger" @onclick="@Delete" disabled="@IsDisabledEdit">Borrar</button></li>
             <li><button class="btn btn-warning" @onclick="(() => OnClickShowModal(Accion.Editar))" disabled="@IsDisabledEdit">Editar</button></li>
+            <li>
+                <Button Color="ButtonColor.Primary" @onclick="OnClickExit">Cerrar Sesion</Button>
+            </li>
+    
 
             <li id="SearchBox">
-                <AutoComplete @bind-Value="@nuevaChore.TaskName"
+                @* <AutoComplete @bind-Value="@nuevaChore.TaskName"
                               TItem="Chore"
                               DataProvider="ChoresDataProvider"
                               PropertyName="TaskName"
                               Placeholder="Buscar chore"
                               OnChanged="(Chore chore) => OnAutoCompleteChanged(chore)"
-                              Size="AutoCompleteSize.Default" />
+                              Size="AutoCompleteSize.Default" /> *@
             </li>
         </ul>
     </div>
@@ -72,8 +78,8 @@
             {
                 <tr class="@GetRowClass(chore)" id="fila" @onclick="(() => selectChore(chore))">
                     <td>@chore.TaskName</td>
-                    <td>@chore.Descripcion</td>
-                    <td>@(chore.Finalizado ? IsFinalizado.Si : IsFinalizado.No)</td>
+                    @* <td>@chore.Descripcion</td>
+                    <td>@(chore.Finalizado ? IsFinalizado.Si : IsFinalizado.No)</td> *@
                 </tr>
             }
         </tbody>
@@ -360,4 +366,3 @@
 
 </style>
 
- *@

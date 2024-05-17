@@ -1,183 +1,119 @@
-﻿using TODO_V2.Server.Repository.Interfaces;
+﻿using Microsoft.Extensions.Configuration;
 using Dapper;
-using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Threading.Tasks;
+using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Shared.Models;
-using Microsoft.EntityFrameworkCore;
-using static Dapper.SqlMapper;
-using System.Linq;
-using System.Collections.Generic;
-using TODO_V2.Shared.Models.Enum;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Data.SqlClient;
 
 namespace TODO_V2.Server.Repository.Impl
 {
     public class UserRepository : IUserRepository
     {
-        private readonly IConfiguration _configuration;
-        private string ConnectionString => _configuration.GetConnectionString("TODO_V2DB");
-
+        private readonly string _connectionString;
 
         public UserRepository(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _connectionString = configuration.GetConnectionString("TODO_V2DB");
         }
 
-
-        //public async Task<User> Add(User user)
-        //{
-        //    using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
-        //    {
-        //        string query = @$"INSERT INTO Users (Name, Surname, UserName, Password, UserType) 
-        //                            VALUES ('{user.Name}', '{user.Surname}', '{user.UserName}', '{user.Password}', '{user.UserType}');";
-        //        dbConnection.Execute(query);
-
-        //        return user;
-        //    }
-        //}
+        private IDbConnection CreateConnection()
+        {
+            return new SqlConnection(_connectionString);
+        }
 
         public async Task<bool> Add(User user)
         {
-            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            using (var dbConnection = CreateConnection())
             {
-                string query = @$"INSERT INTO Users (Name, Surname, UserName, Password, UserType) 
-                                    VALUES ('{user.Name}', '{user.Surname}', '{user.UserName}', '{user.Password}', '{user.UserType}');";
-                dbConnection.Execute(query);
+                await dbConnection.ExecuteAsync(@"
+                    INSERT INTO Users (Name, Surname, UserName, Password, UserType) 
+                    VALUES (@Name, @Surname, @UserName, @Password, @UserType)", user);
             }
             return true;
         }
 
         public async Task<User> Update(User user)
         {
-            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            using (var dbConnection = CreateConnection())
             {
-                string query = @$"UPDATE Users SET Name = '{user.Name}', Surname ='{user.Surname}, Username = '{user.UserName}', Password ='{user.Password}', UserType = '{user.UserType}' WHERE Id = '{user.Id}';";
-
-                dbConnection.Execute(query);
-            }         
+                await dbConnection.ExecuteAsync(@"
+                    UPDATE Users SET Name = @Name, Surname = @Surname, UserName = @UserName, 
+                    Password = @Password, UserType = @UserType WHERE Id = @Id", user);
+            }
             return user;
         }
 
-        public void Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            using (var dbConnection = CreateConnection())
             {
-                string query = $"DELETE FROM Users WHERE Id = {id};";
-
-                dbConnection.Execute(query);
+                await dbConnection.ExecuteAsync("DELETE FROM Users WHERE Id = @Id", new { Id = id });
             }
+            return true;
         }
 
-        public void LogicDelete(int id)
+        public async Task<bool> LogicDelete(int id)
         {
-            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            using (var dbConnection = CreateConnection())
             {
-                string query = $"UPDATE Users SET Deleted = 1 WHERE Id = {id};";
-
-                dbConnection.Execute(query);
+                await dbConnection.ExecuteAsync("UPDATE Users SET Deleted = 1 WHERE Id = @Id", new { Id = id });
             }
+            return true;
         }
 
-        public  async Task<IEnumerable<User>> GetAll(GetRequest<User> request)
+        public async Task<IEnumerable<User>> GetAll(GetRequest<User> request)
         {
-            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            using (var dbConnection = CreateConnection())
             {
-                string query = @"SELECT * FROM Users;";
-
-                return dbConnection.Query<User>(query);
+                return await dbConnection.QueryAsync<User>("SELECT * FROM Users");
             }
-            //IQueryable<T> query = _context.Set<T>();
-
-            //if (request.Filter != null)
-            //{
-            //    query = query.Where(request.Filter);
-            //}
-
-            //if (request.OrderBy != null)
-            //{
-            //    query = request.OrderBy(query);
-            //}
-
-            //if (request.Skip.HasValue)
-            //{
-            //    query = query.Skip(request.Skip.Value);
-            //}
-
-            //if (request.Take.HasValue)
-            //{
-            //    query = query.Take(request.Take.Value);
-            //}
-
-            //return query.ToList();
         }
-
 
         public async Task<IEnumerable<User>> GetAllLogic(GetRequest<User> request)
         {
-            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            using (var dbConnection = CreateConnection())
             {
-                string query = @"SELECT * FROM Users WHERE Deleted = 0;";
-
-                return dbConnection.Query<User>(query);
+                return await dbConnection.QueryAsync<User>("SELECT * FROM Users WHERE Deleted = 0");
             }
-
-            //IQueryable<T> query = _context.Set<T>();
-
-            //if (request.Filter != null)
-            //{
-            //    query = query.Where(request.Filter);
-            //}
-
-            //if (request.OrderBy != null)
-            //{
-            //    query = request.OrderBy(query);
-            //}
-
-            //if (request.Skip.HasValue)
-            //{
-            //    query = query.Skip(request.Skip.Value);
-            //}
-
-            //if (request.Take.HasValue)
-            //{
-            //    query = query.Take(request.Take.Value);
-            //}
-
-            //return query.ToList();
         }
 
         public async Task<User?> GetById(int id)
         {
-            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            using (var dbConnection = CreateConnection())
             {
-                string query = $"SELECT * FROM Users WHERE Id = {id} AND Deleted = 0;";                
-
-                User user = dbConnection.QuerySingle<User>(query);
-                return user;
+                return await dbConnection.QueryFirstOrDefaultAsync<User>(
+                    "SELECT * FROM Users WHERE Id = @Id AND Deleted = 0", new { Id = id });
             }
         }
 
         public async Task<User?> GetByUserName(string username)
         {
-            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
-            {           
-                string query = $"SELECT * FROM Users WHERE UserName = '{username}' AND Deleted = 0;";
-
-                User user = dbConnection.QuerySingle<User>(query);
-                return user;
-            }
-        }
-
-        public ActionResult<int> Count()
-        {
-            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            using (var dbConnection = CreateConnection())
             {
-                string query = $"SELECT COUNT(Id) FROM Users";
-                int count = dbConnection.QuerySingle<int>(query);
-
-                return count;
+                return await dbConnection.QueryFirstOrDefaultAsync<User>(
+                    "SELECT * FROM Users WHERE UserName = @UserName AND Deleted = 0", new { UserName = username });
             }
         }
+
+        public async Task<int> Count()
+        {
+            try
+            {
+                using (var dbConnection = CreateConnection())
+                {
+                    const string query = "SELECT COUNT(*) FROM Users";
+                    var count = await dbConnection.ExecuteScalarAsync<int>(query);
+                    return count;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al contar usuarios: {ex.Message}");
+                return 0;
+            }
+        }
+
     }
 }

@@ -1,10 +1,5 @@
-﻿using TODO_V2.Client.Pages;
-using TODO_V2.Server.Components;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
+﻿using TODO_V2.Server.Components;
 using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TODO_V2.Server.Repository.Impl;
@@ -12,95 +7,79 @@ using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Server.Utils;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Server.Services.Impl;
-using TODO_V2.Shared.Models;
-using BlazorBootstrap;
-using TODO_V2.Server.Controllers.Impl;
-using TODO_V2.Server.Controllers.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de JWT desde appsettings.json
+#region Configuración de JWT
 var jwtKey = builder.Configuration["JWT:Key"];
 var jwtIssuer = builder.Configuration["JWT:Issuer"];
 var jwtAudience = builder.Configuration["JWT:Audience"];
 var jwtExpirationHours = int.Parse(builder.Configuration["JWT:ExpirationHours"]);
+#endregion
 
-// Añadir servicios.
-//builder.Services.AddScoped<AuthenticationService>();
-//builder.Services.AddControllersWithViews();
-//builder.Services.AddRazorPages();
-//builder.Services.AddServerSideBlazor();
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddMvc();
-//builder.Services.AddBlazoredLocalStorage();
-//builder.Services.AddAuthorizationCore();
-builder.Services.AddBlazorBootstrap();
-builder.Services.AddHttpClient();
+#region Añadir servicios
+builder.Services.AddBlazorBootstrap(); // Agrega BlazorBootstrap
+builder.Services.AddHttpClient(); // Agrega HttpClient
+builder.Services.AddControllers(); // Agrega controladores MVC
+builder.Services.AddRazorPages(); // Agrega páginas Razor
+builder.Services.AddServerSideBlazor(); // Agrega Blazor Server
+builder.Services.AddEndpointsApiExplorer(); // Agrega API Explorer
+builder.Services.AddBlazoredLocalStorage(); // Agrega BlazoredLocalStorage
+builder.Services.AddAuthorizationCore(); // Agrega autorización
+#endregion
 
-builder.Services.AddScoped<AuthenticationService>();
-builder.Services.AddControllers();
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddMvc();
-builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddAuthorizationCore();
-
-builder.Services.AddScoped(client => new HttpClient
-{
-    BaseAddress = new Uri("https://localhost:7216/")
-});
-
-
-builder.Services.AddAuthentication()
-        .AddCookie(options =>
-        {
-            options.LoginPath = "/Account/Unauthorized/";
-            options.AccessDeniedPath = "/Account/Forbidden/";
-        })
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-                ClockSkew = TimeSpan.Zero
-            };
-        });
-
-// Configurar Dependencias
-//builder.Services.AddDbContext<UserContext>();
-//builder.Services.AddDbContext<ChoreContext>();
-
-builder.Services.AddTransient<IChoreRepository, ChoreRepository>();
-builder.Services.AddTransient<IUserRepository, UserRepository>();
-
-builder.Services.AddTransient<IChoreService, ChoreService>();
-builder.Services.AddTransient<IUserService, UserService>();
-
-builder.Services.AddTransient<EncryptionUtil> ();
-
-
-// Configuración de CORS para admitir cualquier origen
+#region Configuración de CORS
 builder.Services.AddCors(options => options.AddPolicy("corsPolicy", builder =>
 {
     builder.AllowAnyOrigin()
            .AllowAnyMethod()
            .AllowAnyHeader();
-}));
+})); // Configura CORS
+#endregion
 
-// Add services to the container.
+#region Configura componentes de Blazor
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents()
-    .AddInteractiveWebAssemblyComponents();
+    .AddInteractiveServerComponents() // Agrega componentes interactivos para Blazor Server
+    .AddInteractiveWebAssemblyComponents(); // Agrega componentes interactivos para Blazor WebAssembly
+builder.Services.AddScoped(client => new HttpClient
+{
+    BaseAddress = new Uri("https://localhost:7216/")
+}); // Configura HttpClient
+#endregion
+
+#region Configura autenticación
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddCookie(options =>
+{
+    options.LoginPath = "/Account/Unauthorized/";
+    options.AccessDeniedPath = "/Account/Forbidden/";
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+#endregion
+
+#region Configura repositorios y servicios
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<EncryptionUtil>();
+#endregion
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+#region Configuración del entorno
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -110,23 +89,27 @@ else
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
+#endregion
+
+#region Configuración de middleware
 app.UseCors("corsPolicy");
 app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapRazorPages();
-app.MapControllers();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
+#endregion
 
+#region Mapea páginas y controladores
+app.MapRazorPages();
+app.MapControllers();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
-    .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(TODO_V2.Client._Imports).Assembly);
+    .AddInteractiveServerRenderMode() // Agrega modo de renderización interactiva para Blazor Server
+    .AddInteractiveWebAssemblyRenderMode() // Agrega modo de renderización interactiva para Blazor WebAssembly
+    .AddAdditionalAssemblies(typeof(TODO_V2.Client._Imports).Assembly); // Agrega ensamblados adicionales
+#endregion
 
 app.Run();

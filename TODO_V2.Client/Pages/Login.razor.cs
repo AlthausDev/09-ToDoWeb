@@ -2,10 +2,12 @@
 using BlazorWebPage.Shared.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.JSInterop;
-using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
+using System.Security.Claims;
+using TODO_V2.Client.DTO;
 using TODO_V2.Client.Shared.Modals;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Utils;
@@ -27,18 +29,18 @@ namespace TODO_V2.Client.Pages
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             //Si no hay usuarios, cargarlos
-            if(!await ExistAnyData())            
-                await UserData.CargarDatosAsync(Http);
-                        
+            //if (!await ExistAnyData())
+            //    await UserData.CargarDatosAsync(Http); 
+            await CheckToken();
         }
 
         #region Login     
         private async Task OnClickLogin()
         {
-            //NavManager.NavigateTo($"/admin/", true);    
+            var loginResult = await LoginUser(UserName, Password);            
+            HandleLoginResult(loginResult);
         }
-        #endregion Login
-
+        #endregion
 
         #region Register
         private async Task OnClickRegister()
@@ -70,28 +72,34 @@ namespace TODO_V2.Client.Pages
         private async Task<bool> ExistAnyData()
         {   
             return await Http.GetFromJsonAsync<int>("user") > 0;
-        }      
+        }
 
-        #endregion Api     
-
-        #region Token
-        private async Task GenerateTokenAsync(User usuario)
+        private async Task<ActionResult<User>> LoginUser(string Username, string Password)
         {
-            HttpResponseMessage response = await Http.PostAsJsonAsync("user/login", usuario);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                TokenResponse tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
-
-                await JS.InvokeVoidAsync("localStorage.setItem", new object[] { "token", tokenResponse.Token });
-                Http.DefaultRequestHeaders.Add("Authorization", $"Bearer {tokenResponse.Token}");
+                var credentials = new LoginCredentials { Username = Username.ToUpper(), Password = Password };
+                var response = await Http.PostAsJsonAsync("user/login", credentials);
+                if (response.IsSuccessStatusCode)
+                {
+                    await GenerateTokenAsync();
+                    var loggedUser = await response.Content.ReadFromJsonAsync<User>();
+                    return new ActionResult<User>(loggedUser);
+                }
+                else
+                {
+                    return new ActionResult<User>(new NotFoundResult());
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Error al generar el token");
+                Console.WriteLine($"Error al intentar iniciar sesión: {ex.Message}");
+                return new ActionResult<User>(new StatusCodeResult(500));
             }
         }
-        #endregion Token
 
+
+        #endregion Api     
 
         #region Toast
         private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
@@ -107,9 +115,98 @@ namespace TODO_V2.Client.Pages
         #endregion Toast
 
         #region Aux
+        private async Task GenerateTokenAsync()
+        {
+            HttpResponseMessage response = await Http.PostAsJsonAsync("user/login", user);
+            TokenResponse tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
+
+            await JS.InvokeVoidAsync("localStorage.setItem", new object[] { "token", tokenResponse.Token });
+            Http.DefaultRequestHeaders.Add("Authorization", $"Bearer {tokenResponse.Token}");
+
+            //HttpResponseMessage response = await Http.PostAsJsonAsync("user/login", usuario);
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    TokenResponse tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
+
+            //    await JS.InvokeVoidAsync("localStorage.setItem", new object[] { "token", tokenResponse.Token });
+            //    Http.DefaultRequestHeaders.Add("Authorization", $"Bearer {tokenResponse.Token}");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Error al generar el token");
+            //}
+        }
+
+        //private async Task CheckToken()
+        //{
+        //    try
+        //    {
+        //        var response = await Http.GetAsync("user/CheckToken");
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //           NavManager.NavigateTo("/todo");
+        //        }               
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error al comprobar el token: {ex.Message}");
+        //    }
+        //}
+
+        private async Task CheckToken()
+        {
+            try
+            {
+                string getToken = await storageService.GetItemAsStringAsync("token");
+
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(getToken);
+                List<Claim> claims = jwtSecurityToken.Claims.ToList();
+
+                Console.WriteLine(claims);
+                int Id = int.Parse(claims.ElementAt(0).Value);
+
+                NavManager.NavigateTo("/todo");
+            }
+            catch (Exception ex)
+            {
+                Http.DefaultRequestHeaders.Remove("Authorization");
+            }
+        }
+
+        private async Task GetToken()
+        {
+            try
+            {
+                string getToken = await storageService.GetItemAsStringAsync("token");
+
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(getToken);
+                List<Claim> claims = jwtSecurityToken.Claims.ToList();
+
+                Console.WriteLine(claims);
+                int Id = int.Parse(claims.ElementAt(0).Value);
+
+            }
+            catch (Exception ex)
+            {
+                Http.DefaultRequestHeaders.Remove("Authorization");
+            }
+        }
         #endregion Aux   
 
-        #region Handlers    
+        #region Handlers  
+        private void HandleLoginResult(ActionResult<User> loginResult)
+        {
+            if (loginResult.Value != null)
+            {
+                NavManager.NavigateTo("/todo");
+            }
+            else
+            {
+                ShowMessage(ToastType.Danger, "Credenciales incorrectas. Por favor, inténtelo de nuevo.");
+            }
+        }
         #endregion Handlers
     }
 }

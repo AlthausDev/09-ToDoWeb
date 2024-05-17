@@ -1,5 +1,11 @@
-﻿using System.Security.Cryptography;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
+using TODO_V2.Shared.Models;
+using static System.Net.WebRequestMethods;
+using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Server.Utils
 {
@@ -64,5 +70,32 @@ namespace TODO_V2.Server.Utils
                 }
             }
         }
-    }
+
+        public async Task<string?> GenerateTokenAsync(User user, IConfiguration configuration)
+        {
+            SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(configuration["JWT:Key"]));
+            SigningCredentials credentials = new(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var principal = new ClaimsPrincipal(new ClaimsIdentity(null, "Basic"));
+            var isAuthenticated = principal.Identity.IsAuthenticated;
+
+            Claim[] claims =
+             [
+                 new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, user.UserType)
+            ];
+
+            var expires = DateTime.UtcNow.AddHours(int.Parse(configuration["JWT:ExpirationHours"]));
+
+            JwtSecurityToken token = new(
+                issuer: configuration["JWT:Issuer"],
+                audience: configuration["JWT:Audience"],
+                claims: claims,
+                expires: expires,
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+    }  
 }

@@ -7,10 +7,8 @@ using TODO_V2.Shared.Models.Enum;
 namespace TODO_V2.Shared.Utils
 {
     public static class Validation
-    {
-        //private static Regex Alphabetical { get; set; } = new Regex(@"^[a-zA-Z\s,]*$");
-        //private static Regex AlphaNumeric { get; set; } = new Regex(@"^[a-zA-Z0-9\s,]*$");
-        private static Regex Numeric { get; set; } = new Regex(@"^[0-9\s,]*$");       
+    {       
+        private static Regex Numeric { get; set; } = new Regex(@"^[0-9\s,]*$");
 
 
         public static bool CheckFormat(string word, string FieldType)
@@ -18,7 +16,7 @@ namespace TODO_V2.Shared.Utils
             if (!string.IsNullOrWhiteSpace(word) && word.Length >= 3)
             {
                 return FieldType switch
-                { 
+                {
                     "Alphabetical" => word.All(Char.IsLetter),
                     "AlphaNumeric" => word.All(Char.IsLetterOrDigit),
                     "All" => Numeric.IsMatch(word),
@@ -27,6 +25,7 @@ namespace TODO_V2.Shared.Utils
             }
             return false;
         }
+
 
         public static bool CheckKey(string key)
         {
