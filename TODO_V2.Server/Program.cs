@@ -19,33 +19,35 @@ var jwtExpirationHours = int.Parse(builder.Configuration["JWT:ExpirationHours"])
 #endregion
 
 #region Añadir servicios
-builder.Services.AddBlazorBootstrap(); // Agrega BlazorBootstrap
-builder.Services.AddHttpClient(); // Agrega HttpClient
-builder.Services.AddControllers(); // Agrega controladores MVC
-builder.Services.AddRazorPages(); // Agrega páginas Razor
-builder.Services.AddServerSideBlazor(); // Agrega Blazor Server
-builder.Services.AddEndpointsApiExplorer(); // Agrega API Explorer
-builder.Services.AddBlazoredLocalStorage(); // Agrega BlazoredLocalStorage
-builder.Services.AddAuthorizationCore(); // Agrega autorización
+builder.Services.AddBlazorBootstrap(); 
+builder.Services.AddHttpClient();
+builder.Services.AddControllers(); 
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddAuthorizationCore();
 #endregion
 
 #region Configuración de CORS
 builder.Services.AddCors(options => options.AddPolicy("corsPolicy", builder =>
 {
-    builder.AllowAnyOrigin()
-           .AllowAnyMethod()
-           .AllowAnyHeader();
-})); // Configura CORS
+    builder.AllowAnyMethod()
+           .AllowAnyHeader()
+           .SetIsOriginAllowed(origin => true)
+           .AllowAnyOrigin();        
+           
+})); 
 #endregion
 
 #region Configura componentes de Blazor
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents() // Agrega componentes interactivos para Blazor Server
-    .AddInteractiveWebAssemblyComponents(); // Agrega componentes interactivos para Blazor WebAssembly
+    .AddInteractiveServerComponents()
+    .AddInteractiveWebAssemblyComponents();
 builder.Services.AddScoped(client => new HttpClient
 {
     BaseAddress = new Uri("https://localhost:7216/")
-}); // Configura HttpClient
+}); 
 #endregion
 
 #region Configura autenticación
@@ -107,9 +109,9 @@ app.UseAntiforgery();
 app.MapRazorPages();
 app.MapControllers();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode() // Agrega modo de renderización interactiva para Blazor Server
-    .AddInteractiveWebAssemblyRenderMode() // Agrega modo de renderización interactiva para Blazor WebAssembly
-    .AddAdditionalAssemblies(typeof(TODO_V2.Client._Imports).Assembly); // Agrega ensamblados adicionales
+    .AddInteractiveServerRenderMode() 
+    .AddInteractiveWebAssemblyRenderMode()
+    .AddAdditionalAssemblies(typeof(TODO_V2.Client._Imports).Assembly);
 #endregion
 
 app.Run();

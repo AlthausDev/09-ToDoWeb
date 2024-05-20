@@ -1,6 +1,8 @@
 ﻿using BlazorBootstrap;
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
+using TODO_V2.Client.Layout;
 using TODO_V2.Shared.Models;
 using ToastType = BlazorBootstrap.ToastType;
 
@@ -8,6 +10,8 @@ namespace TODO_V2.Client.Pages
 {
     public partial class Todo
     {
+        [Parameter]
+        public string Id { get; set; }
         public List<Chore> Chores { get; set; } = new List<Chore>();
 
         private Chore nuevaChore { get; set; } = new Chore();
@@ -25,7 +29,6 @@ namespace TODO_V2.Client.Pages
                 }
             }
         }
-
 
         private Chore? selectedChore { get; set; } = null;
         public Chore? SelectedChore
@@ -59,11 +62,7 @@ namespace TODO_V2.Client.Pages
 
 
         protected override async Task OnInitializedAsync()
-        {
-            //Http.DefaultRequestHeaders.Remove("Authorization");
-            //Http.DefaultRequestHeaders.Add("Authorization", $"Bearer {await storageService.GetItemAsStringAsync("token")}");
-
-
+        {   
             //await getData();
             //await InitializeGraph();
         }

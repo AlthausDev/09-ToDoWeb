@@ -4,6 +4,7 @@ using System.Text;
 
 namespace TODO_V2.Shared.Models.Enum
 {
+    //Incluir claves en tabla MySQL
     public enum Keys
     {
         a72b9f4c3e1d6,

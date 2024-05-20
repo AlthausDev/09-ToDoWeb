@@ -6,6 +6,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TODO_V2.Shared.Models
 {
+    //Modificar clase, la contraseña no debe estar en el mismo objeto, se debe guardar en una tabla MySQl
     public class User : BaseModel
     {        
         public string Name { get; set; }

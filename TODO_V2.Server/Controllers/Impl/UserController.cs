@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using TODO_V2.Client.DTO;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Shared.Models;
+using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Server.Controllers.Impl
 {
@@ -49,7 +52,7 @@ namespace TODO_V2.Server.Controllers.Impl
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<object>> Login(LoginCredentials credentials)
+        public async Task<ActionResult<LoginResponse>> Login(LoginCredentials credentials)
         {
             try
             {
@@ -64,8 +67,8 @@ namespace TODO_V2.Server.Controllers.Impl
         }
 
 
-
-        [HttpGet("Count")]
+        [AllowAnonymous]
+        [HttpGet("count")]
         public Task<int> Count()
         {
             return _userService.Count();
@@ -93,19 +96,6 @@ namespace TODO_V2.Server.Controllers.Impl
                 _logger.LogError($"Error during logout: {ex.Message}");
                 return StatusCode(500, "An error occurred while logging out");
             }
-        }
-
-
-
-
-        [HttpGet("CheckToken")]
-        public IActionResult CheckToken()
-        {
-            if (HttpContext.Request.Headers.ContainsKey("Authorization"))
-            {    
-                return Redirect("/");
-            }  
-            return Ok();
         }
 
 

@@ -105,7 +105,7 @@ namespace TODO_V2.Server.Repository.Impl
                 {
                     const string query = "SELECT COUNT(*) FROM Users";
                     var count = await dbConnection.ExecuteScalarAsync<int>(query);
-                    return count;
+                    return count;                 
                 }
             }
             catch (Exception ex)

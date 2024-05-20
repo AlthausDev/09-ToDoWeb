@@ -15,6 +15,7 @@ using TODO_V2.Server.Utils;
 using TODO_V2.Shared;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Models.Enum;
+using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Server.Services.Impl
 {
@@ -113,32 +114,37 @@ namespace TODO_V2.Server.Services.Impl
             return UserRepository.Count();      
         }
 
-        public async Task<ActionResult<User>> Login(string username, string password)
+        public async Task<ActionResult<LoginResponse>> Login(string username, string password)
         {
             try
             {
-                var user = await UserRepository.GetByUserName(username);
+                User user = await UserRepository.GetByUserName(username);
 
                 if (user == null)
                 {
                     return new UnauthorizedResult();
                 }
 
-                var decryptedPassword = EncryptionUtil.Decrypt(user.Password);
+                string decryptedPassword = EncryptionUtil.Decrypt(user.Password);
                 if (password != decryptedPassword)
                 {
                     return new UnauthorizedResult();
                 }
 
+                string tokenString = await EncryptionUtil.BuildToken(user, configuration);
 
-                var token = await EncryptionUtil.GenerateTokenAsync(user, configuration);
-
-                if (token == null)
+                if (tokenString == null)
                 {
                     return new StatusCodeResult(500);
                 }
-                
-                return user;
+
+                var response = new LoginResponse
+                {
+                    User = user,
+                    Token = tokenString
+                };
+
+                return response;            
             }
             catch (Exception ex)
             {

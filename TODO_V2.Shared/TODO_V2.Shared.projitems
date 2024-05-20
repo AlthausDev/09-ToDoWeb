@@ -17,7 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\FieldType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\Keys.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\GetRequest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utils\TokenResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\LoginResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\UserTypeEnum.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Validation.cs" />

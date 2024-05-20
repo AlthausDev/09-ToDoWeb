@@ -1,12 +1,13 @@
-﻿@page "/"
+﻿@page "/login"
 @inject HttpClient Http
-@inject IJSRuntime JS
 @inject NavigationManager NavManager
 @inject ILocalStorageService storageService
+@inject IJSRuntime JS
 
 <PageTitle>TODO APP</PageTitle>
 
-<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false"/>
+
+<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" />
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
 
@@ -37,6 +38,7 @@
         </a>
     </form>
 </div>
+
 
 
 <style>  

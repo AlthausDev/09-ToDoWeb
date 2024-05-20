@@ -17,7 +17,7 @@ namespace TODO_V2.Server.Utils
         {
             byte[] clearBytes = Encoding.Unicode.GetBytes(data);
 
-            using(var encryptor = Aes.Create())
+            using (var encryptor = Aes.Create())
             {
                 byte[] IV = new byte[15];
                 new Random().NextBytes(IV);
@@ -39,17 +39,17 @@ namespace TODO_V2.Server.Utils
                     string result = Convert.ToBase64String(IV) + Convert.ToBase64String(memoryStream.ToArray());
                     return result;
                 }
-            }            
+            }
         }
 
         public string Decrypt(string data)
-        {            
+        {
 
             byte[] IV = Convert.FromBase64String(data[..20]);
             data = data[20..].Replace(" ", "+");
             byte[] cipherBytes = Convert.FromBase64String(data);
 
-            using (var  encryptor = Aes.Create())
+            using (var encryptor = Aes.Create())
             {
                 var pdb = new Rfc2898DeriveBytes(_secret, IV);
 
@@ -71,7 +71,7 @@ namespace TODO_V2.Server.Utils
             }
         }
 
-        public async Task<string?> GenerateTokenAsync(User user, IConfiguration configuration)
+        public async Task<string?> BuildToken(User user, IConfiguration configuration)
         {
             SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(configuration["JWT:Key"]));
             SigningCredentials credentials = new(securityKey, SecurityAlgorithms.HmacSha256);
@@ -81,9 +81,10 @@ namespace TODO_V2.Server.Utils
 
             Claim[] claims =
              [
-                 new Claim(ClaimTypes.Name, user.UserName),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Role, user.UserType)
-            ];
+             ];
 
             var expires = DateTime.UtcNow.AddHours(int.Parse(configuration["JWT:ExpirationHours"]));
 
@@ -97,5 +98,5 @@ namespace TODO_V2.Server.Utils
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-    }  
+    }
 }
