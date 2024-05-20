@@ -1,4 +1,8 @@
-﻿@using TODO_V2.Client.Pages
+﻿@using TODO_V2.Shared.Models
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
+
+@using TODO_V2.Client.Pages
 @using TODO_V2.Shared
 
 @inject HttpClient Http
@@ -49,27 +53,26 @@
 </div>
 
 <style>
-    :root{       
+    :root {
         --password-color: @PasswordColor;
     }
 
-    .modal-body{
-        display: contents;        
+    .modal-body {
+        display: contents;
     }
 
     .modal-header {
-        display:none;        
+        display: none;
     }
 
     .register-box {
-        
         width: 600px;
-        padding: 40px;     
+        padding: 40px;
         background: rgba(0,0,0,1);
         box-sizing: border-box;
         box-shadow: 0 15px 25px rgba(3,233,244,.5);
         border-radius: 10px;
-        border: 1px solid #03e9f4;        
+        border: 1px solid #03e9f4;
     }
 
         .register-box h2 {
@@ -95,7 +98,7 @@
                 outline: none;
                 background: transparent;
             }
-            
+
 
             .register-box .user-box label {
                 position: absolute;
@@ -184,12 +187,15 @@
 
     keyframes btn-anim1, btn-anim2, btn-anim3, btn-anim4 {
         0%
+
     {
         left: -100%;
     }
-        50%, 100% {
+
+    50%, 100% {
         left: 100%;
-        }
     }
-}
+
+    }
+    }
 </style>

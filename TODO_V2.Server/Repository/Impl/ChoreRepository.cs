@@ -25,7 +25,7 @@
 //            {
 //                try
 //                {
-//                    string query = @$"INSERT INTO Chores (CategoryID, UserID, State, TaskName, ExpirationDate) VALUES ('{chore.CategoryID}', '{chore.UserID}', '{chore.State}', '{chore.TaskName}', '{chore.ExpirationDate};";
+//                    string query = @$"INSERT INTO Chores (CategoryID, UserID, State, ChoreName, ExpirationDate) VALUES ('{chore.CategoryID}', '{chore.UserID}', '{chore.State}', '{chore.ChoreName}', '{chore.ExpirationDate};";
 //                    dbConnection.Execute(query);
 //                }
 //                catch (Exception) { }
@@ -37,7 +37,7 @@
 //        {
 //            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
 //            {
-//                string query = @$"UPDATE Chores SET CategoryID = '{chore.CategoryID}', UserID = '{chore.UserID}', State = '{chore.State}', TaskName = '{chore.TaskName}', ExpirationDate = '{chore.ExpirationDate}';";
+//                string query = @$"UPDATE Chores SET CategoryID = '{chore.CategoryID}', UserID = '{chore.UserID}', State = '{chore.State}', ChoreName = '{chore.ChoreName}', ExpirationDate = '{chore.ExpirationDate}';";
 
 //                dbConnection.Execute(query);
 //            }

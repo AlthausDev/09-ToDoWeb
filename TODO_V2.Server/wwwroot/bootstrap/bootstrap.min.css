@@ -5767,9 +5767,10 @@ texchore.form-control-lg {
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 0px;
     pointer-events: auto;
-    background-color: #fff;
+    /*background-color: #fff;*/
+    background-color: rgba(0,0,0,.8);
     background-clip: padding-box;
     border: 1px solid rgba(0,0,0,.2);
     border-radius: .3rem;

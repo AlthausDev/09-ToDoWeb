@@ -6,10 +6,8 @@
 
 <PageTitle>TODO APP</PageTitle>
 
-
-<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" />
+<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true" I />
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
-
 
 <div class="login-box">
     <h2>LOGIN</h2>
@@ -131,7 +129,7 @@
                 width: 100%;
                 height: 2px;
                 background: linear-gradient(90deg, transparent, #03e9f4);
-                animation: btn-anim1 1s linear infinite;
+                /* animation: btn-anim1 1s linear infinite; */
             }
    
     .login-box a span:nth-child(2) {
@@ -140,8 +138,8 @@
         width: 2px;
         height: 100%;
         background: linear-gradient(180deg, transparent, #03e9f4);
-        animation: btn-anim2 1s linear infinite;    
-        animation-delay: 1500ms
+      /*   animation: btn-anim2 1s linear infinite;    
+        animation-delay: 1500ms */
     }  
 
     .login-box a span:nth-child(3) {
@@ -150,8 +148,8 @@
         width: 100%;
         height: 2px;
         background: linear-gradient(270deg, transparent, #03e9f4);
-        animation: btn-anim3 1s linear infinite;
-         animation-delay: 3000ms
+       /*  animation: btn-anim3 1s linear infinite;
+         animation-delay: 3000ms */
     }
   
 
@@ -161,8 +159,8 @@
         width: 2px;
         height: 100%;
         background: linear-gradient(360deg, transparent, #03e9f4);
-        animation: btn-anim4 1s linear infinite;        
-        animation-delay: 4500ms
+        /* animation: btn-anim4 1s linear infinite;        
+        animation-delay: 4500ms */
     }
 
     keyframes btn-anim1, btn-anim2, btn-anim3, btn-anim4 {

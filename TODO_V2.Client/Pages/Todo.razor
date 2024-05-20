@@ -1,18 +1,53 @@
-﻿@page "/todo/{Id}"
+﻿ @page "/todo/{Id}"
 <PageTitle>ToDo List!</PageTitle>
 
 @inject HttpClient Http
-@inject IJSRuntime JS
 @inject NavigationManager NavManager
+@inject IJSRuntime JS
 @inject ILocalStorageService storageService
-@using TODO_V2.Shared
+
+
+<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true" I />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
+
+<button class="btn btn-primary" @onclick="ShowNewChoreModal">Nueva Tarea</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tarea</th>
+            <th>Categoría</th>
+            <th>Fecha Creación</th>
+            <th>Fecha Vencimiento</th>
+            <th>Estado</th>
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var chore in Chores)
+        {
+            <tr>
+                <td>@chore.ChoreName</td>
+                <td>@chore.CategoryID</td>
+                <td>@chore.ExpirationDate.ToShortDateString()</td>
+              
+                <td>@chore.State</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" @onclick="() => ShowEditChoreModal(chore)">Editar</button>
+                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteChore(chore)">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 
 @* <Modal @ref="modal" Title="Formulario" Size="ModalSize.ExtraLarge">
     <BodyTemplate>
         <div id="formDiv">   
-            <label for="formTextBox">TaskName</label>
+            <label for="formTextBox">ChoreName</label>
             <input type="text" id="formTextBox" Placeholder='Campo de texto de prueba'
-                   @bind="@NuevaChore.TaskName" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
+                   @bind="@NuevaChore.ChoreName" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
         </div>
 
         <div id="formDiv">
@@ -35,7 +70,7 @@
             <button class="btn btn-danger" @onclick="HideModal">Cancelar</button>
         </div>
     </FooterTemplate>
-</Modal> *@
+</Modal> 
 
 <nav class="navbar-inverse">
     <div class="topButtons">
@@ -49,13 +84,13 @@
     
 
             <li id="SearchBox">
-                @* <AutoComplete @bind-Value="@nuevaChore.TaskName"
+                @* <AutoComplete @bind-Value="@nuevaChore.ChoreName"
                               TItem="Chore"
                               DataProvider="ChoresDataProvider"
-                              PropertyName="TaskName"
+                              PropertyName="ChoreName"
                               Placeholder="Buscar chore"
                               OnChanged="(Chore chore) => OnAutoCompleteChanged(chore)"
-                              Size="AutoCompleteSize.Default" /> *@
+                              Size="AutoCompleteSize.Default" /> 
             </li>
         </ul>
     </div>
@@ -68,7 +103,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>TaskName</th>
+                <th>ChoreName</th>
                 <th>Descripcion</th>
                 <th>Finalizado</th>
             </tr>
@@ -77,9 +112,9 @@
             @foreach (var chore in Chores)
             {
                 <tr class="@GetRowClass(chore)" id="fila" @onclick="(() => selectChore(chore))">
-                    <td>@chore.TaskName</td>
+                    <td>@chore.ChoreName</td>
                     @* <td>@chore.Descripcion</td>
-                    <td>@(chore.Finalizado ? IsFinalizado.Si : IsFinalizado.No)</td> *@
+                    <td>@(chore.Finalizado ? IsFinalizado.Si : IsFinalizado.No)</td> 
                 </tr>
             }
         </tbody>
@@ -366,3 +401,4 @@
 
 </style>
 
+ *@

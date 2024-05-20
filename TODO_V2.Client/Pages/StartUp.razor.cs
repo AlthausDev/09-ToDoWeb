@@ -1,18 +1,34 @@
-﻿using BlazorWebPage.Shared.Data;
+﻿using BlazorBootstrap;
+using BlazorWebPage.Shared.Data;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using TODO_V2.Shared.Models;
 
 namespace TODO_V2.Client.Pages
 {
     public partial class StartUp
-    {     
+    {
+
+        public static Modal ModalInstance = default!;  
+        public static List<ToastMessage> messages = new();
+
+
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    //Si no hay usuarios, cargarlos
+        //    //NavManager.NavigateTo("/login");
+        //    //if (!await ExistAnyData())
+        //    //    await UserData.CargarDatosAsync(Http);
+        //    await CheckToken();
+        //}
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            //Si no hay usuarios, cargarlos
-            if (!await ExistAnyData())
-                await UserData.CargarDatosAsync(Http);
+            //    //Si no hay usuarios, cargarlos
+            //    if (!await ExistAnyData())
+            //        await UserData.CargarDatosAsync(Http);
             await CheckToken();
         }
 
@@ -30,7 +46,7 @@ namespace TODO_V2.Client.Pages
 
                 if (string.IsNullOrEmpty(getToken))
                 {
-                    NavManager.NavigateTo("/login", false);
+                    NavManager.NavigateTo("/login");
                     return;
                 }
 
@@ -44,7 +60,7 @@ namespace TODO_V2.Client.Pages
             catch (Exception)
             {
                 Http.DefaultRequestHeaders.Remove("Authorization");
-                NavManager.NavigateTo("/login", true);
+                NavManager.NavigateTo("/login");
             }
         }
     }

@@ -3,3 +3,6 @@
 @inject NavigationManager NavManager
 @inject ILocalStorageService storageService
 @inject IJSRuntime JS
+
+<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />

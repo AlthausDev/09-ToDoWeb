@@ -18,15 +18,42 @@ namespace TODO_V2.Client.Pages
 {
     public partial class Login 
     {
-  
-        public Modal ModalInstance = default!;
+        
         public static User user = new();
 
-        List<ToastMessage> messages = new();
+        //public Modal ModalInstance = default!;
+        //List<ToastMessage> messages = new();
+        public Modal ModalInstance = default!;
+        List<ToastMessage> messages = StartUp.messages;
 
         private string UserName { get; set; } = string.Empty;
         private string Password { get; set; } = string.Empty;
 
+
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    NavManager.LocationChanged += OnLocationChanged;
+        //    await base.OnInitializedAsync();
+        //}
+
+        //protected override async Task OnAfterRenderAsync(bool firstRender)
+        //{
+        //    if (firstRender)
+        //    {
+        //        await JS.InvokeVoidAsync("initializeBootstrapComponents");
+        //    }
+        //}
+
+        //private async void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+        //{
+        //    await JS.InvokeVoidAsync("initializeBootstrapComponents");
+        //    StateHasChanged();
+        //}
+
+        //public void Dispose()
+        //{
+        //    NavManager.LocationChanged -= OnLocationChanged;
+        //}
 
         //protected override async Task OnInitializedAsync()
         //{
@@ -60,15 +87,6 @@ namespace TODO_V2.Client.Pages
         {
             var loginResult = await LoginUser(UserName, Password);            
             HandleLoginResult(loginResult);
-
-            if (loginResult.Value != null)
-            {               
-                NavManager.NavigateTo($"/todo/{loginResult.Value.Id}");
-            }
-            else
-            {
-                ShowMessage(ToastType.Danger, "Credenciales incorrectas. Por favor, inténtelo de nuevo.");
-            }
         }
         #endregion
 

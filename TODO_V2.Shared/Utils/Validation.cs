@@ -13,7 +13,7 @@ namespace TODO_V2.Shared.Utils
 
         public static bool CheckFormat(string word, string FieldType)
         {
-            if (!string.IsNullOrWhiteSpace(word) && word.Length >= 3)
+            if (!string.IsNullOrWhiteSpace(word) && word.Length >= 3 && word.Length <= 25)
             {
                 return FieldType switch
                 {
