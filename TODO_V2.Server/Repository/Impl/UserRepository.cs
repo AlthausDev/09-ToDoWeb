@@ -6,6 +6,7 @@ using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using TODO_V2.Server.Models;
 
 namespace TODO_V2.Server.Repository.Impl
 {
@@ -23,24 +24,36 @@ namespace TODO_V2.Server.Repository.Impl
             return new SqlConnection(_connectionString);
         }
 
-        public async Task<bool> Add(User user)
+        public async Task<bool> Add(User user, UserCredentials userCredentials)
         {
             using (var dbConnection = CreateConnection())
             {
+                var userId = await dbConnection.ExecuteScalarAsync<int>(@"
+                    INSERT INTO Users (UserName, Name, Surname, UserType) 
+                    VALUES (@UserName, @Name, @Surname, @UserType); 
+                    SELECT SCOPE_IDENTITY()", user);
+
+
+                userCredentials.UserId = userId;
+
                 await dbConnection.ExecuteAsync(@"
-                    INSERT INTO Users (Name, Surname, UserName, Password, UserType) 
-                    VALUES (@Name, @Surname, @UserName, @Password, @UserType)", user);
+                    INSERT INTO UserCredentials (UserId, UserName, EncryptedPassword) 
+                    VALUES (@UserId, @UserName, @EncryptedPassword)", userCredentials);
             }
             return true;
         }
 
-        public async Task<User> Update(User user)
+
+        public async Task<User> Update(User user, UserCredentials userCredentials)
         {
             using (var dbConnection = CreateConnection())
             {
                 await dbConnection.ExecuteAsync(@"
-                    UPDATE Users SET Name = @Name, Surname = @Surname, UserName = @UserName, 
-                    Password = @Password, UserType = @UserType WHERE Id = @Id", user);
+            UPDATE Users SET Name = @Name, Surname = @Surname, UserName = @UserName, UserType = @UserType, UpdatedAt = GETDATE() 
+            WHERE Id = @Id", user);
+
+                await dbConnection.ExecuteAsync(@"
+            UPDATE UserCredentials SET EncryptedPassword = @EncryptedPassword, UpdatedAt = GETDATE() WHERE UserId = @Id", userCredentials);
             }
             return user;
         }
@@ -49,7 +62,8 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (var dbConnection = CreateConnection())
             {
-                await dbConnection.ExecuteAsync("DELETE FROM Users WHERE Id = @Id", new { Id = id });
+                await dbConnection.ExecuteAsync($"DELETE FROM Users WHERE Id = {id}");
+                await dbConnection.ExecuteAsync($"DELETE FROM UserCredentials WHERE UserId = {id}");
             }
             return true;
         }
@@ -58,7 +72,8 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (var dbConnection = CreateConnection())
             {
-                await dbConnection.ExecuteAsync("UPDATE Users SET Deleted = 1 WHERE Id = @Id", new { Id = id });
+                await dbConnection.ExecuteAsync("UPDATE Users SET IsDeleted = 1, DeletedAt = GETDATE() WHERE Id = @Id", new { Id = id });
+                await dbConnection.ExecuteAsync("UPDATE UserCredentials SET IsDeleted = 1, DeletedAt = GETDATE() WHERE UserId = @Id", new { Id = id });
             }
             return true;
         }
@@ -75,7 +90,7 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (var dbConnection = CreateConnection())
             {
-                return await dbConnection.QueryAsync<User>("SELECT * FROM Users WHERE Deleted = 0");
+                return await dbConnection.QueryAsync<User>("SELECT * FROM Users WHERE IsDeleted = 0");
             }
         }
 
@@ -84,7 +99,7 @@ namespace TODO_V2.Server.Repository.Impl
             using (var dbConnection = CreateConnection())
             {
                 return await dbConnection.QueryFirstOrDefaultAsync<User>(
-                    "SELECT * FROM Users WHERE Id = @Id AND Deleted = 0", new { Id = id });
+                    $"SELECT * FROM Users WHERE Id = {id} AND IsDeleted = 0");
             }
         }
 
@@ -93,9 +108,20 @@ namespace TODO_V2.Server.Repository.Impl
             using (var dbConnection = CreateConnection())
             {
                 return await dbConnection.QueryFirstOrDefaultAsync<User>(
-                    "SELECT * FROM Users WHERE UserName = @UserName AND Deleted = 0", new { UserName = username });
+                    "SELECT * FROM Users WHERE UserName = @UserName AND IsDeleted = 0", new { UserName = username });
             }
         }
+
+        public async Task<UserCredentials> GetUserCredentialsByUserName(string username)
+        {
+            using (var dbConnection = CreateConnection())
+            {
+                return await dbConnection.QueryFirstOrDefaultAsync<UserCredentials>(
+                    "SELECT * FROM UserCredentials WHERE UserName = @UserName AND IsDeleted = 0",
+                    new { UserName = username });
+            }
+        }
+
 
         public async Task<int> Count()
         {
@@ -105,7 +131,7 @@ namespace TODO_V2.Server.Repository.Impl
                 {
                     const string query = "SELECT COUNT(*) FROM Users";
                     var count = await dbConnection.ExecuteScalarAsync<int>(query);
-                    return count;                 
+                    return count;
                 }
             }
             catch (Exception ex)
@@ -114,6 +140,5 @@ namespace TODO_V2.Server.Repository.Impl
                 return 0;
             }
         }
-
     }
 }

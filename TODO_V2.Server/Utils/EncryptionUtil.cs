@@ -11,7 +11,12 @@ namespace TODO_V2.Server.Utils
 {
     public sealed class EncryptionUtil
     {
-        private const string _secret = "fwr8734rf46ef84ser86f46se84fs598";
+        public readonly string _secret;
+
+        public EncryptionUtil(IConfiguration configuration)
+        {
+            _secret = configuration["Encryption:Secret"];
+        }
 
         public string Encrypt(string data)
         {
@@ -80,11 +85,11 @@ namespace TODO_V2.Server.Utils
             var isAuthenticated = principal.Identity.IsAuthenticated;
 
             Claim[] claims =
-             [
+           {
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.UserType)
-             ];
+                new(ClaimTypes.Name, user.UserName),
+                new(ClaimTypes.Role, user.UserType.ToString())
+            };
 
             var expires = DateTime.UtcNow.AddHours(int.Parse(configuration["JWT:ExpirationHours"]));
 

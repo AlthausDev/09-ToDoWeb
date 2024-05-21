@@ -9,14 +9,20 @@
     <Import_RootNamespace>TODO_V2.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Data\CategoryData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\TaskItemData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\UserCredentialsData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\UserData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\BaseModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Categories.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Chore.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\Colores.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\FieldType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Category.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\TaskStateEnum.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Request\UserCredentialsRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\UserCredentials.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TaskItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\ColorsEnum.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\FieldTypeEnum.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\Keys.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\GetRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Request\GetRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\LoginResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\UserTypeEnum.cs" />

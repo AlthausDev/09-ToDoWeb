@@ -1,40 +1,51 @@
-﻿using TODO_V2.Shared.Models;
+﻿using System.Net.Http.Json;
+using System.Threading.Tasks;
+using TODO_V2.Server.Models;
+using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Models.Enum;
 using static System.Net.WebRequestMethods;
-using System.Net.Http.Json;
-
+using TODO_V2.Shared.Models.Request;
 
 namespace BlazorWebPage.Shared.Data
 {
     public class UserData
     {
         public static User[] Users { get; set; }
+        
 
-        public static async Task CargarDatosAsync(HttpClient http)
+        public static async Task LoadTestUsers(HttpClient http)
         {
-            string UserType = UserTypeEnum.USUARIO.ToString();
+            await UserCredentialsData.LoadTestCredentials(http);
 
-            Users = [
-                //new(Name, Surname, UserName, Password),
-                new("John", "Doe", "Admin", "111", UserTypeEnum.ADMINISTRADOR.ToString()),
-                new("Jane", "Smith", "jane", "111", UserType),
-                new("Mike", "Johnson", "mike", "222", UserType),
-                new("Sarah", "Williams", "sarah", "333", UserType),
-                new("David", "Brown", "david", "444", UserType),
-                new("Emily", "Jones", "emily", "555", UserType),
-                new("Tom", "Wilson", "tom", "666", UserType),
-                new("Laura", "Davis", "laura", "777", UserType),
-                new("Chris", "Moore", "chris", "888", UserType),
-                new("Rachel", "Taylor", "rachel", "9999", UserType),
-                new("Liam", "Anderson", "liam", "0000", UserType)
+            Users = [            
+                new("Admin", "John", "Doe", UserTypeEnum.ADMINISTRADOR),
+                new("jane", "Jane", "Smith", UserTypeEnum.USUARIO),
+                new("mike", "Mike", "Johnson", UserTypeEnum.USUARIO),
+                new("sarah", "Sarah", "Williams", UserTypeEnum.USUARIO),
+                new("david", "David", "Brown", UserTypeEnum.USUARIO),
+                new("emily", "Emily", "Jones", UserTypeEnum.USUARIO),
+                new("tom", "Tom", "Wilson", UserTypeEnum.USUARIO),
+                new("laura", "Laura", "Davis", UserTypeEnum.USUARIO),
+                new("chris", "Chris", "Moore", UserTypeEnum.USUARIO),
+                new("rachel", "Rachel", "Taylor", UserTypeEnum.USUARIO),         
+                new("emma", "Emma", "White", UserTypeEnum.USUARIO),
+                new("will", "William", "Wilson", UserTypeEnum.USUARIO),
+                new("olivia", "Olivia", "Brown", UserTypeEnum.USUARIO),
+                new("james", "James", "Jones", UserTypeEnum.USUARIO),
+                new("isabella", "Isabella", "Taylor", UserTypeEnum.USUARIO),
+                new("alex", "Alexander", "Martinez", UserTypeEnum.USUARIO),
+                new("sophia", "Sophia", "Anderson", UserTypeEnum.USUARIO),
+                new("ben", "Benjamin", "Davis", UserTypeEnum.USUARIO),
+                new("amelia", "Amelia", "Garcia", UserTypeEnum.USUARIO),
+                new("mia", "Mia", "Rodriguez", UserTypeEnum.USUARIO),
+                new("aaa", "Test", "User", UserTypeEnum.USUARIO)
             ];
 
-            foreach (User User in Users)
+            for (int i = 0; i < Users.Length; i++)
             {
-                User.UserName = User.UserName.ToUpper();
-                await http.PostAsJsonAsync("user", User);
-            }
+                UserCredentialsRequest request = new(Users[i], UserCredentialsData.Credentials[i]);
+                HttpResponseMessage response = await http.PostAsJsonAsync("user", request);
+            }            
         }
-
     }
 }

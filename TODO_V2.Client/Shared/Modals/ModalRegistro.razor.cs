@@ -8,6 +8,8 @@ using static System.Net.WebRequestMethods;
 using TODO_V2.Shared.Models;
 using System.Net.Http.Json;
 using System.Diagnostics;
+using TODO_V2.Client.DTO;
+using TODO_V2.Shared.Models.Request;
 
 namespace TODO_V2.Client.Shared.Modals
 {
@@ -22,6 +24,7 @@ namespace TODO_V2.Client.Shared.Modals
         private string UserType { get; set; } = UserTypeEnum.USUARIO.ToString();
 
         private User? NewUser;
+        private LoginCredentials? Credentials { get; set; }
 
         private string? PasswordColor, UserNameColor, NameColor, SurnameColor, ClaveColor;
         private bool IsInputValid = false;
@@ -44,11 +47,11 @@ namespace TODO_V2.Client.Shared.Modals
             if (!isPasswordValid || !isUserNameValid || !isNameValid || !isSurnameValid || !isClaveValid)
             {
                 ShowMessage(ToastType.Danger, "Por favor, complete todos los campos correctamente.");
-                if (!isPasswordValid) PasswordColor = Colores.crimson.ToString();
-                if (!isUserNameValid) UserNameColor = Colores.crimson.ToString();
-                if (!isNameValid) NameColor = Colores.crimson.ToString();
-                if (!isSurnameValid) SurnameColor = Colores.crimson.ToString();
-                if (!isClaveValid) ClaveColor = Colores.crimson.ToString();
+                if (!isPasswordValid) PasswordColor = ColorsEnum.crimson.ToString();
+                if (!isUserNameValid) UserNameColor = ColorsEnum.crimson.ToString();
+                if (!isNameValid) NameColor = ColorsEnum.crimson.ToString();
+                if (!isSurnameValid) SurnameColor = ColorsEnum.crimson.ToString();
+                if (!isClaveValid) ClaveColor = ColorsEnum.crimson.ToString();
                 return;
             }
 
@@ -58,7 +61,8 @@ namespace TODO_V2.Client.Shared.Modals
                 return;
             }
 
-            NewUser = new(Name, Surname, UserName.ToUpper(), Password, UserTypeEnum.USUARIO.ToString());
+            NewUser = new(UserName.ToUpper(), Name, Surname, UserTypeEnum.USUARIO);
+            Credentials = new(UserName.ToUpper(), Password);
 
             if (await RegisterUser())
             {
@@ -69,7 +73,7 @@ namespace TODO_V2.Client.Shared.Modals
             else
             {
                 ShowMessage(ToastType.Danger, "El Username introducido ya existe. Por favor, introduzca un nuevo Username");
-                UserNameColor = Colores.crimson.ToString();
+                UserNameColor = ColorsEnum.crimson.ToString();
             }
         }
 
@@ -99,34 +103,34 @@ namespace TODO_V2.Client.Shared.Modals
         {
             if (string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(CheckPassword))
             {
-                PasswordColor = Colores.white.ToString();
+                PasswordColor = ColorsEnum.white.ToString();
                 return false;
             }
 
-            if (!CheckFieldFormat(Password, FieldType.AlphaNumeric.ToString(), ref PasswordColor))
+            if (!CheckFieldFormat(Password, FieldTypeEnum.AlphaNumeric.ToString(), ref PasswordColor))
             {
                 return false;
             }
 
             bool passwordsMatch = Password.Equals(CheckPassword);
-            PasswordColor = passwordsMatch ? Colores.lime.ToString() : Colores.crimson.ToString();
+            PasswordColor = passwordsMatch ? ColorsEnum.lime.ToString() : ColorsEnum.crimson.ToString();
             return passwordsMatch;
         }
 
 
         private bool CheckUserNameHandler()
         {
-            return CheckFieldFormat(UserName, FieldType.AlphaNumeric.ToString(), ref UserNameColor);
+            return CheckFieldFormat(UserName, FieldTypeEnum.AlphaNumeric.ToString(), ref UserNameColor);
         }
 
         private bool CheckNameHandler()
         {
-            return CheckFieldFormat(Name, FieldType.Alphabetical.ToString(), ref NameColor);
+            return CheckFieldFormat(Name, FieldTypeEnum.Alphabetical.ToString(), ref NameColor);
         }
 
         private bool CheckSurnameHandler()
         {
-            return CheckFieldFormat(Surname, FieldType.Alphabetical.ToString(), ref SurnameColor);
+            return CheckFieldFormat(Surname, FieldTypeEnum.Alphabetical.ToString(), ref SurnameColor);
         }
 
         private bool CheckClaveHandler()
@@ -137,7 +141,7 @@ namespace TODO_V2.Client.Shared.Modals
             }
             else
             {
-                ClaveColor = Colores.white.ToString();
+                ClaveColor = ColorsEnum.white.ToString();
                 return false;
             }
         }
@@ -147,22 +151,49 @@ namespace TODO_V2.Client.Shared.Modals
         #region Api
         private async Task<bool> RegisterUser()
         {
-            HttpResponseMessage response = await Http.PostAsJsonAsync("user", NewUser);
-            var data = await response.Content.ReadAsStringAsync();
-
-            if (data.Equals("false"))
+            try
             {
+                UserCredentialsRequest request = new(NewUser, Credentials);
+
+                HttpResponseMessage response = await Http.PostAsJsonAsync("user", request);
+                response.EnsureSuccessStatusCode();
+
+                var data = await response.Content.ReadAsStringAsync();               
+                return data.Equals("true");
+            }
+            catch (HttpRequestException)
+            {
+                ClearFields();
                 return false;
             }
-
-            ClearFields();
-            return true;
         }
 
         private async Task<User?> GetUserByUserName(string Username)
         {
-            return await Http.GetFromJsonAsync<User>($"user/{Username}");
+            try
+            {
+                return await Http.GetFromJsonAsync<User>($"user/{Username}");
+            }
+            catch (HttpRequestException)
+            {               
+                return null;
+            }
         }
+
+        //private async Task<bool> RegisterUser()
+        //{
+        //    HttpResponseMessage response = await Http.PostAsJsonAsync("user", NewUser);
+        //    var data = await response.Content.ReadAsStringAsync();
+
+        //    if (data.Equals("false"))
+        //    {
+        //        return false;
+        //    }
+
+        //    ClearFields();
+        //    return true;
+        //}
+        
         #endregion Api
 
         #region Toast
@@ -182,14 +213,14 @@ namespace TODO_V2.Client.Shared.Modals
         private bool CheckFieldFormat(string fieldValue, string fieldType, ref string fieldColor)
         {
             bool isValid = Validation.CheckFormat(fieldValue, fieldType);
-            fieldColor = isValid ? Colores.lime.ToString() : Colores.white.ToString();
+            fieldColor = isValid ? ColorsEnum.lime.ToString() : ColorsEnum.white.ToString();
             return isValid;
         }
 
         private void ClearFields()
         {
             UserName = Password = CheckPassword = Name = Surname = Clave = string.Empty;
-            PasswordColor = UserNameColor = NameColor = SurnameColor = ClaveColor = Colores.white.ToString();
+            PasswordColor = UserNameColor = NameColor = SurnameColor = ClaveColor = ColorsEnum.white.ToString();
         }
         #endregion Aux
     }

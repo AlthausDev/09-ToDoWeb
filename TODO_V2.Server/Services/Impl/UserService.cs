@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using TODO_V2.Client.DTO;
+using TODO_V2.Server.Models;
 using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Server.Utils;
@@ -35,20 +37,22 @@ namespace TODO_V2.Server.Services.Impl
         }
 
 
-        public async Task<bool> Add(User user)
+        public async Task<bool> Add(User user, LoginCredentials credentials)
         {
             if (await GetByUserName(user.UserName) == null)
             {
-                user.Password = EncryptionUtil.Encrypt(user.Password);
-                return await UserRepository.Add(user);
+                UserCredentials userCredentials = CreateUserCredentials(credentials);
+                return await UserRepository.Add(user, userCredentials);
             }
             return false;
         }
 
-        public async Task<User> Update(User user)
+
+        public async Task<User> Update(User user, LoginCredentials credentials)
         {
-            user.Password = EncryptionUtil.Encrypt(user.Password);
-            return await UserRepository.Update(user);
+            UserCredentials userCredentials = await GetUserCredentialsByUserName(credentials.Username);
+            userCredentials.EncryptedPassword = EncryptionUtil.Encrypt(credentials.Password);
+            return await UserRepository.Update(user, userCredentials);
         }
 
         public void Delete(int userId)
@@ -79,10 +83,11 @@ namespace TODO_V2.Server.Services.Impl
 
                 if (user != null)
                 {
-                    user.Password = EncryptionUtil.Decrypt(user.Password);
+                    //user.Password = EncryptionUtil.Decrypt(user.Password);
+                    return user;
+                    
                 }
-
-                return user;
+                return null;
             }
             catch (Exception)
             {
@@ -92,21 +97,7 @@ namespace TODO_V2.Server.Services.Impl
 
         public async Task<User?> GetByUserName(string username)
         {
-            try
-            {
-                User? user = await UserRepository.GetByUserName(username);
-
-                if (user != null)
-                {
-                    user.Password = EncryptionUtil.Decrypt(user.Password);
-                }
-
-                return user;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return await UserRepository.GetByUserName(username);           
         }
 
         public Task<int> Count()
@@ -114,51 +105,60 @@ namespace TODO_V2.Server.Services.Impl
             return UserRepository.Count();      
         }
 
-        public async Task<ActionResult<LoginResponse>> Login(string username, string password)
+        public async Task<ActionResult<LoginResponse>> Login(LoginCredentials credentials)
         {
             try
             {
-                User user = await UserRepository.GetByUserName(username);
+                UserCredentials userCredentials = await UserRepository.GetUserCredentialsByUserName(credentials.Username);
+
+                if (userCredentials == null)
+                {
+                    return new UnauthorizedResult();
+                }
+
+                if (!credentials.Password.Equals(EncryptionUtil.Decrypt(userCredentials.EncryptedPassword)))
+                {                    
+                    return new UnauthorizedResult();
+                }
+
+                User user = await UserRepository.GetByUserName(credentials.Username);
 
                 if (user == null)
                 {
                     return new UnauthorizedResult();
                 }
 
-                string decryptedPassword = EncryptionUtil.Decrypt(user.Password);
-                if (password != decryptedPassword)
-                {
-                    return new UnauthorizedResult();
-                }
-
+               
                 string tokenString = await EncryptionUtil.BuildToken(user, configuration);
 
                 if (tokenString == null)
                 {
+                 
                     return new StatusCodeResult(500);
                 }
-
+                
                 var response = new LoginResponse
                 {
                     User = user,
                     Token = tokenString
                 };
 
-                return response;            
+               
+                return response;
             }
             catch (Exception ex)
-            {
+            {                
                 Console.WriteLine($"Error al intentar iniciar sesión: {ex.Message}");
                 return new StatusCodeResult(500);
             }
         }
 
+
         public async Task<bool> Logout()
         {
             try
             {
-                await localStorageService.ClearAsync();
-                await localStorageService.RemoveItemAsync("Token");
+                await localStorageService.ClearAsync();                
                 await localStorageService.RemoveItemAsync("token");
                 return true;
             }
@@ -167,6 +167,16 @@ namespace TODO_V2.Server.Services.Impl
                 Console.WriteLine($"Error al intentar cerrar sesión: {ex.Message}");
                 return false;
             }
+        }
+
+        private async Task<UserCredentials> GetUserCredentialsByUserName(string username)
+        {
+            return await UserRepository.GetUserCredentialsByUserName(username);
+        }
+
+        private UserCredentials CreateUserCredentials(LoginCredentials credentials)
+        {
+            return new UserCredentials(credentials.Username, EncryptionUtil.Encrypt(credentials.Password));
         }
 
     }

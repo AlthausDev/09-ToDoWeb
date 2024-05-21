@@ -7,7 +7,18 @@ namespace TODO_V2.Shared.Models
     public abstract class BaseModel
     {
         public int Id { get; set; }
-        public DateOnly Registro { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-        public DateOnly Modificacion { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public string? Name { get; set; }
+
+        public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+
+        //Update
+        public DateOnly? UpdatedAt { get; set; }
+        public int? UpdatedBy { get; set; }
+
+
+        //Delete
+        public bool IsDeleted { get; set; } = false;
+        public DateOnly? DeletedAt { get; set; }
+        public int? DeletedBy { get; set; }
     }
 }

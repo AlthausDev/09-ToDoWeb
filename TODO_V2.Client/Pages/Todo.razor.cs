@@ -12,10 +12,10 @@ namespace TODO_V2.Client.Pages
     {
         [Parameter]
         public string Id { get; set; }
-        public List<Chore> Chores { get; set; } = new List<Chore>();
+        public List<TaskItem> Chores { get; set; } = new List<TaskItem>();
 
-        private Chore newChore { get; set; } = new Chore();
-        private Chore NewChore
+        private TaskItem newChore { get; set; } = new TaskItem();
+        private TaskItem NewChore
         {
             get
             {
@@ -30,8 +30,8 @@ namespace TODO_V2.Client.Pages
             }
         }
 
-        private Chore? selectedChore { get; set; } = null;
-        public Chore? SelectedChore
+        private TaskItem? selectedChore { get; set; } = null;
+        public TaskItem? SelectedChore
         {
             get
             {
@@ -64,40 +64,40 @@ namespace TODO_V2.Client.Pages
 
         private void ShowNewChoreModal()
         {
-            //choreFormRef.SetChore(new Chore { CreationDate = DateTime.Now });
+            //choreFormRef.SetChore(new TaskItem { CreationDate = DateTime.Now });
             //modalRef.Show();
         }
 
-        private void ShowEditChoreModal(Chore chore)
+        private void ShowEditChoreModal(TaskItem TaskItem)
         {
-            //choreFormRef.SetChore(chore);
+            //choreFormRef.SetChore(TaskItem);
             //modalRef.Show();
         }
 
         private void SaveChore()
         {
-            //var chore = choreFormRef.GetChore();
-            //if (!Chores.Contains(chore))
+            //var TaskItem = choreFormRef.GetChore();
+            //if (!Chores.Contains(TaskItem))
             //{
-            //    Chores.Add(chore);
+            //    Chores.Add(TaskItem);
             //}
             //modalRef.Hide();
         }
 
-        private void DeleteChore(Chore chore)
+        private void DeleteChore(TaskItem TaskItem)
         {
-            Chores.Remove(chore);
+            Chores.Remove(TaskItem);
         }
 
 
-        //        protected override async Chore OnInitializedAsync()
+        //        protected override async TaskItem OnInitializedAsync()
         //        {   
         //            //await getData();
         //            //await InitializeGraph();
         //        }
 
         //        #region OnClick
-        //        private async Chore OnClickExit()
+        //        private async TaskItem OnClickExit()
         //        {
         //            var response = await Http.DeleteAsync("/user/logout");
         //            await storageService.RemoveItemAsync("token");
@@ -108,9 +108,9 @@ namespace TODO_V2.Client.Pages
         //        #endregion
 
         //        #region ApiOperations    
-        //        private async Chore getData()
+        //        private async TaskItem getData()
         //        {
-        //            Chore[]? choresArray = await Http.GetFromJsonAsync<Chore[]>("chore");
+        //            TaskItem[]? choresArray = await Http.GetFromJsonAsync<TaskItem[]>("TaskItem");
 
         //            if (choresArray is not null)
         //            {
@@ -119,22 +119,22 @@ namespace TODO_V2.Client.Pages
         //        }
 
 
-        //        private async Chore Post()
+        //        private async TaskItem Post()
         //        {
         //            Chores.Add(newChore);
-        //            await Http.PostAsJsonAsync("Chore", NewChore);
+        //            await Http.PostAsJsonAsync("TaskItem", NewChore);
         //            await getData();
         //        }
 
-        //        private async Chore Put()
+        //        private async TaskItem Put()
         //        {
-        //            await Http.PutAsJsonAsync("Chore", NewChore);
+        //            await Http.PutAsJsonAsync("TaskItem", NewChore);
 
         //            Chores.Insert(Chores.IndexOf(selectedChore), newChore);
         //            Chores.Remove(selectedChore);
         //        }
 
-        //        private async Chore Delete()
+        //        private async TaskItem Delete()
         //        {
         //            if (selectedChore != null)
         //            {
@@ -153,7 +153,7 @@ namespace TODO_V2.Client.Pages
         //        #endregion ApiOperations
 
         //        #region Modal
-        //        private async Chore execChore()
+        //        private async TaskItem execChore()
         //        {
         //            if (accion.Equals(Accion.Crear))
         //            {
@@ -169,7 +169,7 @@ namespace TODO_V2.Client.Pages
         //        }
 
 
-        //        private async Chore OnClickShowModal(Enum accion)
+        //        private async TaskItem OnClickShowModal(Enum accion)
         //        {
         //            this.accion = accion;
 
@@ -180,38 +180,38 @@ namespace TODO_V2.Client.Pages
 
         //            if (accion.Equals(Accion.Crear))
         //            {
-        //                NewChore = new Chore();
+        //                NewChore = new TaskItem();
         //            }
 
         //            await modal.ShowAsync();
         //        }
 
-        //        private async Chore HideModal()
+        //        private async TaskItem HideModal()
         //        {
         //            accion = Accion.Espera;
         //            SelectedChore = null;
-        //            NewChore = new Chore();
+        //            NewChore = new TaskItem();
         //            await modal.HideAsync();
         //        }
         //        #endregion Modal       
 
         //        #region SelectRow
-        //        private void selectChore(Chore chore)
+        //        private void selectChore(TaskItem TaskItem)
         //        {
-        //            SelectedChore = chore;
-        //            //Console.WriteLine(chore.Name);
+        //            SelectedChore = TaskItem;
+        //            //Console.WriteLine(TaskItem.Name);
         //        }
 
-        //        private string GetRowClass(Chore chore)
+        //        private string GetRowClass(TaskItem TaskItem)
         //        {
-        //            return chore == SelectedChore ? "selected-row" : "";
+        //            return TaskItem == SelectedChore ? "selected-row" : "";
         //        }
         //        #endregion SelectRow
 
         //        #region AutoComplete
-        //        private async Chore<AutoCompleteDataProviderResult<Chore>> ChoresDataProvider(AutoCompleteDataProviderRequest<Chore> request)
+        //        private async TaskItem<AutoCompleteDataProviderResult<TaskItem>> ChoresDataProvider(AutoCompleteDataProviderRequest<TaskItem> request)
         //        {
-        //            return await Chore.FromResult(request.ApplyTo(Chores.OrderBy(chore => chore.ChoreName)));
+        //            return await TaskItem.FromResult(request.ApplyTo(Chores.OrderBy(TaskItem => TaskItem.TaskItemName)));
         //        }
 
         //        #endregion AutoComplete
@@ -231,7 +231,7 @@ namespace TODO_V2.Client.Pages
 
         //        #region Graph     
         //        //TODO no se cuentan correctamente el numero de lineas
-        //        protected async Chore InitializeGraph()
+        //        protected async TaskItem InitializeGraph()
         //        {
         //            chartData = new ChartData { Labels = GetDataLabels(), Datasets = GetDataSet() };
 
@@ -270,9 +270,9 @@ namespace TODO_V2.Client.Pages
         //        {
         //            List<double> data = new();
 
-        //            //double count = (from Chore chore in Chores
-        //            //                where chore
-        //            //                select chore).Count();
+        //            //double count = (from TaskItem TaskItem in Chores
+        //            //                where TaskItem
+        //            //                select TaskItem).Count();
 
         //            //data.Add(Chores.Count - count);
         //            //data.Add(count);
@@ -311,14 +311,14 @@ namespace TODO_V2.Client.Pages
 
         //        private void ValueChangeHandler()
         //        {
-        //            IsDisabled = (String.IsNullOrWhiteSpace(NewChore.ChoreName) || String.IsNullOrWhiteSpace(NewChore.State));
+        //            IsDisabled = (String.IsNullOrWhiteSpace(NewChore.TaskItemName) || String.IsNullOrWhiteSpace(NewChore.State));
         //        }
 
-        //        private async Chore OnAutoCompleteChanged(Chore chore)
+        //        private async TaskItem OnAutoCompleteChanged(TaskItem TaskItem)
         //        {
-        //            SelectedChore = chore;
-        //            //await JS.InvokeVoidAsync($"searchFuction('{SelectedChore.ChoreName}')");
-        //            Console.WriteLine($"'{chore?.ChoreName}' selected.");
+        //            SelectedChore = TaskItem;
+        //            //await JS.InvokeVoidAsync($"searchFuction('{SelectedChore.TaskItemName}')");
+        //            Console.WriteLine($"'{TaskItem?.TaskItemName}' selected.");
         //        }
         //        #endregion Handlers
 

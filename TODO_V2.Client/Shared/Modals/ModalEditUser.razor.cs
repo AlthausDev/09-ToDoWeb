@@ -19,7 +19,7 @@
 //        public string Password { get; set; } = string.Empty;
 
 //        [Parameter]
-//        public string ChoreName { get; set; } = string.Empty;
+//        public string TaskItemName { get; set; } = string.Empty;
 
 //        [Parameter]
 //        public string UserType { get; set; } = string.Empty;
@@ -35,7 +35,7 @@
 //        #region Handlers
 //        protected void OnClickEdit()
 //        {
-//            //User user = new(Id, UserName, Password, ChoreName, UserType, DateTimeOffset.Now.ToString("dd-MM-yyyy"));
+//            //User user = new(Id, UserName, Password, TaskItemName, UserType, DateTimeOffset.Now.ToString("dd-MM-yyyy"));
 //            //Sesion.user = user;
 //            Editar.InvokeAsync();
 //        }

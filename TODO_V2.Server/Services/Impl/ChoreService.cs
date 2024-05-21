@@ -17,14 +17,14 @@
 //            this.choreRepository = choreRepository;
 //        }
 
-//        public Task<bool> Add(Chore chore)
+//        public Task<bool> Add(TaskItem TaskItem)
 //        {
-//            return choreRepository.Add(chore);
+//            return choreRepository.Add(TaskItem);
 //        }
 
-//        public Task<Chore> Update(Chore chore)
+//        public Task<TaskItem> Update(TaskItem TaskItem)
 //        {           
-//            return choreRepository.Update(chore);
+//            return choreRepository.Update(TaskItem);
 //        }
 
 //        public void Delete(int choreId)
@@ -37,17 +37,17 @@
 //            choreRepository.LogicDelete(choreId);
 //        }
 
-//        public Task<IEnumerable<Chore>> GetAll(GetRequest<Chore>? request)
+//        public Task<IEnumerable<TaskItem>> GetAll(GetRequest<TaskItem>? request)
 //        {
 //            return choreRepository.GetAll(request);
 //        }
 
-//        public Task<IEnumerable<Chore>> GetAllLogic(GetRequest<Chore>? request)
+//        public Task<IEnumerable<TaskItem>> GetAllLogic(GetRequest<TaskItem>? request)
 //        {
 //            return choreRepository.GetAllLogic(request);
 //        }
 
-//        public Chore GetById(int choreId)
+//        public TaskItem GetById(int choreId)
 //        {  
 //            return choreRepository.GetById(choreId).Result;
 //        }

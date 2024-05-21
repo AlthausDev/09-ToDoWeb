@@ -4,10 +4,10 @@ using System.Text;
 
 namespace TODO_V2.Shared.Models.Enum
 {
-   public enum Colores
+    public enum FieldTypeEnum
     {
-        crimson,
-        white,
-        lime
+        Alphabetical,
+        AlphaNumeric,
+        All
     }
 }

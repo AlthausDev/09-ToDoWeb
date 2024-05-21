@@ -61,9 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Users.sql" />
+    <Build Include="dbo\Tables\UserCredentials.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Categories.sql" />
-    <Build Include="dbo\Tables\Chores.sql" />
+    <Build Include="dbo\Tables\Tasks.sql" />
   </ItemGroup>
 </Project>

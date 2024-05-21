@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using TODO_V2.Client.DTO;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Shared.Models;
+using TODO_V2.Shared.Models.Request;
 using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Server.Controllers.Impl
@@ -13,17 +15,15 @@ namespace TODO_V2.Server.Controllers.Impl
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IUserService _userService;
-        private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;  
 
-        public UserController(ILogger<UserController> logger, IUserService userService, IConfiguration configuration)
+        public UserController(ILogger<UserController> logger, IUserService userService)
         {
             _logger = logger;
-            _userService = userService;
-            _configuration = configuration;
+            _userService = userService;        
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet]
         public async Task<IEnumerable<User>> GetAll([FromBody] GetRequest<User>? request = null)
         {
             return await _userService.GetAll(request);
@@ -56,7 +56,7 @@ namespace TODO_V2.Server.Controllers.Impl
         {
             try
             {
-                var result = await _userService.Login(credentials.Username, credentials.Password);
+                var result = await _userService.Login(credentials);
                 return result.Value != null ? Ok(result.Value) : Unauthorized("Invalid credentials");
             }
             catch (Exception ex)
@@ -100,15 +100,25 @@ namespace TODO_V2.Server.Controllers.Impl
 
 
         [HttpPost]
-        public async Task<ActionResult<bool>> Post(User entity)
+        public async Task<ActionResult<bool>> Post(UserCredentialsRequest request)
         {
-            return await _userService.Add(entity);
+            User user = request.user;
+            LoginCredentials credentials = request.Credentials;
+            
+            return await _userService.Add(user, credentials);
         }
 
         [HttpPut]
-        public async Task<ActionResult<User>> Put(User entity)
+        public async Task<ActionResult<User>> Put(UserCredentialsRequest request)
         {
-            var result = await _userService.Update(entity);
+            User user = request.user;
+            Debug.WriteLine(user.ToString());
+            LoginCredentials credentials = new(request.Credentials.Username, request.Credentials.Password);            
+            
+            Debug.WriteLine(credentials.ToString());
+
+
+            var result = await _userService.Update(user, credentials);
             if (result == null)
             {
                 return NotFound();
@@ -117,10 +127,23 @@ namespace TODO_V2.Server.Controllers.Impl
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
+            var user = await _userService.GetById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
             _userService.Delete(id);
             return NoContent();
         }
+
+        //[HttpDelete("{id}")]
+        //public ActionResult Delete(int id)
+        //{
+        //    _userService.Delete(id);
+        //    return NoContent();
+        //}
     }
 }

@@ -20,25 +20,25 @@
 //        }
 
 //        [HttpPost("GetAll")]
-//        public async Task<IEnumerable<Chore>>? GetAll([FromBody] GetRequest<Chore>? request = null)
+//        public async Task<IEnumerable<TaskItem>>? GetAll([FromBody] GetRequest<TaskItem>? request = null)
 //        {
 //            return await service.GetAll(request);
 //        }
 
 //        [HttpGet("{id}")]
-//        public ActionResult<Chore> Get(int id)
+//        public ActionResult<TaskItem> Get(int id)
 //        {
 //            return service.GetById(id);
 //        }
 
 //        [HttpPost]
-//        public async Task<bool> Post(Chore entity)
+//        public async Task<bool> Post(TaskItem entity)
 //        {
 //            return await service.Add(entity);
 //        }
 
 //        [HttpPut]
-//        public async Task<Chore>? Put(Chore entity)
+//        public async Task<TaskItem>? Put(TaskItem entity)
 //        {
 //            return await service.Update(entity);
 //        }

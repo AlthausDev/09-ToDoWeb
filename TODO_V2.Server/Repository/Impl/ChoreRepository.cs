@@ -19,13 +19,13 @@
 //            _configuration = configuration;
 //        }
 
-//        public async Task<bool> Add(Chore chore)
+//        public async Task<bool> Add(TaskItem TaskItem)
 //        {
 //            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
 //            {
 //                try
 //                {
-//                    string query = @$"INSERT INTO Chores (CategoryID, UserID, State, ChoreName, ExpirationDate) VALUES ('{chore.CategoryID}', '{chore.UserID}', '{chore.State}', '{chore.ChoreName}', '{chore.ExpirationDate};";
+//                    string query = @$"INSERT INTO Chores (CategoryID, UserID, State, TaskItemName, ExpirationDate) VALUES ('{TaskItem.CategoryID}', '{TaskItem.UserID}', '{TaskItem.State}', '{TaskItem.TaskItemName}', '{TaskItem.ExpirationDate};";
 //                    dbConnection.Execute(query);
 //                }
 //                catch (Exception) { }
@@ -33,15 +33,15 @@
 //            return true;
 //        }
 
-//        public async Task<Chore> Update(Chore chore)
+//        public async Task<TaskItem> Update(TaskItem TaskItem)
 //        {
 //            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
 //            {
-//                string query = @$"UPDATE Chores SET CategoryID = '{chore.CategoryID}', UserID = '{chore.UserID}', State = '{chore.State}', ChoreName = '{chore.ChoreName}', ExpirationDate = '{chore.ExpirationDate}';";
+//                string query = @$"UPDATE Chores SET CategoryID = '{TaskItem.CategoryID}', UserID = '{TaskItem.UserID}', State = '{TaskItem.State}', TaskItemName = '{TaskItem.TaskItemName}', ExpirationDate = '{TaskItem.ExpirationDate}';";
 
 //                dbConnection.Execute(query);
 //            }
-//            return chore;
+//            return TaskItem;
 //        }
 
 //        public void Delete(int id)
@@ -64,13 +64,13 @@
 //            }  
 //        }
 
-//        public async Task<IEnumerable<Chore>> GetAll(GetRequest<Chore> request)
+//        public async Task<IEnumerable<TaskItem>> GetAll(GetRequest<TaskItem> request)
 //        {
 //            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
 //            {
 //                string query = @"SELECT * FROM Chores;";
 
-//                return dbConnection.Query<Chore>(query);
+//                return dbConnection.Query<TaskItem>(query);
 //            }
 //            //IQueryable<T> query = _context.Set<T>();
 
@@ -98,13 +98,13 @@
 //        }
 
 
-//        public async Task<IEnumerable<Chore>> GetAllLogic(GetRequest<Chore> request)
+//        public async Task<IEnumerable<TaskItem>> GetAllLogic(GetRequest<TaskItem> request)
 //        {
 //            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
 //            {
 //                string query = @"SELECT * FROM Chores WHERE Deleted = 0;";
 
-//                return dbConnection.Query<Chore>(query);
+//                return dbConnection.Query<TaskItem>(query);
 //            }
 
 //            //IQueryable<T> query = _context.Set<T>();
@@ -132,14 +132,14 @@
 //            //return query.ToList();
 //        }
 
-//        public async Task<Chore?> GetById(int id)
+//        public async Task<TaskItem?> GetById(int id)
 //        {
 //            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
 //            {
 //                string query = $"SELECT * FROM Chores WHERE Id = {id} AND Deleted = 0;"; 
-//                Chore chore = dbConnection.QuerySingle<Chore>(query);               
+//                TaskItem TaskItem = dbConnection.QuerySingle<TaskItem>(query);               
 
-//                return chore;
+//                return TaskItem;
 //            }
 //        }
 
