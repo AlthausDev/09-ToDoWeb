@@ -2,7 +2,14 @@
 {
     public class LoginCredentials
     {
-        public string Username { get; set; }
+        private string _username;
+
+        public string Username
+        {
+            get => _username;
+            set => _username = value.ToUpper();
+        }
+
         public string Password { get; set; }
 
         public LoginCredentials(string username, string password)

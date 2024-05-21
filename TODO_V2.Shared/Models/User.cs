@@ -6,14 +6,20 @@ namespace TODO_V2.Shared.Models
 {
     public class User : BaseModel
     {
-        public string UserName { get; set; }
+        private string _userName;
+        public string UserName
+        {
+            get => _userName;
+            set => _userName = value.ToUpper();
+        }
+
         public string Surname { get; set; }        
-        public UserTypeEnum UserType { get; set; }
+        public string UserType { get; set; }
 
 
         public User() { }
 
-        public User(string userName, string name, string surname, UserTypeEnum userType)
+        public User(string userName, string name, string surname, string userType)
         {
             Name = name;
             Surname = surname;

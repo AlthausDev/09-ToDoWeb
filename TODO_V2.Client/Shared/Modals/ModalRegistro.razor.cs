@@ -61,8 +61,8 @@ namespace TODO_V2.Client.Shared.Modals
                 return;
             }
 
-            NewUser = new(UserName.ToUpper(), Name, Surname, UserTypeEnum.USUARIO);
-            Credentials = new(UserName.ToUpper(), Password);
+            NewUser = new(UserName, Name, Surname, UserTypeEnum.USUARIO.ToString());
+            Credentials = new(UserName, Password);
 
             if (await RegisterUser())
             {

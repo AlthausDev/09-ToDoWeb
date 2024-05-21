@@ -59,12 +59,7 @@ namespace BlazorWebPage.Shared.Data
                 new("amelia", "9012"),
                 new("mia", "0123"),
                 new("aaa", "aaa")
-           ];
-
-            foreach (UserCredentials userCredentials in UsersCredentials)
-            {
-                userCredentials.UserName = userCredentials.UserName.ToUpper();                
-            }
+           ];          
         }
     }
 }

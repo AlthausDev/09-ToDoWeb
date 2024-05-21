@@ -17,7 +17,7 @@ namespace TODO_V2.Client.Shared.Modals
         public string Password { get; set; } = string.Empty;
         public string CheckPassword { get; set; } = string.Empty;
         public string Clave { get; set; } = string.Empty;
-        private string UserType { get; set; } = UserTypeEnum.USUARIO.ToString();
+        private string UserType { get; set; } = UserTypeEnum.USUARIO.ToString().ToString();
 
         private User? NewUser;
 
@@ -56,7 +56,7 @@ namespace TODO_V2.Client.Shared.Modals
                 return;
             }
 
-            NewUser = new(UserName.ToUpper(), Name, Surname,UserTypeEnum.USUARIO);
+            NewUser = new(UserName, Name, Surname,UserTypeEnum.USUARIO.ToString());
 
             if (await RegisterUser())
             {

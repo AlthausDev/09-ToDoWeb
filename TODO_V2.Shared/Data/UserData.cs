@@ -18,27 +18,27 @@ namespace BlazorWebPage.Shared.Data
             await UserCredentialsData.LoadTestCredentials(http);
 
             Users = [            
-                new("Admin", "John", "Doe", UserTypeEnum.ADMINISTRADOR),
-                new("jane", "Jane", "Smith", UserTypeEnum.USUARIO),
-                new("mike", "Mike", "Johnson", UserTypeEnum.USUARIO),
-                new("sarah", "Sarah", "Williams", UserTypeEnum.USUARIO),
-                new("david", "David", "Brown", UserTypeEnum.USUARIO),
-                new("emily", "Emily", "Jones", UserTypeEnum.USUARIO),
-                new("tom", "Tom", "Wilson", UserTypeEnum.USUARIO),
-                new("laura", "Laura", "Davis", UserTypeEnum.USUARIO),
-                new("chris", "Chris", "Moore", UserTypeEnum.USUARIO),
-                new("rachel", "Rachel", "Taylor", UserTypeEnum.USUARIO),         
-                new("emma", "Emma", "White", UserTypeEnum.USUARIO),
-                new("will", "William", "Wilson", UserTypeEnum.USUARIO),
-                new("olivia", "Olivia", "Brown", UserTypeEnum.USUARIO),
-                new("james", "James", "Jones", UserTypeEnum.USUARIO),
-                new("isabella", "Isabella", "Taylor", UserTypeEnum.USUARIO),
-                new("alex", "Alexander", "Martinez", UserTypeEnum.USUARIO),
-                new("sophia", "Sophia", "Anderson", UserTypeEnum.USUARIO),
-                new("ben", "Benjamin", "Davis", UserTypeEnum.USUARIO),
-                new("amelia", "Amelia", "Garcia", UserTypeEnum.USUARIO),
-                new("mia", "Mia", "Rodriguez", UserTypeEnum.USUARIO),
-                new("aaa", "Test", "User", UserTypeEnum.USUARIO)
+                new("Admin", "John", "Doe", UserTypeEnum.ADMINISTRADOR.ToString()),
+                new("jane", "Jane", "Smith", UserTypeEnum.USUARIO.ToString()),
+                new("mike", "Mike", "Johnson", UserTypeEnum.USUARIO.ToString()),
+                new("sarah", "Sarah", "Williams", UserTypeEnum.USUARIO.ToString()),
+                new("david", "David", "Brown", UserTypeEnum.USUARIO.ToString()),
+                new("emily", "Emily", "Jones", UserTypeEnum.USUARIO.ToString()),
+                new("tom", "Tom", "Wilson", UserTypeEnum.USUARIO.ToString()),
+                new("laura", "Laura", "Davis", UserTypeEnum.USUARIO.ToString()),
+                new("chris", "Chris", "Moore", UserTypeEnum.USUARIO.ToString()),
+                new("rachel", "Rachel", "Taylor", UserTypeEnum.USUARIO.ToString()),         
+                new("emma", "Emma", "White", UserTypeEnum.USUARIO.ToString()),
+                new("will", "William", "Wilson", UserTypeEnum.USUARIO.ToString()),
+                new("olivia", "Olivia", "Brown", UserTypeEnum.USUARIO.ToString()),
+                new("james", "James", "Jones", UserTypeEnum.USUARIO.ToString()),
+                new("isabella", "Isabella", "Taylor", UserTypeEnum.USUARIO.ToString()),
+                new("alex", "Alexander", "Martinez", UserTypeEnum.USUARIO.ToString()),
+                new("sophia", "Sophia", "Anderson", UserTypeEnum.USUARIO.ToString()),
+                new("ben", "Benjamin", "Davis", UserTypeEnum.USUARIO.ToString()),
+                new("amelia", "Amelia", "Garcia", UserTypeEnum.USUARIO.ToString()),
+                new("mia", "Mia", "Rodriguez", UserTypeEnum.USUARIO.ToString()),
+                new("aaa", "Test", "User", UserTypeEnum.USUARIO.ToString())
             ];
 
             for (int i = 0; i < Users.Length; i++)

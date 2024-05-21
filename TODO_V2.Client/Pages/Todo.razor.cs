@@ -96,16 +96,16 @@ namespace TODO_V2.Client.Pages
         //            //await InitializeGraph();
         //        }
 
-        //        #region OnClick
-        //        private async TaskItem OnClickExit()
-        //        {
-        //            var response = await Http.DeleteAsync("/user/logout");
-        //            await storageService.RemoveItemAsync("token");
-        //            await storageService.ClearAsync();
-        //            NavManager.NavigateTo("/");
-        //            Http.DefaultRequestHeaders.Remove("Authorization");
-        //        }
-        //        #endregion
+        #region OnClick
+        private async Task OnClickLogOut()
+        {
+            var response = await Http.DeleteAsync("/user/logout");
+            await storageService.RemoveItemAsync("token");
+            await storageService.ClearAsync();
+            NavManager.NavigateTo("/login");
+            Http.DefaultRequestHeaders.Remove("Authorization");
+        }
+        #endregion
 
         //        #region ApiOperations    
         //        private async TaskItem getData()

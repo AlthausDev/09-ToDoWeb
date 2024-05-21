@@ -1,10 +1,22 @@
-﻿namespace TODO_V2.Server.Models
+﻿using TODO_V2.Shared.Models;
+
+namespace TODO_V2.Server.Models
 {
-    public class UserCredentials
+    public class UserCredentials : BaseModel
     {
         public int UserId { get; set; }
-        public string UserName { get; set; }
+
+        private string _userName;
+        public string UserName
+        {
+            get => _userName;
+            set => _userName = value.ToUpper(); 
+        }
         public string EncryptedPassword { get; set; }
+
+        public UserCredentials()
+        {
+        }
 
         public UserCredentials(string username, string encryptedPassword)
         {

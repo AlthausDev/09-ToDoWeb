@@ -97,7 +97,7 @@ namespace TODO_V2.Server.Services.Impl
 
         public async Task<User?> GetByUserName(string username)
         {
-            return await UserRepository.GetByUserName(username);           
+            return await UserRepository.GetByUserName(username.ToUpper());           
         }
 
         public Task<int> Count()
@@ -171,7 +171,7 @@ namespace TODO_V2.Server.Services.Impl
 
         private async Task<UserCredentials> GetUserCredentialsByUserName(string username)
         {
-            return await UserRepository.GetUserCredentialsByUserName(username);
+            return await UserRepository.GetUserCredentialsByUserName(username.ToUpper());
         }
 
         private UserCredentials CreateUserCredentials(LoginCredentials credentials)

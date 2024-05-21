@@ -121,7 +121,7 @@ namespace TODO_V2.Client.Pages
         {
             try
             {         
-                var credentials = new LoginCredentials(Username.ToUpper(), Password );
+                var credentials = new LoginCredentials(Username, Password );
                 var response = await Http.PostAsJsonAsync("user/login", credentials);
 
                 if (response.IsSuccessStatusCode)

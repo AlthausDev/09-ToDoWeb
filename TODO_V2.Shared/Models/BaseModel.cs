@@ -9,10 +9,10 @@ namespace TODO_V2.Shared.Models
         public int Id { get; set; }
         public string? Name { get; set; }
 
-        public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         //Update
-        public DateOnly? UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public int? UpdatedBy { get; set; }
 
 
