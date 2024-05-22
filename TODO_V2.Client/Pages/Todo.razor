@@ -15,7 +15,7 @@
     <button type="button" class="button-style" @onclick="OnClickLogOut">Logout</button>
 </nav>
 
-<table class="table">
+<table class="table rounded-table">
     <thead>
         <tr>
             <th>Tarea</th>
@@ -32,23 +32,48 @@
             <tr>
                 <td>@TaskItem.Name</td>
                 <td>@TaskItem.CategoryId</td>
+                <td>@TaskItem.CreatedAt</td>
                 <td>@TaskItem.ExpirationDate</td>
                 <td>@TaskItem.State</td>
                 <td>
                     @* <button type="button" class="button-style" @onclick="() => ShowEditTaskItemModal(TaskItem)">Editar</button>
-                    <button type="button" class="button-style" @onclick="() => DeleteTaskItem(TaskItem)">Eliminar</button> *@
+                <button type="button" class="button-style" @onclick="() => DeleteTaskItem(TaskItem)">Eliminar</button> *@
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+
 <style>
     .upper-buttons {
         padding-bottom: 2.5em;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-between;        
     }
+
+    .upper-buttons button {        
+        box-shadow: 0 8px 22px rgba(3,233,244,.5);
+        border: 1px solid #03e9f4;
+        border-radius: 8px;
+    }
+
+
+    .rounded-table {
+        border-collapse: separate;
+        /* border-spacing: 0; */
+    }
+
+        .rounded-table th,
+        .rounded-table td {
+            padding: 10px;           
+            border-radius: 10px; 
+        }
+
+        .rounded-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
 </style>
 
 @* <Modal @ref="modal" Title="Formulario" Size="ModalSize.ExtraLarge">
