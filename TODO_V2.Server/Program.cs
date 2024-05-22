@@ -44,6 +44,7 @@ builder.Services.AddCors(options => options.AddPolicy("corsPolicy", builder =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
 builder.Services.AddScoped(client => new HttpClient
 {
     BaseAddress = new Uri("https://localhost:7216/")
@@ -101,6 +102,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseStaticFiles();
 app.UseAntiforgery();
 #endregion

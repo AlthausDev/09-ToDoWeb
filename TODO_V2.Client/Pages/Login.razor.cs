@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using TODO_V2.Client.DTO;
+using TODO_V2.Client.Layout;
 using TODO_V2.Client.Shared.Modals;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Utils;
@@ -21,71 +22,16 @@ namespace TODO_V2.Client.Pages
         
         public static User user = new();
 
-        //public Modal ModalInstance = default!;
-        //List<ToastMessage> messages = new();
         public Modal ModalInstance = default!;
-        List<ToastMessage> messages = StartUp.messages;
+        List<ToastMessage> messages = new();
 
         private string UserName { get; set; } = string.Empty;
-        private string Password { get; set; } = string.Empty;
-
-
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    NavManager.LocationChanged += OnLocationChanged;
-        //    await base.OnInitializedAsync();
-        //}
-
-        //protected override async Task OnAfterRenderAsync(bool firstRender)
-        //{
-        //    if (firstRender)
-        //    {
-        //        await JS.InvokeVoidAsync("initializeBootstrapComponents");
-        //    }
-        //}
-
-        //private async void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
-        //{
-        //    await JS.InvokeVoidAsync("initializeBootstrapComponents");
-        //    StateHasChanged();
-        //}
-
-        //public void Dispose()
-        //{
-        //    NavManager.LocationChanged -= OnLocationChanged;
-        //}
-
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    NavManager.LocationChanged += OnLocationChanged;
-        //    ModalInstance = new BlazorBootstrap.Modal();
-        //    await base.OnInitializedAsync();
-        //    StateHasChanged();
-        //}
-
-        //protected override void OnAfterRender(bool firstRender)
-        //{
-        //    if (firstRender)
-        //    {
-        //        StateHasChanged();
-        //    }
-        //}
-
-        //private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
-        //{
-        //    StateHasChanged();
-        //}
-
-        //public void Dispose()
-        //{
-        //    NavManager.LocationChanged -= OnLocationChanged;
-        //}
-
+        private string Password { get; set; } = string.Empty;        
 
         #region Login     
         private async Task OnClickLogin()
         {
-            var loginResult = await LoginUser(UserName, Password);            
+            var loginResult = await LoginUser(UserName, Password);
             HandleLoginResult(loginResult);
         }
         #endregion
@@ -98,8 +44,7 @@ namespace TODO_V2.Client.Pages
                 { "Registrar", EventCallback.Factory.Create<MouseEventArgs>(this, Registro) },
                 { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
             };
-            await Task.Delay(1000);
-            await ModalInstance.ShowAsync<ModalRegistro>(title: "Registrarse", parameters: parameters);            
+            await ModalInstance.ShowAsync<ModalRegistro>(title: "Registrarse", parameters: parameters);
         }
 
 

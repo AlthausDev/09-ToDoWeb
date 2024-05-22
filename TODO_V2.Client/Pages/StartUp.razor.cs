@@ -1,5 +1,6 @@
 ﻿using BlazorBootstrap;
 using BlazorWebPage.Shared.Data;
+using Microsoft.JSInterop;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
@@ -10,11 +11,7 @@ using TODO_V2.Shared.Data;
 namespace TODO_V2.Client.Pages
 {
     public partial class StartUp
-    {
-
-        public static Modal ModalInstance = default!;
-        public static List<ToastMessage> messages = new();
-
+    {      
 
         //protected override async Task OnInitializedAsync()
         //{
@@ -30,8 +27,9 @@ namespace TODO_V2.Client.Pages
             //Si no hay usuarios, cargarlos
             if (!await ExistAnyUser())
             {
-                await UserData.LoadTestUsers(Http);               
+                await UserData.LoadTestUsers(Http);
             }
+
 
             //Si no hay tareas generarlas y las categorías
             //if (!await ExistAnyTask())
@@ -54,7 +52,7 @@ namespace TODO_V2.Client.Pages
         }
 
         private async Task CheckToken()
-        {
+        {     
             try
             {
                 string getToken = await storageService.GetItemAsStringAsync("token");

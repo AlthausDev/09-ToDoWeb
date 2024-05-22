@@ -52,7 +52,7 @@ namespace TODO_V2.Client.Pages
 
         //private Enum? accion = Accion.Espera;
         public Modal ModalInstance = default!;
-        List<ToastMessage> messages = StartUp.messages;
+        List<ToastMessage> messages = new();
 
         public static User user = new();
 
