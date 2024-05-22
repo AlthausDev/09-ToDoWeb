@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TODO_V2.Server.Repository.Impl;
 using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Shared.Models;
 
 namespace TODO_V2.Server.Services.Impl
 {
-    public class TaskItemService : IGenericService<TaskItem, object>
+    public class TaskItemService : ITaskItemService
     {
-        private readonly ITaskRepository _taskRepository;
+        private readonly ITaskRepository TaskRepository;
+        private readonly IConfiguration configuration;
 
-        public TaskItemService(ITaskRepository taskRepository)
+        public TaskItemService(ITaskRepository categoryRepository, IConfiguration configuration)
         {
-            _taskRepository = taskRepository ?? throw new ArgumentNullException(nameof(taskRepository));
+            this.configuration = configuration;
+            TaskRepository = categoryRepository;
         }
+       
 
         public async Task<bool> Add(TaskItem entity, object? secondEntity)
         {
             try
             {
-                return await _taskRepository.Add(entity, secondEntity);
+                return await TaskRepository.Add(entity, secondEntity);
             }
             catch (Exception ex)
             {
@@ -34,7 +38,7 @@ namespace TODO_V2.Server.Services.Impl
         {
             try
             {
-                return await _taskRepository.Count();
+                return await TaskRepository.Count();
             }
             catch (Exception ex)
             {
@@ -48,7 +52,7 @@ namespace TODO_V2.Server.Services.Impl
         {
             try
             {
-                _taskRepository.Delete(entityId);
+                TaskRepository.Delete(entityId);
             }
             catch (Exception ex)
             {
@@ -62,7 +66,7 @@ namespace TODO_V2.Server.Services.Impl
         {
             try
             {
-                return await _taskRepository.GetAll(request);
+                return await TaskRepository.GetAll(request);
             }
             catch (Exception ex)
             {
@@ -76,7 +80,7 @@ namespace TODO_V2.Server.Services.Impl
         {
             try
             {
-                return await _taskRepository.GetAllLogic(request);
+                return await TaskRepository.GetAllLogic(request);
             }
             catch (Exception ex)
             {
@@ -90,7 +94,7 @@ namespace TODO_V2.Server.Services.Impl
         {
             try
             {
-                return await _taskRepository.GetById(entityId);
+                return await TaskRepository.GetById(entityId);
             }
             catch (Exception ex)
             {
@@ -100,11 +104,11 @@ namespace TODO_V2.Server.Services.Impl
             }
         }
 
-        public async Task<bool> LogicDelete(int entityId)
+        public async void LogicDelete(int entityId)
         {
             try
             {
-                return await _taskRepository.LogicDelete(entityId);
+                await TaskRepository.LogicDelete(entityId);
             }
             catch (Exception ex)
             {
@@ -118,7 +122,7 @@ namespace TODO_V2.Server.Services.Impl
         {
             try
             {
-                return await _taskRepository.Update(entity, secondEntity);
+                return await TaskRepository.Update(entity, secondEntity);
             }
             catch (Exception ex)
             {
@@ -128,9 +132,9 @@ namespace TODO_V2.Server.Services.Impl
             }
         }
 
-        void IGenericService<TaskItem, object>.LogicDelete(int entityId)
+        public async Task<IEnumerable<TaskItem>> GetTasksByUserId(int userId)
         {
-            throw new NotImplementedException();
+            return await TaskRepository.GetTasksByUserId(userId);
         }
     }
 }

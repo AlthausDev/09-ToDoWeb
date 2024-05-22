@@ -11,7 +11,7 @@
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
 <nav class="upper-buttons">
-    <button type="button" class="button-style" @onclick="ShowNewChoreModal">Nueva Tarea</button>
+    <button type="button" class="button-style" @onclick="OnClickNewTask">Nueva Tarea</button>
     <button type="button" class="button-style" @onclick="OnClickLogOut">Logout</button>
 </nav>
 
@@ -27,7 +27,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var TaskItem in Chores)
+        @foreach (var TaskItem in TaskItemsList)
         {
             <tr>
                 <td>@TaskItem.Name</td>
@@ -35,8 +35,8 @@
                 <td>@TaskItem.ExpirationDate</td>
                 <td>@TaskItem.State</td>
                 <td>
-                    <button type="button" class="button-style" @onclick="() => ShowEditChoreModal(TaskItem)">Editar</button>
-                    <button type="button" class="button-style" @onclick="() => DeleteChore(TaskItem)">Eliminar</button>
+                    @* <button type="button" class="button-style" @onclick="() => ShowEditTaskItemModal(TaskItem)">Editar</button>
+                    <button type="button" class="button-style" @onclick="() => DeleteTaskItem(TaskItem)">Eliminar</button> *@
                 </td>
             </tr>
         }
@@ -56,26 +56,26 @@
         <div id="formDiv">
             <label for="formTextBox">TaskItemName</label>
             <input type="text" id="formTextBox" Placeholder='Campo de texto de prueba'
-                   @bind="@NuevaChore.TaskItemName" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
+                   @bind="@NuevaTaskItem.TaskItemName" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
         </div>
 
         <div id="formDiv">
-            <label for="texchore">
+            <label for="textaskitem">
                 Descripción
             </label>
-            <texchore name="texchore" rows="20" id="formTextBox" Placeholder='Descripcion de prueba'
-                      @bind="@NuevaChore.Descripcion" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
+            <textaskitem name="textaskitem" rows="20" id="formTextBox" Placeholder='Descripcion de prueba'
+                      @bind="@NuevaTaskItem.Descripcion" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
 
         </div>
 
         <div id="formDiv">
-            <input type="checkbox" id="finalizadoCheckBox" name="Finalizado" @bind="NuevaChore.Finalizado" />
+            <input type="checkbox" id="finalizadoCheckBox" name="Finalizado" @bind="NuevaTaskItem.Finalizado" />
             <label id="checkBoxLabel" for="finalizadoCheckBox">Finalizado</label>
         </div>
     </BodyTemplate>
     <FooterTemplate>
         <div id="FormButtons">
-            <button class="btn btn-success" @onclick="execChore" disabled="@IsDisabled">Aceptar</button>
+            <button class="btn btn-success" @onclick="execTaskItem" disabled="@IsDisabled">Aceptar</button>
             <button class="btn btn-danger" @onclick="HideModal">Cancelar</button>
         </div>
     </FooterTemplate>
@@ -93,9 +93,9 @@
 
 
             <li id="SearchBox">
-                @* <AutoComplete @bind-Value="@nuevaChore.TaskItemName"
+                @* <AutoComplete @bind-Value="@nuevaTaskItem.TaskItemName"
                               TItem="TaskItem"
-                              DataProvider="ChoresDataProvider"
+                              DataProvider="TaskItemsDataProvider"
                               PropertyName="TaskItemName"
                               Placeholder="Buscar TaskItem"
                               OnChanged="(TaskItem TaskItem) => OnAutoCompleteChanged(TaskItem)"
@@ -118,9 +118,9 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var TaskItem in Chores)
+            @foreach (var TaskItem in TaskItems)
             {
-                <tr class="@GetRowClass(TaskItem)" id="fila" @onclick="(() => selectChore(TaskItem))">
+                <tr class="@GetRowClass(TaskItem)" id="fila" @onclick="(() => selectTaskItem(TaskItem))">
                     <td>@TaskItem.TaskItemName</td>
                     @* <td>@TaskItem.Descripcion</td>
                     <td>@(TaskItem.Finalizado ? IsFinalizado.Si : IsFinalizado.No)</td>
@@ -336,7 +336,7 @@
         background: linear-gradient(160deg, rgba(27,58,117,0.7624299719887955) 0%, rgba(80,21,94,0.7344187675070029) 47%, rgba(239,222,246,1) 100%);
     }
 
-    texchore {
+    textaskitem {
         width: 90%;
         resize: none;
     }
@@ -354,7 +354,7 @@
             margin-right:5%;
         }
 
-    label texchore {
+    label textaskitem {
         vertical-align: top;
     }
 

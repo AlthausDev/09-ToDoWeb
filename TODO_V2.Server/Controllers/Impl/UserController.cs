@@ -11,7 +11,7 @@ using TODO_V2.Shared.Utils;
 namespace TODO_V2.Server.Controllers.Impl
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;

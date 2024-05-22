@@ -39,19 +39,17 @@ namespace TODO_V2.Client.Pages
         #region Data Existence Checks 
         private async Task<bool> ExistAnyUser()
         {
-            return await ExistAnyElement("user/count", "users");
+            return await ExistAnyElement("api/User/count", "User");
+        }       
+
+        private async Task<bool> ExistAnyCategory()
+        {            
+            return await ExistAnyElement("api/Category/count", "Category");
         }
 
         private async Task<bool> ExistAnyTask()
-        {
-            return true;
-            return await ExistAnyElement("tasks/count", "tasks");
-        }
-
-        private async Task<bool> ExistAnyCategory()
-        {
-            //return true;
-            return await ExistAnyElement("api/Category/count", "categories");
+        {            
+            return await ExistAnyElement("api/TaskItem/count", "TaskItem");
         }
 
         private async Task<bool> ExistAnyElement(string endpoint, string elementName)

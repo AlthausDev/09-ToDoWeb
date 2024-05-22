@@ -172,7 +172,7 @@ namespace TODO_V2.Client.Shared.Modals
         {
             try
             {
-                return await Http.GetFromJsonAsync<User>($"user/{Username}");
+                return await Http.GetFromJsonAsync<User>($"api/User/{Username}");
             }
             catch (HttpRequestException)
             {               

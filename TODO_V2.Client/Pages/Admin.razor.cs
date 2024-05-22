@@ -34,7 +34,7 @@ namespace TODO_V2.Client.Pages
         {
             //try
             //{
-                var response = await Http.DeleteAsync("/user/logout");
+                var response = await Http.DeleteAsync("/api/User/logout");
 
                 await storageService.RemoveItemAsync("token");
                 NavManager.NavigateTo("/");

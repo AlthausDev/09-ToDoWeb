@@ -26,8 +26,7 @@ namespace TODO_V2.Shared.Data
             ];
 
             foreach (Category category in Categories)
-            {
-                //HttpResponseMessage response = await http.PostAsJsonAsync("categories", category);
+            {                
                 await http.PostAsJsonAsync("api/Category", category);
             }
         }

@@ -159,7 +159,7 @@ namespace TODO_V2.Client.Shared.Modals
 
         private async Task<User?> GetUserByUserName(string Username)
         {
-            return await Http.GetFromJsonAsync<User>($"user/{Username}");
+            return await Http.GetFromJsonAsync<User>($"api/User/{Username}");
         }
         #endregion Api
 

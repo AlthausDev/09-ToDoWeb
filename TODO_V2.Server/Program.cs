@@ -85,7 +85,7 @@ builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ITaskRepository, TaskRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
-//builder.Services.AddTransient<ITaskItemService, TaskItemService>();
+builder.Services.AddTransient<ITaskItemService, TaskItemService>();
 builder.Services.AddTransient<EncryptionUtil>();
 #endregion
 

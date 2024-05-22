@@ -134,5 +134,13 @@ namespace TODO_V2.Server.Repository.Impl
                 return null;
             }
         }
+
+        public async Task<IEnumerable<TaskItem>> GetTasksByUserId(int userId)
+        {
+            using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
+            {
+                return await dbConnection.QueryAsync<TaskItem>("SELECT * FROM Tasks WHERE UserId = @UserId", new { UserId = userId });
+            }
+        }
     }
 }
