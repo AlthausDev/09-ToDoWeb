@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TODO_V2.Shared.Models.Enum;
 using TODO_V2.Shared.Models;
+using System.Net.Http.Json;
 
 namespace TODO_V2.Shared.Data
 {
@@ -22,12 +23,13 @@ namespace TODO_V2.Shared.Data
                 new("Sitio web"),
                 new("Pruebas de software"),
                 new("Lista de verificación")
-            ];         
+            ];
 
-            //foreach (Category category in Categories)
-            //{
-            //    await http.PostAsJsonAsync("Categories", category);
-            //}
+            foreach (Category category in Categories)
+            {
+                //HttpResponseMessage response = await http.PostAsJsonAsync("categories", category);
+                await http.PostAsJsonAsync("api/Category", category);
+            }
         }
     }
 }

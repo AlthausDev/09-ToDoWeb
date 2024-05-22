@@ -7,14 +7,14 @@ namespace TODO_V2.Shared.Models
     {
         public int CategoryId { get; set; }
         public int UserId { get; set; }
-        public TaskStateEnum State { get; set; }
-        public DateOnly? ExpirationDate { get; set; }
+        public string State { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
         public TaskItem()
         {
         }
 
-        public TaskItem(int categoryId, int userId, TaskStateEnum state, string name, DateOnly expirationDate)
+        public TaskItem(int categoryId, int userId, string state, string name, DateTime expirationDate)
         {
             CategoryId = categoryId;
             UserId = userId;

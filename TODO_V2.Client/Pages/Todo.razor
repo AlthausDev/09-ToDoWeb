@@ -10,8 +10,10 @@
 <Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true" I />
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
-<button class="btn btn-primary" @onclick="ShowNewChoreModal">Nueva Tarea</button>
-<button class="btn btn-danger" @onclick="OnClickLogOut">Logout</button>
+<nav class="upper-buttons">
+    <button type="button" class="button-style" @onclick="ShowNewChoreModal">Nueva Tarea</button>
+    <button type="button" class="button-style" @onclick="OnClickLogOut">Logout</button>
+</nav>
 
 <table class="table">
     <thead>
@@ -31,21 +33,27 @@
                 <td>@TaskItem.Name</td>
                 <td>@TaskItem.CategoryId</td>
                 <td>@TaskItem.ExpirationDate</td>
-              
                 <td>@TaskItem.State</td>
                 <td>
-                    <button class="btn btn-sm btn-primary" @onclick="() => ShowEditChoreModal(TaskItem)">Editar</button>
-                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteChore(TaskItem)">Eliminar</button>
+                    <button type="button" class="button-style" @onclick="() => ShowEditChoreModal(TaskItem)">Editar</button>
+                    <button type="button" class="button-style" @onclick="() => DeleteChore(TaskItem)">Eliminar</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+<style>
+    .upper-buttons {
+        padding-bottom: 2.5em;
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
 
 @* <Modal @ref="modal" Title="Formulario" Size="ModalSize.ExtraLarge">
     <BodyTemplate>
-        <div id="formDiv">   
+        <div id="formDiv">
             <label for="formTextBox">TaskItemName</label>
             <input type="text" id="formTextBox" Placeholder='Campo de texto de prueba'
                    @bind="@NuevaChore.TaskItemName" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
@@ -71,7 +79,7 @@
             <button class="btn btn-danger" @onclick="HideModal">Cancelar</button>
         </div>
     </FooterTemplate>
-</Modal> 
+</Modal>
 
 <nav class="navbar-inverse">
     <div class="topButtons">
@@ -82,7 +90,7 @@
             <li>
                 <Button Color="ButtonColor.Primary" @onclick="OnClickExit">Cerrar Sesion</Button>
             </li>
-    
+
 
             <li id="SearchBox">
                 @* <AutoComplete @bind-Value="@nuevaChore.TaskItemName"
@@ -91,7 +99,7 @@
                               PropertyName="TaskItemName"
                               Placeholder="Buscar TaskItem"
                               OnChanged="(TaskItem TaskItem) => OnAutoCompleteChanged(TaskItem)"
-                              Size="AutoCompleteSize.Default" /> 
+                              Size="AutoCompleteSize.Default" />
             </li>
         </ul>
     </div>
@@ -115,7 +123,7 @@
                 <tr class="@GetRowClass(TaskItem)" id="fila" @onclick="(() => selectChore(TaskItem))">
                     <td>@TaskItem.TaskItemName</td>
                     @* <td>@TaskItem.Descripcion</td>
-                    <td>@(TaskItem.Finalizado ? IsFinalizado.Si : IsFinalizado.No)</td> 
+                    <td>@(TaskItem.Finalizado ? IsFinalizado.Si : IsFinalizado.No)</td>
                 </tr>
             }
         </tbody>
@@ -291,7 +299,7 @@
         }
 
     #formTextBox {
-        width: 100%;        
+        width: 100%;
     }
 
     #scrollBtn, #scrollBtnDown {

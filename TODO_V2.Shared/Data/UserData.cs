@@ -6,7 +6,7 @@ using TODO_V2.Shared.Models.Enum;
 using static System.Net.WebRequestMethods;
 using TODO_V2.Shared.Models.Request;
 
-namespace BlazorWebPage.Shared.Data
+namespace TODO_V2.Shared.Data
 {
     public class UserData
     {

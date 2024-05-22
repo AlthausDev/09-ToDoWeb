@@ -4,7 +4,7 @@ using TODO_V2.Client.DTO;
 using TODO_V2.Server.Models;
 using TODO_V2.Shared.Models;
 
-namespace BlazorWebPage.Shared.Data
+namespace TODO_V2.Shared.Data
 {
     public class UserCredentialsData
     {

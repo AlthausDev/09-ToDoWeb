@@ -11,17 +11,18 @@ using TODO_V2.Server.Models;
 namespace TODO_V2.Server.Repository.Impl
 {
     public class UserRepository : IUserRepository
-    {
-        private readonly string _connectionString;
+    { 
+        private readonly IConfiguration _configuration;
+        private string ConnectionString => _configuration.GetConnectionString("TODO_V2DB");
 
         public UserRepository(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("TODO_V2DB");
+            _configuration = configuration;
         }
 
         private IDbConnection CreateConnection()
         {
-            return new SqlConnection(_connectionString);
+            return new SqlConnection(ConnectionString);
         }
 
         public async Task<bool> Add(User user, UserCredentials userCredentials)

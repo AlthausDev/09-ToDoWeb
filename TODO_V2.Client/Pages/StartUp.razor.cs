@@ -1,5 +1,5 @@
 ﻿using BlazorBootstrap;
-using BlazorWebPage.Shared.Data;
+using TODO_V2.Shared.Data;
 using Microsoft.JSInterop;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,43 +13,62 @@ namespace TODO_V2.Client.Pages
     public partial class StartUp
     {      
 
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    //Si no hay usuarios, cargarlos
-        //    //NavManager.NavigateTo("/login");
-        //    //if (!await ExistAnyData())
-        //    //    await UserData.CargarDatosAsync(Http);
-        //    await CheckToken();
+        //protected override async Task OnInitializedAsync()       
         //}
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            //Si no hay usuarios, cargarlos
-            if (!await ExistAnyUser())
-            {
-                await UserData.LoadTestUsers(Http);
-            }
-
-
-            //Si no hay tareas generarlas y las categorías
-            //if (!await ExistAnyTask())
-            //{
-            //    await TaskItemData.LoadTestTasks(Http);
-            //    await CategoryData.LoadTestCategories(Http);
-            //}
-
+            await LoadTestDataIfNeeded();
             await CheckToken();
         }
 
+        #region Load Data
+        private async Task LoadTestDataIfNeeded()
+        {
+            if (!await ExistAnyUser())
+                await UserData.LoadTestUsers(Http);
+
+            if (!await ExistAnyCategory())
+                await CategoryData.LoadTestCategories(Http);
+
+            if (!await ExistAnyTask())
+                await TaskItemData.LoadTestTasks(Http);
+        }
+        #endregion
+
+        #region Data Existence Checks 
         private async Task<bool> ExistAnyUser()
         {
-            return await Http.GetFromJsonAsync<int>("user/count") > 0;
+            return await ExistAnyElement("user/count", "users");
         }
 
         private async Task<bool> ExistAnyTask()
         {
-            return await Http.GetFromJsonAsync<int>("tasks/count") > 0;
+            return true;
+            return await ExistAnyElement("tasks/count", "tasks");
         }
+
+        private async Task<bool> ExistAnyCategory()
+        {
+            //return true;
+            return await ExistAnyElement("api/Category/count", "categories");
+        }
+
+        private async Task<bool> ExistAnyElement(string endpoint, string elementName)
+        {
+            try
+            {
+                int elementCount = await Http.GetFromJsonAsync<int>(endpoint);
+                return elementCount > 0;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al verificar la existencia de {elementName}: {ex.Message}");
+                return false;
+            }
+        }
+
+        #endregion
 
         private async Task CheckToken()
         {     

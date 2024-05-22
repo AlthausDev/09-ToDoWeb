@@ -8,6 +8,7 @@ using TODO_V2.Server.Utils;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Server.Services.Impl;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,10 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthorizationCore();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+});
 #endregion
 
 #region Configuración de CORS
@@ -76,7 +81,11 @@ builder.Services.AddAuthentication(options =>
 
 #region Configura repositorios y servicios
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+builder.Services.AddTransient<ITaskRepository, TaskRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+//builder.Services.AddTransient<ITaskItemService, TaskItemService>();
 builder.Services.AddTransient<EncryptionUtil>();
 #endregion
 
@@ -102,6 +111,12 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+});
 
 app.UseStaticFiles();
 app.UseAntiforgery();
