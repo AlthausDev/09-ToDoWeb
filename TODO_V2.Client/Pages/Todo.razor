@@ -1,4 +1,5 @@
 ﻿ @page "/todo/{Id}"
+@using TODO_V2.Shared.Models
 <PageTitle>ToDo List!</PageTitle>
 
 @inject HttpClient Http
@@ -11,169 +12,48 @@
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
 <nav class="upper-buttons">
-    <button type="button" class="button-style" @onclick="OnClickNewTask">Nueva Tarea</button>
+    <button type="button" class="button-style" @onclick="OnClickTaskForm">Nueva Tarea</button>
     <button type="button" class="button-style" @onclick="OnClickLogOut">Logout</button>
 </nav>
 
-<table class="table rounded-table">
-    <thead>
-        <tr>
-            <th>Tarea</th>
-            <th>Categoría</th>
-            <th>Fecha Creación</th>
-            <th>Fecha Vencimiento</th>
-            <th>Estado</th>
-            <th>Opciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var TaskItem in TaskItemsList)
-        {
-            <tr>
-                <td>@TaskItem.Name</td>
-                <td>@TaskItem.CategoryId</td>
-                <td>@TaskItem.CreatedAt</td>
-                <td>@TaskItem.ExpirationDate</td>
-                <td>@TaskItem.State</td>
-                <td>
-                    @* <button type="button" class="button-style" @onclick="() => ShowEditTaskItemModal(TaskItem)">Editar</button>
-                <button type="button" class="button-style" @onclick="() => DeleteTaskItem(TaskItem)">Eliminar</button> *@
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<Grid TItem="TaskItem"
+    AllowFiltering="false"
+    AllowPaging="true"
+    PageSize="15"
+    
+    AllowSorting="true"
+    HeaderRowCssClass="bg-black text-black"    
+    DataProvider="UsersDataProvider"
+    Responsive="true" class="table rounded-grid">
 
+    <GridColumn TItem="TaskItem" HeaderText="Tarea" PropertyName="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true">
+        @context.Name
+    </GridColumn>
 
-<style>
-    .upper-buttons {
-        padding-bottom: 2.5em;
-        display: flex;
-        justify-content: space-between;        
-    }
+    <GridColumn TItem="TaskItem" HeaderText="Categoria" PropertyName="CategoryId" SortKeySelector="item => item.CategoryId">
+        @context.CategoryId
+    </GridColumn>
 
-    .upper-buttons button {        
-        box-shadow: 0 8px 22px rgba(3,233,244,.5);
-        border: 1px solid #03e9f4;
-        border-radius: 8px;
-    }
+    <GridColumn TItem="TaskItem" HeaderText="Fecha Creacion" PropertyName="Nombre" SortKeySelector="item => item.CreatedAt">
+        @context.CreatedAt
+    </GridColumn>
 
+    <GridColumn TItem="TaskItem" HeaderText="Fecha Vencimiento" PropertyName="Fecha Vencimiento" SortKeySelector="item => item.ExpirationDate">
+        @context.ExpirationDate
+    </GridColumn>
 
-    .rounded-table {
-        border-collapse: separate;
-        /* border-spacing: 0; */
-    }
+    <GridColumn TItem="TaskItem" HeaderText="Estado" PropertyName="Estado" SortKeySelector="item => item.State">
+        @context.State
+    </GridColumn>
 
-        .rounded-table th,
-        .rounded-table td {
-            padding: 10px;           
-            border-radius: 10px; 
-        }
-
-        .rounded-table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-</style>
-
-@* <Modal @ref="modal" Title="Formulario" Size="ModalSize.ExtraLarge">
-    <BodyTemplate>
-        <div id="formDiv">
-            <label for="formTextBox">TaskItemName</label>
-            <input type="text" id="formTextBox" Placeholder='Campo de texto de prueba'
-                   @bind="@NuevaTaskItem.TaskItemName" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
-        </div>
-
-        <div id="formDiv">
-            <label for="textaskitem">
-                Descripción
-            </label>
-            <textaskitem name="textaskitem" rows="20" id="formTextBox" Placeholder='Descripcion de prueba'
-                      @bind="@NuevaTaskItem.Descripcion" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
-
-        </div>
-
-        <div id="formDiv">
-            <input type="checkbox" id="finalizadoCheckBox" name="Finalizado" @bind="NuevaTaskItem.Finalizado" />
-            <label id="checkBoxLabel" for="finalizadoCheckBox">Finalizado</label>
-        </div>
-    </BodyTemplate>
-    <FooterTemplate>
-        <div id="FormButtons">
-            <button class="btn btn-success" @onclick="execTaskItem" disabled="@IsDisabled">Aceptar</button>
-            <button class="btn btn-danger" @onclick="HideModal">Cancelar</button>
-        </div>
-    </FooterTemplate>
-</Modal>
-
-<nav class="navbar-inverse">
-    <div class="topButtons">
-        <ul class="navbar-nav">
-            <li><button class="btn btn-success" @onclick="(() => OnClickShowModal(Accion.Crear))">Nueva TaskItem</button></li>
-            <li><button class="btn btn-danger" @onclick="@Delete" disabled="@IsDisabledEdit">Borrar</button></li>
-            <li><button class="btn btn-warning" @onclick="(() => OnClickShowModal(Accion.Editar))" disabled="@IsDisabledEdit">Editar</button></li>
-            <li>
-                <Button Color="ButtonColor.Primary" @onclick="OnClickExit">Cerrar Sesion</Button>
-            </li>
-
-
-            <li id="SearchBox">
-                @* <AutoComplete @bind-Value="@nuevaTaskItem.TaskItemName"
-                              TItem="TaskItem"
-                              DataProvider="TaskItemsDataProvider"
-                              PropertyName="TaskItemName"
-                              Placeholder="Buscar TaskItem"
-                              OnChanged="(TaskItem TaskItem) => OnAutoCompleteChanged(TaskItem)"
-                              Size="AutoCompleteSize.Default" />
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<div class="scroll">
-
-    <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.BottomRight" />
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>TaskItemName</th>
-                <th>Descripcion</th>
-                <th>Finalizado</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var TaskItem in TaskItems)
-            {
-                <tr class="@GetRowClass(TaskItem)" id="fila" @onclick="(() => selectTaskItem(TaskItem))">
-                    <td>@TaskItem.TaskItemName</td>
-                    @* <td>@TaskItem.Descripcion</td>
-                    <td>@(TaskItem.Finalizado ? IsFinalizado.Si : IsFinalizado.No)</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <div id="scrollBtnContainer">
-        <button id="scrollBtnDown" onclick="bottomFuction()" title="Scroll to Bottom">
-            <i class="oi oi-chevron-bottom"></i>
-        </button>
-    </div>
-    <div id="scrollBtnContainertop">
-        <button id="scrollBtn" onclick="topFunction()" title="Scroll to Top">
-            <i class="oi oi-chevron-top"></i>
-        </button>
-    </div>
-</div>
-
-<div class="grafica">
-    <div id="chart">
-        <PieChart @ref="pieChart" Width="500" Class="mb-5" />
-    </div>
-</div>
+    <GridColumn TItem="TaskItem" HeaderText="Opciones" PropertyName="Opciones">
+        <a href="#">Editar</a>
+        <button class="option-button" @onclick="OnClickTaskForm">Editar</button>
+        <button class="option-button">Eliminar</button>
+    </GridColumn>
+</Grid>
 
 <section id="bottom" />
-
 
 <script>
     var mybutton = document.getElementById("scrollBtn");
@@ -209,123 +89,128 @@
     function bottomFuction() {
         document.getElementById('bottom').scrollIntoView({ behavior: 'smooth' });
     }
-
-    // function searchFuction() {
-
-    //     var w = $(window);
-    //     var row = $('#tableid').find('tr').eq(fila);
-
-    //     // var row = table.find('tr')
-    //     //     .removeClass('active')
-    //     //     .eq(+$('#fila').val())
-    //     //     .addClass('active');
-
-    //     if (row.length) {
-    //         $('html,body').animate({ scrollTop: row.offset().top - (w.height() / 2) }, 1000);
-    //     }
-    // }
-
-    // function CalculatePositionOfTR() {
-    //     return $('tr:eq(' + i + ')').offset().top;
-    // }
-
-    // function searchFuction(i) {
-    //     var position = CalculatePositionOfTD(i);
-    //     var timer = setTimeout(function () {
-    //         ScrollDownALittle(position);
-    //         if (CenterOfVerticalWindowPosition > position)
-    //             clearInterval(timer);
-    //     }, 100);
-    // }
 </script>
+
+<style>
+    .upper-buttons {
+        padding-bottom: 2.5em;
+        display: flex;
+        justify-content: space-between;        
+    }
+
+    .upper-buttons button {        
+        box-shadow: 0 8px 22px rgba(3,233,244,.5);
+        border: 1px solid #03e9f4;
+        border-radius: 8px;
+    }
+
+    .rounded-grid {
+        border-collapse: separate; 
+        color:black;
+    }
+
+        .rounded-grid th,
+        .rounded-grid td {
+            padding: 10px;           
+            border-radius: 8px;            
+        }
+
+        .rounded-grid th {
+            background-color: #d9d9d9;
+            font-weight: bold;
+        }
+  
+
+    .rounded-grid tr:not(.selected-row) {
+        cursor: pointer;
+        background-color: white;
+    }
+
+    .rounded-grid tr:hover:not(.selected-row) {
+        background-color: lightcyan;
+    }
+
+    .selected-row {
+        background-color: #9ed9e0 !important;
+    }    
+
+    .bb-grid-pagination-text {
+        padding: .375rem;
+        color: white;
+    }
+
+    
+    /* .page-item.disabled .page-link {
+        color: #03e9f4;
+        background-color: transparent;
+        border: 1px solid #03e9f4;
+    }
+
+        .page-item.disabled:hover .page-link:hover {
+            color: red; 
+            background-color: #f0f0f0; 
+            border-color: red;
+        } */
+
+
+   /*  .page-item.active .page-link { 
+        box-shadow: 0 8px 22px rgba(3,233,244,.5);
+        background-color: transparent;
+        border: 1px solid #03e9f4;        
+    } */
+</style>
+
+@* <Modal @ref="modal" Title="Formulario" Size="ModalSize.ExtraLarge">
+    <BodyTemplate>
+        <div id="formDiv">
+            <label for="formTextBox">TaskItemName</label>
+            <input type="text" id="formTextBox" Placeholder='Campo de texto de prueba'
+                   @bind="@NuevaTaskItem.TaskItemName" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
+        </div>
+
+        <div id="formDiv">
+            <label for="textaskitem">
+                Descripción
+            </label>
+            <textaskitem name="textaskitem" rows="20" id="formTextBox" Placeholder='Descripcion de prueba'
+                      @bind="@NuevaTaskItem.Descripcion" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
+
+        </div>
+
+        <div id="formDiv">
+            <input type="checkbox" id="finalizadoCheckBox" name="Finalizado" @bind="NuevaTaskItem.Finalizado" />
+            <label id="checkBoxLabel" for="finalizadoCheckBox">Finalizado</label>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <div id="FormButtons">
+            <button class="btn btn-success" @onclick="execTaskItem" disabled="@IsDisabled">Aceptar</button>
+            <button class="btn btn-danger" @onclick="HideModal">Cancelar</button>
+        </div>
+    </FooterTemplate>
+</Modal>
+
+
+<div class="scroll">   
+    <div id="scrollBtnContainer">
+        <button id="scrollBtnDown" onclick="bottomFuction()" title="Scroll to Bottom">
+            <i class="oi oi-chevron-bottom"></i>
+        </button>
+    </div>
+    <div id="scrollBtnContainertop">
+        <button id="scrollBtn" onclick="topFunction()" title="Scroll to Top">
+            <i class="oi oi-chevron-top"></i>
+        </button>
+    </div>
+</div>
+
 
 
 <style>
 
-    .grafica {
-        display: flex;
-        width: 100%;
-    }
-
-    #chart {
-        display: flex;
-        position: relative;
-        margin: auto;
-    }
-
     .scroll {
         margin: 2%;
-    }
-
-    .navbar-inverse {
-        position: fixed;
-        background-image: linear-gradient( rgb(48, 48, 48) 13%, rgb(30, 30, 30) 40%, #0c0d11 86% );
-        color: rgba(255, 255, 255, 0.6);
-        text-shadow: 0 -2px 0 black;
-        box-shadow: 1px 2px 4px rgb(20, 20, 20), 0 4px 12px rgb(10, 10, 10);
-        text-align: left;
-        width: 100%;
-    }
-
-    .topButtons button {
-        border-radius: 8px;
-        border: 1px solid white;
-    }
-
-    .navbar-nav {
-        display: inline;
-        list-style-type: none;
-    }
-
-    .navbar-inverse li {
-        display: inline-flex;
-        margin: 25px 3%;
-    }
-
-    *,
-    *:before,
-    *:after {
-        box-sizing: border-box;
-    }
-
-    input[type="checkbox"] {
-        appearance: none;
-        background-color: #fff;
-        margin: 0;
-        font: inherit;
-        width: 1.15em;
-        height: 1.15em;
-        border: 0.15em solid rebeccapurple;
-        border-radius: 0.18em;
-        transform: translateY(-0.075em);
-        display: grid;
-        place-content: center;
-    }
-
-        input[type="checkbox"]::before {
-            content: "";
-            width: 0.65em;
-            height: 0.65em;
-            transform: scale(0);
-            transition: 120ms transform ease-in-out;
-            box-shadow: inset 1em 1em rebeccapurple;
-            transform-origin: bottom left;
-            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-        }
-
-        input[type="checkbox"]:checked::before {
-            transform: scale(1);
-        }
-
-        input[type="checkbox"]:hover {
-            border: 0.18em solid rebeccapurple;
-            border-radius: 0.20em;
-            box-shadow: 0px 0px 12px 4px rgba(153,102,204,1);
-        }
-
-    #formTextBox {
-        width: 100%;
-    }
+    }      
 
     #scrollBtn, #scrollBtnDown {
         position: fixed;
@@ -355,16 +240,7 @@
         #scrollBtn:hover, #scrollBtnDown:hover {
             background: linear-gradient(290deg, rgba(9,72,190,1) 0%, rgba(55,43,162,1) 33%, rgba(107,11,131,1) 70%, rgba(107,11,131,1) 100%);
         }
-
-
-    body {
-        background: linear-gradient(160deg, rgba(27,58,117,0.7624299719887955) 0%, rgba(80,21,94,0.7344187675070029) 47%, rgba(239,222,246,1) 100%);
-    }
-
-    textaskitem {
-        width: 90%;
-        resize: none;
-    }
+            
 
     #formDiv {
         display: flex;
@@ -386,53 +262,7 @@
     label {
         text-align: left;
     }
-
-    #FormButtons {
-        display: flex;
-        margin: 5%;
-        text-align: right;
-    }
-
-        #FormButtons button {
-            box-shadow: 1px 1px 22px 4px rgba(66,52,66,0.69);
-            margin-right: 2%;
-            border-radius: 8px;
-            border: 1px solid white;
-        }
-
-    .btn {
-        width: 165px;
-    }
-
-    #finalizadoCheckBox {
-        margin-right: 15px;
-    }
-
-    .table {
-        margin-top: 100px;
-    }
-
-    .table, th, td {
-        border: 1px solid black;
-    }
-
-        .table th {
-            background-color: #E0E0E0;
-        }
-
-    tr:not(.selected-row) {
-        cursor: pointer;
-        background-color: white;
-    }
-
-    tr:hover:not(.selected-row) {
-        background-color: lightcyan;
-    }
-
-    .selected-row {
-        background-color: #9ed9e0;
-    }
-
+    
 </style>
 
  *@

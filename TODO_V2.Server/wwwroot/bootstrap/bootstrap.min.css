@@ -54,8 +54,7 @@
     --bs-body-font-size: 1rem;
     --bs-body-font-weight: 400;
     --bs-body-line-height: 1.5;
-    --bs-body-color: #212529;
-    --bs-body-bg: #fff
+    --bs-body-color: #212529;    
 }
 
 *, ::after, ::before {
@@ -290,7 +289,7 @@ img, svg {
 
 table {
     caption-side: bottom;
-    border-collapse: collapse
+    border-collapse: collapse;   
 }
 
 caption {
@@ -1855,8 +1854,7 @@ progress {
     }
 }
 
-.table {
-    --bs-table-bg: transparent;
+.table {   
     --bs-table-accent-bg: transparent;
     --bs-table-striped-color: #212529;
     --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
@@ -4940,67 +4938,85 @@ textaskitem.form-control-lg {
     list-style: none
 }
 
-.page-link {
-    position: relative;
-    display: block;
-    color: #0d6efd;
-    text-decoration: none;
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out
-}
 
-@media (prefers-reduced-motion:reduce) {
+
+@media (prefers-reduced-motion: reduce) {
     .page-link {
-        transition: none
+        transition: none;
     }
 }
 
-.page-link:hover {
-    z-index: 2;
-    color: #0a58ca;
-    background-color: #e9ecef;
-    border-color: #dee2e6
+.page-item.disabled .page-link,
+.page-item.active .page-link,
+.page-item .page-link {
+    position: relative;
+    display: inline-block;
+    padding: 10px 15px;
+    color: #03e9f4;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 40px;
+    letter-spacing: 4px;
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    /* border: 1px solid #03e9f4;*/
+    border-radius: 8px;
+    margin: 10px;   
 }
 
-.page-link:focus {
-    z-index: 3;
-    color: #0a58ca;
-    background-color: #e9ecef;
-    outline: 0;
-    box-shadow: 0 0 0 .25rem rgba(13,110,253,.25)
-}
+    .page-item.disabled .page-link{
+        color: slategrey;
+    }
 
-.page-item:not(:first-child) .page-link {
-    margin-left: -1px
-}
 
-.page-item.active .page-link {
-    z-index: 3;
+    .page-item.active .page-link {
+        background: #03e9f4;
+        color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 5px #03e9f4, 0 0 19px #03e9f4, 0 0 19px #03e9f4, 0 0 15px #03e9f4;
+       
+    }
+
+.page-link:focus,
+.page-item .page-link:hover {
+    background: #03e9f4;
     color: #fff;
-    background-color: #0d6efd;
-    border-color: #0d6efd
+    box-shadow: 0 0 5px #03e9f4, 0 0 19px #03e9f4, 0 0 19px #03e9f4, 0 0 15px #03e9f4;    
+    transition: transform 0.5s ease-in-out;
 }
 
-.page-item.disabled .page-link {
-    color: #6c757d;
-    pointer-events: none;
-    background-color: #fff;
-    border-color: #dee2e6
+    .page-item.disabled .page-link span:nth-child(1),
+    .page-item.disabled .page-link span:nth-child(2),
+    .page-item.disabled .page-link span:nth-child(3),
+    .page-item.disabled .page-link span:nth-child(4),
+    .page-item.active .page-link span:nth-child(1),
+    .page-item.active .page-link span:nth-child(2),
+    .page-item.active .page-link span:nth-child(3),
+    .page-item.active .page-link span:nth-child(4),
+    .page-item .page-link span:nth-child(1),
+    .page-item .page-link span:nth-child(2),
+    .page-item .page-link span:nth-child(3),
+    .page-item .page-link span:nth-child(4) {
+        animation: btn-anim1 1s linear infinite;
+    }
+
+@keyframes btn-anim1
+
+, btn-anim2, btn-anim3, btn-anim4 {
+    0%
+
+{
+    left: -100%;
 }
 
-.page-link {
-    padding: .375rem .75rem
+50%, 100% {
+    left: 100%;
 }
 
-.page-item:first-child .page-link {
-    border-top-left-radius: .25rem;
-    border-bottom-left-radius: .25rem
-}
-
-.page-item:last-child .page-link {
-    border-top-right-radius: .25rem;
-    border-bottom-right-radius: .25rem
 }
 
 .pagination-lg .page-link {
@@ -7399,7 +7415,7 @@ textaskitem.form-control-lg {
 }
 
 .justify-content-between {
-    justify-content: space-between !important
+    /*justify-content: space-between !important*/
 }
 
 .justify-content-around {
@@ -8416,7 +8432,7 @@ textaskitem.form-control-lg {
     }
 
     .justify-content-sm-between {
-        justify-content: space-between !important
+        /*justify-content: space-between !important*/
     }
 
     .justify-content-sm-around {

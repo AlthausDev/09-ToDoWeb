@@ -2,12 +2,19 @@
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.IdentityModel.Tokens;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using TODO_V2.Client.Layout;
 using TODO_V2.Client.Shared.Modals;
 using TODO_V2.Shared.Models;
 using ToastType = BlazorBootstrap.ToastType;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
 
 namespace TODO_V2.Client.Pages
 {
@@ -22,7 +29,7 @@ namespace TODO_V2.Client.Pages
 
 
         private List<ToastMessage> messages = new();
-        private List<TaskItem> TaskItemsList { get; set; } = new List<TaskItem>();
+        private ObservableCollection<TaskItem> TaskItemList { get; set; } = new ObservableCollection<TaskItem>();
 
         private bool IsDisabled { get; set; } = true;
         private bool IsDisabledEdit { get; set; } = true;
@@ -58,11 +65,10 @@ namespace TODO_V2.Client.Pages
                 if (selectedTaskItem != value)
                 {
                     selectedTaskItem = value;
-                    //SelectedChangeHandler();
+                    SelectedChangeHandler();
                 }
             }
         }
-
 
         protected override async Task OnInitializedAsync()
         {
@@ -70,6 +76,24 @@ namespace TODO_V2.Client.Pages
             await GetTaskData();
         }
 
+        private async Task<GridDataProviderResult<TaskItem>> UsersDataProvider(GridDataProviderRequest<TaskItem> request)
+        {
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
+
+            while (TaskItemList.IsNullOrEmpty())
+            {
+                await Task.Delay(5);
+            }
+
+            stopwatch.Stop();
+            Debug.WriteLine($"Tiempo total de espera: {stopwatch.ElapsedMilliseconds} ms");
+
+            return await Task.FromResult(request.ApplyTo(TaskItemList.OrderBy(TaskItem => TaskItem.Id)));
+        }
+
+
+        #region Api
         private async Task GetUserData()
         {
             User = await Http.GetFromJsonAsync<User>($"api/User/{Id}");
@@ -78,7 +102,8 @@ namespace TODO_V2.Client.Pages
         private async Task GetTaskData()
         {
             Debug.WriteLine(Id);
-            TaskItemsList = await Http.GetFromJsonAsync<List<TaskItem>>($"api/TaskItem/user/{Id}/tasks");
+            TaskItemList = new ObservableCollection<TaskItem>(await Http.GetFromJsonAsync<List<TaskItem>>($"api/TaskItem/user/{Id}/tasks"));
+            StateHasChanged();
         }
 
         private async Task AddOrUpdateTaskItem()
@@ -105,6 +130,7 @@ namespace TODO_V2.Client.Pages
             await GetTaskData();
             SelectedTaskItem = null;
         }
+        #endregion Api
 
         #region OnClick
         private async Task OnClickLogOut()
@@ -114,98 +140,21 @@ namespace TODO_V2.Client.Pages
             await storageService.ClearAsync();
             NavManager.NavigateTo("/login");
             Http.DefaultRequestHeaders.Remove("Authorization");
-        }
-
-        private async Task OnClickNewTask()
-        {
-            var response = await Http.DeleteAsync("/api/User/logout");
-            await storageService.RemoveItemAsync("token");
-            await storageService.ClearAsync();
-            NavManager.NavigateTo("/login");
-            Http.DefaultRequestHeaders.Remove("Authorization");
-        }
-
+        }  
         #endregion
 
-        #region New Task Item
-        private async Task OnClickRegister()
+        #region SelectRow
+        private void SelectTaskItem(TaskItem TaskItem)
         {
-            var parameters = new Dictionary<string, object>
-            {
-                { "Registrar", EventCallback.Factory.Create<MouseEventArgs>(this, Registro) },
-                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
-            };
-            await ModalInstance.ShowAsync<ModalRegistro>(title: "Registrarse", parameters: parameters);
+            SelectedTaskItem = TaskItem;
+            Debug.WriteLine(TaskItem.Name);
         }
 
-
-        private async Task Registro()
+        private string GetRowClass(TaskItem TaskItem)
         {
-            ShowMessage(ToastType.Success, "El Registro se ha realizado exitosamente");
-            await HideModal();
+            return TaskItem == SelectedTaskItem ? "selected-row" : "";
         }
-
-        private async Task HideModal()
-        {
-           
-            await ModalInstance.HideAsync();
-        }
-        #endregion 
-
-        //#region Edit
-        //private async Task OnClickRegister()
-        //{
-        //    var parameters = new Dictionary<string, object>
-        //    {
-        //        { "Registrar", EventCallback.Factory.Create<MouseEventArgs>(this, Registro) },
-        //        { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
-        //    };
-        //    await ModalInstance.ShowAsync<ModalRegistro>(title: "Registrarse", parameters: parameters);
-        //}
-
-
-        //private async Task Registro()
-        //{
-        //    ShowMessage(ToastType.Success, "El Registro se ha realizado exitosamente");
-        //    await HideModal();
-        //}
-
-        //private async Task HideModal()
-        //{
-        //    user = new User();
-        //    await ModalInstance.HideAsync();
-        //}
-        //#endregion 
-
-        private void ShowNewTaskModal()
-        {
-            AccionActual = Accion.Crear;
-            NewTaskItem = new TaskItem();
-            //ShowModal();
-        }
-
-        private void ShowEditTaskModal(TaskItem taskItem)
-        {
-            AccionActual = Accion.Editar;
-            SelectedTaskItem = taskItem;
-            //ShowModal();
-        }
-
-        //private async Task HideModal()
-        //{
-        //    SelectedTaskItem = null;
-        //    await ModalInstance.HideAsync();
-        //}
-
-        //private void ShowModal()
-        //{
-        //    ModalInstance.Show();
-        //}
-
-        private void ShowMessage(ToastType toastType, string message)
-        {
-            // Lógica para mostrar un mensaje de toast.
-        }
+        #endregion SelectRow
 
         public enum Accion
         {
@@ -214,60 +163,11 @@ namespace TODO_V2.Client.Pages
             Editar
         }
 
+        #region ApiOperations   
+        
+        #endregion ApiOperations
 
-
-
-
-
-
-
-
-        //#region ApiOperations    
-        //private async TaskItem getData()
-        //{
-        //    TaskItem[]? taskitemsArray = await Http.GetFromJsonAsync<TaskItem[]>("TaskItem");
-
-        //    if (taskitemsArray is not null)
-        //    {
-        //        TaskItemsList = [.. taskitemsArray];
-        //    }
-        //}
-
-
-        //private async TaskItem Post()
-        //{
-        //    TaskItems.Add(newTaskItem);
-        //    await Http.PostAsJsonAsync("TaskItem", NewTaskItem);
-        //    await getData();
-        //}
-
-        //private async TaskItem Put()
-        //{
-        //    await Http.PutAsJsonAsync("TaskItem", NewTaskItem);
-
-        //    TaskItems.Insert(TaskItems.IndexOf(selectedTaskItem), newTaskItem);
-        //    TaskItems.Remove(selectedTaskItem);
-        //}
-
-        //private async TaskItem Delete()
-        //{
-        //    if (selectedTaskItem != null)
-        //    {
-        //        TaskItems.Remove(selectedTaskItem);
-        //        HttpResponseMessage httpResponseMessage = await Http.DeleteAsync($"/DelTaskItem/{selectedTaskItem.Id}");
-
-        //        await getData();
-        //        SelectedTaskItem = null;
-
-        //        if (accion.Equals(Accion.Espera))
-        //        {
-        //            ShowMessage(ToastType.Danger, "Registro eliminado con éxito");
-        //        }
-        //    }
-        //}
-        //#endregion ApiOperations
-        //#region aux
-
+        #region aux
         //private void ShowNewTaskItemModal()
         //{
         //    //taskitemFormRef.SetTaskItem(new TaskItem { CreationDate = DateTime.Now });
@@ -292,17 +192,26 @@ namespace TODO_V2.Client.Pages
 
         //private void DeleteTaskItem(TaskItem TaskItem)
         //{
-        //    TaskItemsList.Remove(TaskItem);
+        //    TaskItemList.Remove(TaskItem);
         //}
+        #endregion
 
-        //#endregion
+        #region Modal
+        private void ShowNewTaskModal()
+        {
+            AccionActual = Accion.Crear;
+            NewTaskItem = new TaskItem();
+        }
 
+        private void ShowEditTaskModal(TaskItem taskItem)
+        {
+            AccionActual = Accion.Editar;
+            SelectedTaskItem = taskItem;
+        }
 
-
-        //#region Modal
         //private async TaskItem execTaskItem()
         //{
-        //    if (accion.Equals(Accion.Crear))
+        //    if (true)
         //    {
         //        await Post();
         //        ShowMessage(ToastType.Success, "Registro agregado con éxito");
@@ -313,8 +222,58 @@ namespace TODO_V2.Client.Pages
         //        ShowMessage(ToastType.Warning, "Registro editado con éxito");
         //    }
         //    await HideModal();
+        //    }
+
+
+        private async Task HideModal()
+        {
+            SelectedTaskItem = null;
+            await ModalInstance.HideAsync();
+        }
+
+        #region New Task Item
+        private async Task OnClickTaskForm()
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                { "Crear", EventCallback.Factory.Create<MouseEventArgs>(this, AddNewTask) },
+                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
+            };
+            await ModalInstance.ShowAsync<ModalTask>(title: "Agregar Tarea", parameters: parameters);
+        }
+
+
+        private async Task AddNewTask()
+        {
+            ShowMessage(ToastType.Success, "El Registro se ha realizado exitosamente");
+            await HideModal();
+        }
+        #endregion
+
+        #region Edit
+        //private async Task OnClickRegister()
+        //{
+        //    var parameters = new Dictionary<string, object>
+        //    {
+        //        { "Registrar", EventCallback.Factory.Create<MouseEventArgs>(this, Registro) },
+        //        { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
+        //    };
+        //    await ModalInstance.ShowAsync<ModalRegistro>(title: "Registrarse", parameters: parameters);
         //}
 
+
+        //private async Task Registro()
+        //{
+        //    ShowMessage(ToastType.Success, "El Registro se ha realizado exitosamente");
+        //    await HideModal();
+        //}
+
+        //private async Task HideModal()
+        //{
+        //    user = new User();
+        //    await ModalInstance.HideAsync();
+        //}
+        #endregion     
 
         //private async TaskItem OnClickShowModal(Enum accion)
         //{
@@ -340,75 +299,31 @@ namespace TODO_V2.Client.Pages
         //    NewTaskItem = new TaskItem();
         //    await modal.HideAsync();
         //}
-        //#endregion Modal       
+        #endregion Modal       
 
-        //#region SelectRow
-        //private void selectTaskItem(TaskItem TaskItem)
-        //{
-        //    SelectedTaskItem = TaskItem;
-        //    //Console.WriteLine(TaskItem.Name);
-        //}
+        #region Toast
+        private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
 
-        //private string GetRowClass(TaskItem TaskItem)
-        //{
-        //    return TaskItem == SelectedTaskItem ? "selected-row" : "";
-        //}
-        //#endregion SelectRow
+        private ToastMessage CreateToastMessage(ToastType toastType, string message)
+        {
+            var toastMessage = new ToastMessage();
+            toastMessage.Type = toastType;
+            toastMessage.Message = message;
 
-        //#region AutoComplete
-        //private async TaskItem<AutoCompleteDataProviderResult<TaskItem>> TaskItemsDataProvider(AutoCompleteDataProviderRequest<TaskItem> request)
-        //{
-        //    return await TaskItem.FromResult(request.ApplyTo(TaskItems.OrderBy(TaskItem => TaskItem.TaskItemName)));
-        //}
+            return toastMessage;
+        }
+        #endregion Toast     
 
-        //#endregion AutoComplete
-
-        //#region Toast
-        //private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
-
-        //private ToastMessage CreateToastMessage(ToastType toastType, string message)
-        //{
-        //    var toastMessage = new ToastMessage();
-        //    toastMessage.Type = toastType;
-        //    toastMessage.Message = message;
-
-        //    return toastMessage;
-        //}
-        //#endregion Toast     
-
-        //#region Handlers
-        //private void SelectedChangeHandler()
-        //{
-        //    IsDisabledEdit = selectedTaskItem == null;
-        //}
+        #region Handlers
+        private void SelectedChangeHandler()
+        {
+            IsDisabledEdit = selectedTaskItem == null;
+        }
 
         //private void ValueChangeHandler()
         //{
         //    IsDisabled = (String.IsNullOrWhiteSpace(NewTaskItem.TaskItemName) || String.IsNullOrWhiteSpace(NewTaskItem.State));
-        //}
-
-        //private async TaskItem OnAutoCompleteChanged(TaskItem TaskItem)
-        //{
-        //    SelectedTaskItem = TaskItem;
-        //    //await JS.InvokeVoidAsync($"searchFuction('{SelectedTaskItem.TaskItemName}')");
-        //    Console.WriteLine($"'{TaskItem?.TaskItemName}' selected.");
-        //}
-        //#endregion Handlers
-
-        //#region Enums
-        //public enum Accion
-        //{
-        //    Espera,
-        //    Crear,
-        //    Editar
-        //}
-
-        //public enum IsFinalizado
-        //{
-        //    No,
-        //    Si
-        //}
-        //#endregion Enums     
+        //}       
+        #endregion Handlers
     }
-
 }

@@ -20,13 +20,14 @@ namespace TODO_V2.Client.Shared.Modals
         private string UserType { get; set; } = UserTypeEnum.USUARIO.ToString().ToString();
 
         private User? NewUser;
+        private TaskItem? NewTaskItem;
 
         private string? PasswordColor, UserNameColor, NameColor, SurnameColor, ClaveColor;
         private bool IsInputValid = false;
 
         List<ToastMessage> messages = new();
 
-        [Parameter] public EventCallback<MouseEventArgs> Registrar { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> Crear { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> Cerrar { get; set; }
 
 
@@ -56,19 +57,17 @@ namespace TODO_V2.Client.Shared.Modals
                 return;
             }
 
-            NewUser = new(UserName, Name, Surname,UserTypeEnum.USUARIO.ToString());
-
-            if (await RegisterUser())
-            {
+            //if (await NewItem())
+            //{
                 Login.user = NewUser;
                 ClearFields();
-                await Registrar.InvokeAsync();
-            }
-            else
-            {
+                //await Registrar.InvokeAsync();
+            //}
+            //else
+            //{
                 ShowMessage(ToastType.Danger, "El Username introducido ya existe. Por favor, introduzca un nuevo Username");
                 UserNameColor = ColorsEnum.crimson.ToString();
-            }
+            //}
         }
 
 
@@ -143,23 +142,14 @@ namespace TODO_V2.Client.Shared.Modals
         #endregion Handlers
 
         #region Api
-        private async Task<bool> RegisterUser()
-        {
-            HttpResponseMessage response = await Http.PostAsJsonAsync("user", NewUser);
-            var data = await response.Content.ReadAsStringAsync();
-
-            if (data.Equals("false"))
-            {
-                return false;
-            }
-
-            ClearFields();
-            return true;
+        private async Task NewItem()
+        {            
+            await Http.PostAsJsonAsync("TaskItem", NewTaskItem);            
         }
 
-        private async Task<User?> GetUserByUserName(string Username)
+        private async Task EditItem()
         {
-            return await Http.GetFromJsonAsync<User>($"api/User/{Username}");
+            await Http.PutAsJsonAsync("TaskItem", NewTaskItem);
         }
         #endregion Api
 
