@@ -52,7 +52,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped(client => new HttpClient
 {
-    BaseAddress = new Uri("https://localhost:7216/")
+    BaseAddress = new Uri("https://localhost:7216/"), 
 }); 
 #endregion
 

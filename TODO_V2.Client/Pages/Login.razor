@@ -10,14 +10,14 @@
 <Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true" I />
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
-<div class="login-box">
+<div class="main-box" style="background: rgba(0,0,0,.5);">
     <h2>LOGIN</h2>
     <form>
-        <div class="user-box">
+        <div class="core-box">
             <input autofocus type="text" name="" required="true" @bind="UserName" @bind:event="oninput">
             <label>Username</label>
         </div>
-        <div class="user-box">
+        <div class="core-box">
             <input type="password" name="" required="true" @bind="Password" @bind:event="oninput">
             <label>Contraseña</label>
         </div>
@@ -37,69 +37,3 @@
         </button>
     </form>
 </div>
-
-<style>  
-    .login-box {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        width: 400px;
-        padding: 40px;
-        transform: translate(-50%, -50%);
-        background: rgba(0,0,0,.5);
-        box-sizing: border-box;     
-        box-shadow: 0 15px 25px rgba(3,233,244,.5);
-        border-radius: 10px;
-        border: 1px solid #03e9f4;
-    }
-
-        .login-box h2 {
-            margin: 0 0 20%; 
-            font-size: 2em;
-            padding: 0;
-            color: #fff;
-            text-align: center;
-        }
-
-        .login-box .user-box {
-            position: relative;
-        }
-
-            .login-box .user-box input {
-                width: 100%;
-                padding: 10px 0;
-                font-size: 16px;
-                color: #fff;
-                margin-bottom: 30px;
-                border: none;
-                border-bottom: 1px solid #fff;
-                outline: none;
-                background: transparent;
-            }
-
-            .login-box .user-box label {
-                position: absolute;
-                top: 0;
-                left: 0;
-                padding: 10px 0;
-                font-size: 16px;
-                color: #fff;
-                pointer-events: none;
-                transition: .5s;
-            }
-
-            .login-box .user-box input:focus ~ label,
-            .login-box .user-box input:valid ~ label {
-                top: -20px;
-                left: 0;
-                color: #03e9f4;
-                font-size: 12px;
-            }
-
-
-        .login-box button {
-            display: ruby-text;
-            width: 100%;
-            text-align: center;
-        }
-</style>

@@ -14,6 +14,7 @@ using TODO_V2.Client.Layout;
 using TODO_V2.Client.Shared.Modals;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Utils;
+using TODO_V2.Shared.Models.Enum;
 
 namespace TODO_V2.Client.Pages
 {
@@ -28,11 +29,46 @@ namespace TODO_V2.Client.Pages
         private string UserName { get; set; } = string.Empty;
         private string Password { get; set; } = string.Empty;        
 
+
         #region Login     
         private async Task OnClickLogin()
         {
             var loginResult = await LoginUser(UserName, Password);
-            HandleLoginResult(loginResult);
+            LoginResult(loginResult);
+        }
+
+        private void LoginResult(ActionResult<User> loginResult)
+        {
+            try
+            {
+                if (loginResult == null || loginResult.Value == null)
+                {
+                    ShowMessage(ToastType.Danger, "Credenciales incorrectas. Por favor, inténtelo de nuevo.");
+                    return;
+                }
+
+                NavigateBasedOnUserType(loginResult.Value);
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ToastType.Danger, $"Ocurrió un error al procesar el inicio de sesión: {ex.Message}");
+            }
+        }
+
+        private void NavigateBasedOnUserType(User user)
+        {
+            switch (user.UserType)
+            {
+                case "USUARIO":
+                    NavManager.NavigateTo($"/todo/{user.Id}");
+                    break;
+                case "ADMINISTRADOR":
+                    NavManager.NavigateTo("/admin");
+                    break;
+                default:
+                    ShowMessage(ToastType.Danger, $"Tipo de usuario desconocido: {user.UserType}");
+                    break;
+            }
         }
         #endregion
 
@@ -110,19 +146,5 @@ namespace TODO_V2.Client.Pages
             Http.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         }
         #endregion Token   
-
-        #region Handlers  
-        private void HandleLoginResult(ActionResult<User> loginResult)
-        {
-            if (loginResult.Value != null)
-            {
-                NavManager.NavigateTo($"/todo/{loginResult.Value.Id}");
-            }
-            else
-            {
-                ShowMessage(ToastType.Danger, "Credenciales incorrectas. Por favor, inténtelo de nuevo.");
-            }
-        }
-        #endregion Handlers
     }
 }

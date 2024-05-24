@@ -26,7 +26,12 @@ namespace TODO_V2.Client.Shared.Modals
         private User? NewUser;
         private LoginCredentials? Credentials { get; set; }
 
-        private string? PasswordColor, UserNameColor, NameColor, SurnameColor, ClaveColor;
+        private string? PasswordColor = "#03e9f4";
+        private string? UserNameColor = "#03e9f4";
+        private string? NameColor = "#03e9f4";
+        private string? SurnameColor = "#03e9f4";
+        private string? ClaveColor = "#03e9f4";
+
         private bool IsInputValid = false;
 
         List<ToastMessage> messages = new();
@@ -103,7 +108,7 @@ namespace TODO_V2.Client.Shared.Modals
         {
             if (string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(CheckPassword))
             {
-                PasswordColor = ColorsEnum.white.ToString();
+                PasswordColor = "#03e9f4";
                 return false;
             }
 
@@ -141,7 +146,7 @@ namespace TODO_V2.Client.Shared.Modals
             }
             else
             {
-                ClaveColor = ColorsEnum.white.ToString();
+                ClaveColor = "#03e9f4";
                 return false;
             }
         }
@@ -213,14 +218,14 @@ namespace TODO_V2.Client.Shared.Modals
         private bool CheckFieldFormat(string fieldValue, string fieldType, ref string fieldColor)
         {
             bool isValid = Validation.CheckFormat(fieldValue, fieldType);
-            fieldColor = isValid ? ColorsEnum.lime.ToString() : ColorsEnum.white.ToString();
+            fieldColor = isValid ? ColorsEnum.lime.ToString() : "#03e9f4";
             return isValid;
         }
 
         private void ClearFields()
         {
             UserName = Password = CheckPassword = Name = Surname = Clave = string.Empty;
-            PasswordColor = UserNameColor = NameColor = SurnameColor = ClaveColor = ColorsEnum.white.ToString();
+            PasswordColor = UserNameColor = NameColor = SurnameColor = ClaveColor = "#03e9f4";
         }
         #endregion Aux
     }

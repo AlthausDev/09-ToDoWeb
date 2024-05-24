@@ -12,10 +12,7 @@ namespace TODO_V2.Client.Pages
 {
     public partial class StartUp
     {      
-
-        //protected override async Task OnInitializedAsync()       
-        //}
-
+     
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await LoadTestDataIfNeeded();

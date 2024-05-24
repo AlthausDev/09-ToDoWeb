@@ -10,6 +10,30 @@
     
 }
 
+
+/* Estilos para la barra de desplazamiento en el body */
+body::-webkit-scrollbar {
+    width: 10px; /* Ancho de la barra de desplazamiento */
+    position: fixed; /* Fijar la barra de desplazamiento */
+    right: 0; /* Colocar la barra de desplazamiento en el extremo derecho */
+}
+
+/* Estilo del riel de la barra de desplazamiento */
+body::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Color de fondo del riel */
+}
+
+/* Estilo del pulgar de la barra de desplazamiento */
+body::-webkit-scrollbar-thumb {
+    background-color: #03e9f4; /* Color del pulgar */
+    border-radius: 5px; /* Bordes redondeados del pulgar */
+}
+
+    /* Estilo del pulgar de la barra de desplazamiento cuando está activo (por ejemplo, cuando se hace clic y se arrastra) */
+    body::-webkit-scrollbar-thumb:hover {
+        background-color: #028090; /* Color del pulgar cuando está activo */
+    }
+
 main {
     flex: 1;   
 }

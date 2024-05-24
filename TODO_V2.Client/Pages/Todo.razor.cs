@@ -26,6 +26,8 @@ namespace TODO_V2.Client.Pages
         private User User { get; set; }
 
         private Modal ModalInstance = default!;
+        private ConfirmDialog dialog = default!;
+        [Inject] ToastService ToastService { get; set; } = default!;
 
 
         private List<ToastMessage> messages = new();
@@ -123,9 +125,25 @@ namespace TODO_V2.Client.Pages
             await HideModal();
         }
 
-        private async Task DeleteTaskItem()
+        private async Task DeleteTaskAsync()
         {
-            await Http.DeleteAsync($"api/TaskItem/{SelectedTaskItem.Id}");
+            var parameters = new Dictionary<string?, object?>();
+            parameters.Add("TaskId", 39);
+            
+            var response = await dialog.ShowAsync<ModalDelete>("Are you sure you want to delete this?", parameters);
+
+            if (response)
+            {
+                await DeleteTaskItem(39);
+                ToastService.Notify(new ToastMessage(ToastType.Success, $"Deleted successfully."));
+            }
+            else
+                ToastService.Notify(new ToastMessage(ToastType.Secondary, $"Delete action canceled."));
+        }
+
+        private async Task DeleteTaskItem(int Id)
+        {
+            await Http.DeleteAsync($"api/TaskItem/{Id}");
             ShowMessage(ToastType.Success, "Tarea eliminada con éxito.");
             await GetTaskData();
             SelectedTaskItem = null;
@@ -148,6 +166,7 @@ namespace TODO_V2.Client.Pages
         {
             SelectedTaskItem = TaskItem;
             Debug.WriteLine(TaskItem.Name);
+            Debug.WriteLine(TaskItem.ToString());
         }
 
         private string GetRowClass(TaskItem TaskItem)

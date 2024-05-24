@@ -40,22 +40,18 @@
 }
 
 .option-button {
-    width: 120px;
+    width: 100px;
     font-weight: bold;
     position: relative;
-    display: inline-block;
-    padding: 10px 20px;
-    color: black;
-    font-size: 12px;
-    text-decoration: none;
-    text-transform: uppercase;
+    display: flex;
+    padding: 5px 10px;
+    color: #006bb7;
+    font-size: 16px;
     overflow: hidden;
     transition: .5s;
-    letter-spacing: 4px;
     background: transparent;
     border: none;
-    cursor: pointer;
-}
+    justify-content: center;}
 
     .option-button:hover {
         background: #03e9f4;

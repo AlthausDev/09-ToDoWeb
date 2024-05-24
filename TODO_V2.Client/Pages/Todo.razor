@@ -8,7 +8,9 @@
 @inject ILocalStorageService storageService
 
 
-<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true" I />
+<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true"/>
+<ConfirmDialog @ref="dialog" />
+
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
 <nav class="upper-buttons">
@@ -35,11 +37,11 @@
     </GridColumn>
 
     <GridColumn TItem="TaskItem" HeaderText="Fecha Creacion" PropertyName="Nombre" SortKeySelector="item => item.CreatedAt">
-        @context.CreatedAt
+        @context.CreatedAt.ToString("dd/MM/yyyy")
     </GridColumn>
 
     <GridColumn TItem="TaskItem" HeaderText="Fecha Vencimiento" PropertyName="Fecha Vencimiento" SortKeySelector="item => item.ExpirationDate">
-        @context.ExpirationDate
+        @context.ExpirationDate?.ToString("dd/MM/yyyy")
     </GridColumn>
 
     <GridColumn TItem="TaskItem" HeaderText="Estado" PropertyName="Estado" SortKeySelector="item => item.State">
@@ -47,9 +49,10 @@
     </GridColumn>
 
     <GridColumn TItem="TaskItem" HeaderText="Opciones" PropertyName="Opciones">
-        <a href="#">Editar</a>
-        <button class="option-button" @onclick="OnClickTaskForm">Editar</button>
-        <button class="option-button">Eliminar</button>
+        <div class="options-container">
+            <button class="option-button" @onclick="OnClickTaskForm">Editar</button>
+            <button class="option-button" @onclick="DeleteTaskAsync">Eliminar</button>
+        </div>
     </GridColumn>
 </Grid>
 
@@ -139,6 +142,12 @@
         color: white;
     }
 
+    .options-container{
+        width: 100px;
+        display: inline-grid;
+        justify-content: center;
+        justify-items: center;
+    }
     
     /* .page-item.disabled .page-link {
         color: #03e9f4;

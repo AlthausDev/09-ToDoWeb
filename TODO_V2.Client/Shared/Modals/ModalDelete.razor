@@ -1,0 +1,23 @@
+﻿@using TODO_V2.Shared.Models
+<div class="row">
+    <div class="col-5 col-md-3 text-end">Employee Id :</div>
+    <div class="col-7 col-md-9">Id</div>
+</div>
+<div class="row">
+    <div class="col-5 col-md-3 text-end">First Name :</div>
+    <div class="col-7 col-md-9">Name</div>
+</div>
+
+@code {
+    private TaskItem? taskItem;
+
+    [Parameter] public int TaskId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // get employee with {EmployeeId} from DB
+      
+
+        base.OnInitialized();
+    }
+}

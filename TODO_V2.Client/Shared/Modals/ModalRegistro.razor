@@ -4,31 +4,31 @@
 @inject HttpClient Http
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
-<div class="register-box">
+<div class="main-box">
     <h2>REGISTRO</h2>
     <form>
-        <div class="user-box">
-            <input autofocus type="text" name="" required="true" @bind="UserName" @bind:event="oninput" style="border-bottom:1px solid @UserNameColor" @onkeyup="ValueChangeHandler">
+        <div class="core-box">
+            <input autofocus type="text" name="" required="true" @bind="UserName" @bind:event="oninput" style="border: 2px solid @UserNameColor; box-shadow: 0 3px 26px @UserNameColor;" @onkeyup="ValueChangeHandler">
             <label>Username</label>
         </div>
-        <div class="user-box">
-            <input type="Password" name="" required="true" @bind="Password" @bind:event="oninput" style="border-bottom:1px solid var(--password-color)" @onkeyup="ValueChangeHandler">
+        <div class="core-box">
+            <input type="Password" name="" required="true" @bind="Password" @bind:event="oninput" style="border: 2px solid var(--password-color); box-shadow: 0 3px 26px var(--password-color);" @onkeyup="ValueChangeHandler">
             <label>Contraseña </label>
         </div>
-        <div class="user-box">
-            <input type="Password" name="" required="true" @bind="@CheckPassword" @bind:event="oninput" style="border-bottom:1px solid var(--password-color)" @onkeyup="ValueChangeHandler">
+        <div class="core-box">
+            <input type="Password" name="" required="true" @bind="@CheckPassword" @bind:event="oninput" style="border: 2px solid var(--password-color); box-shadow: 0 3px 26px var(--password-color);" @onkeyup="ValueChangeHandler">
             <label>Repetir Contraseña</label>
         </div>
-        <div class="user-box">
-            <input type="text" name="" required="true" @bind="@Name" @bind:event="oninput" style="border-bottom:1px solid @NameColor" @onkeyup="ValueChangeHandler">
+        <div class="core-box">
+            <input type="text" name="" required="true" @bind="@Name" @bind:event="oninput" style="border: 2px solid @NameColor; box-shadow: 0 3px 26px @NameColor;" @onkeyup="ValueChangeHandler">
             <label>Nombre</label>
         </div>
-        <div class="user-box">
-            <input type="text" name="" required="true" @bind="@Surname" @bind:event="oninput" style="border-bottom:1px solid @SurnameColor" @onkeyup="ValueChangeHandler">
+        <div class="core-box">
+            <input type="text" name="" required="true" @bind="@Surname" @bind:event="oninput" style="border: 2px solid @SurnameColor; box-shadow: 0 3px 26px @SurnameColor;" @onkeyup="ValueChangeHandler">
             <label>Apellido</label>
         </div>
-        <div class="user-box">
-            <input type="text" name="" required="true" @bind="@Clave" @bind:event="oninput" style="border-bottom:1px solid @ClaveColor" @onkeyup="ValueChangeHandler">
+        <div class="core-box">
+            <input type="text" name="" required="true" @bind="@Clave" @bind:event="oninput" style="border: 2px solid @ClaveColor; box-shadow: 0 3px 26px @ClaveColor;" @onkeyup="ValueChangeHandler">
             <label>Clave</label>
         </div>
         <button type="button" class="button-style" @onclick="OnClickRegistro">
@@ -53,70 +53,7 @@
         --password-color: @PasswordColor;
     }
 
-    .modal-body{
-        display: contents;        
-    }
-
-    .modal-header {
-        display:none;        
-    }
-
-    .register-box {
-        
-        width: 600px;
-        padding: 40px;     
-        background: rgba(0,0,0,1);
-        box-sizing: border-box;
-        box-shadow: 0 15px 25px rgba(3,233,244,.5);
-        border-radius: 10px;
-        border: 1px solid #03e9f4;        
-    }
-
-        .register-box h2 {
-            margin: 0 0 15%;
-            font-size: 2em;
-            padding: 0;
-            color: #fff;
-            text-align: center;
-        }
-
-        .register-box .user-box {
-            position: relative;
-            transition: all ease 10s;
-        }
-
-            .register-box .user-box input {
-                width: 100%;
-                padding: 10px 0;
-                font-size: 16px;
-                color: #fff;
-                margin-bottom: 30px;
-                border: none;
-                outline: none;
-                background: transparent;
-            }
-            
-
-            .register-box .user-box label {
-                position: absolute;
-                top: 0;
-                left: 0;
-                padding: 10px 0;
-                font-size: 16px;
-                color: #fff;
-                pointer-events: none;
-                transition: .5s;
-            }
-
-            .register-box .user-box input:focus ~ label,
-            .register-box .user-box input:valid ~ label {
-                top: -20px;
-                left: 0;
-                color: #03e9f4;
-                font-size: 12px;
-            }
-
-    .register-box button {      
+    .main-box button {      
         display: ruby-text;        
         width: 100%;
         text-align: center;
