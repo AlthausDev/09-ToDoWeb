@@ -100,8 +100,7 @@ namespace TODO_V2.Client.Shared.Modals
 
         private void ClearFields()
         {
-            TaskName = TaskCategory = state = string.Empty;
-            PasswordColor = UserNameColor = NameColor = SurnameColor = ClaveColor = ColorsEnum.white.ToString();
+            TaskName = TaskCategory = state = string.Empty;           
         }
         #endregion Aux
     }
