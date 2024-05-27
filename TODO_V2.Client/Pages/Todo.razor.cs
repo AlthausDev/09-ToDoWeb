@@ -182,10 +182,6 @@ namespace TODO_V2.Client.Pages
             Editar
         }
 
-        #region ApiOperations   
-        
-        #endregion ApiOperations
-
         #region aux
         //private void ShowNewTaskItemModal()
         //{
@@ -254,11 +250,13 @@ namespace TODO_V2.Client.Pages
         private async Task OnClickTaskForm()
         {
             var parameters = new Dictionary<string, object>
-            {
-                { "Crear", EventCallback.Factory.Create<MouseEventArgs>(this, AddNewTask) },
+             {
+                { "UserId", User.Id },
+                { "TaskId", SelectedTaskItem?.Id },                
+                { "Aceptar", EventCallback.Factory.Create<MouseEventArgs>(this, AddNewTask) },
                 { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
             };
-            await ModalInstance.ShowAsync<ModalTask>(title: "Agregar Tarea", parameters: parameters);
+            await ModalInstance.ShowAsync<ModalTask>(title: "Tarea", parameters: parameters);
         }
 
 

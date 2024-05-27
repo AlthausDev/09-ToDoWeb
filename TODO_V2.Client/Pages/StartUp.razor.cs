@@ -6,6 +6,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using TODO_V2.Shared.Data;
+using TODO_V2.Client.Data;
+using TODO_V2.Shared.Models;
 
 
 namespace TODO_V2.Client.Pages
@@ -16,6 +18,7 @@ namespace TODO_V2.Client.Pages
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await LoadTestDataIfNeeded();
+            await CategoryDictionary.LoadCategoryDictionary(Http);           
             await CheckToken();
         }
 
@@ -30,7 +33,7 @@ namespace TODO_V2.Client.Pages
 
             if (!await ExistAnyTask())
                 await TaskItemData.LoadTestTasks(Http);
-        }
+        }        
         #endregion
 
         #region Data Existence Checks 

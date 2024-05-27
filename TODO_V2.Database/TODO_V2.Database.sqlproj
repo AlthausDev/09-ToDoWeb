@@ -63,7 +63,6 @@
   <ItemGroup>
     <Build Include="dbo\Tables\Users.sql" />
     <Build Include="dbo\Tables\UserCredentials.sql" />
-    <Build Include="dbo\Procedure\DeleteAllUsers.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Categories.sql" />

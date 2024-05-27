@@ -4,7 +4,7 @@
     CategoryId INT NOT NULL,
     UserId INT NOT NULL,
     Name NVARCHAR(255) NOT NULL,
-    State NVARCHAR(50) NOT NULL,
+    StateId INT NOT NULL DEFAULT 1,
     CreatedAt DATE NOT NULL DEFAULT GETDATE(),
     UpdatedAt DATE NULL,
     UpdatedBy INT NULL,

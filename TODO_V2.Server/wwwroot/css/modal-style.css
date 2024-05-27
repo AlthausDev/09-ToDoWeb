@@ -35,20 +35,23 @@
         transition: all ease-in-out 10s;
     }
 
-        .main-box .core-box input {
+        .main-box .core-box input, 
+        .main-box .core-box select {
             width: 100%;
             padding: 10px 15px;
             font-size: 16px;
-            color: #fff;
-            /*margin-bottom: 30px;*/
+            color: #fff;            
             margin: 30px 0px;
             outline: none;
             background: rgba(255, 255, 255, .2);
-            box-shadow: 0 3px 26px rgba(3,233,244,.5);
+            box-shadow: 0 3px 26px rgba(3,233,244);
             border-radius: 5px;
             border: 2px solid #03e9f4;
         }
 
+        .main-box .core-box select option {
+            background: rgba(0, 0, 0, .8) !important;
+        }
 
         .main-box .core-box label {
             position: absolute;
@@ -61,13 +64,15 @@
             transition: .5s;
         }
 
-        .main-box .core-box input:focus ~ label,
+        .main-box .core-box input:focus ~ label,        
         .main-box .core-box input:valid ~ label {
             top: -5px;
             left: 12px;
             color: #03e9f4;
             font-size: 14px;
         }
+
+   
 
     .main-box form a {
         position: relative;

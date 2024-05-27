@@ -1,4 +1,5 @@
-﻿@using TODO_V2.Shared.Models
+﻿@using TODO_V2.Client.Data
+@using TODO_V2.Shared.Models
 @using Microsoft.AspNetCore.Components
 @using Microsoft.AspNetCore.Components.Forms
 
@@ -11,39 +12,63 @@
 <div class="main-box">  
     <form>
         <div class="core-box">
-            <input autofocus type="text" name="" required="true" @bind="TaskName" @bind:event="oninput" style="border-bottom:1px solid @DescripcionColor" @onkeyup="ValueChangeHandler">
-            <label>Tarea</label>
+            <input autofocus type="text" name="" required="true" @bind="TaskName" @bind:event="oninput" style="border: 2px solid @DescripcionColor; box-shadow: 0 3px 26px @DescripcionColor;" @onkeyup="ValueChangeHandler">
+            <label>Descripcion de la tarea</label>
         </div>
+  
         <div class="core-box">
-            <input type="text" list="browsers" />
-            <datalist id="browsers">
-                <option>Google</option>
-                <option>IE9</option>
-            </datalist>
-            <label>Categoria </label>
+            <select @bind="@TaskCategory" id="category" name="categoria">
+                <option value="0" disabled selected hidden>Categoria</option>
+                @foreach (var categoryId in CategoryDictionary.categoryDictionary.Keys)
+                {
+                    <option value="@categoryId">@CategoryDictionary.GetCategoryName(categoryId)</option>
+                }
+            </select>
+            <label for="category">Categoria</label>
+        </div> 
+
+        <div class="core-box">
+            <input type="date"
+                   id="expirationDateInput"
+                   name="meeting-time"
+                   @bind-value="@ExpirationDate"
+                   min="@ExpirationDate" />            
+            <label for="expirationDateInput">Fecha de expiración</label>
         </div>
-        <div class="core-box">
-            <DateInput TValue="DateTime" @bind-Value="@ExpirationDate"/>    
-            <label>Fecha de expiración </label>
+
+        <div class="core-box">             
+            <select @bind="@StateId" id="status" name="estado">
+                <option value="" disabled selected hidden>Estado de la tarea</option>
+                <option value="1">Pendiente</option>
+                <option value="2">En proceso</option>
+                <option value="3">Finalizada</option>
+                <option value="4">Cancelada</option>
+            </select>     
+            <label for="status">Estado de la tarea</label>
         </div>
-        <div class="core-box">
-            <input type="text" name="" required="true" @bind="@state" @bind:event="oninput" @onkeyup="ValueChangeHandler">
-            <label>Estado</label>
-        </div>       
-        <a href="" @onclick="OnClickRegistro">
+
+        <button type="button" class="button-style" @onclick="OnClickAceptar">
             <span></span>
             <span></span>
             <span></span>
             <span></span>
             Aceptar
-        </a>
-        <a href="" @onclick="OnClickClose">
+        </button>
+        <button type="button" class="button-style" @onclick="OnClickClose">
             <span></span>
             <span></span>
             <span></span>
             <span></span>
             Salir
-        </a>
+        </button>
     </form>
 </div>
 
+<style>
+    div.core-box > select + label {
+        top: -5px !important;
+        left: 12px !important;
+        color: #03e9f4 !important;
+        font-size: 14px !important;
+    }
+</style>

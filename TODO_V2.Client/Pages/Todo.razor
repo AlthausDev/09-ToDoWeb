@@ -44,8 +44,8 @@
         @context.ExpirationDate?.ToString("dd/MM/yyyy")
     </GridColumn>
 
-    <GridColumn TItem="TaskItem" HeaderText="Estado" PropertyName="Estado" SortKeySelector="item => item.State">
-        @context.State
+    <GridColumn TItem="TaskItem" HeaderText="Estado" PropertyName="Estado" SortKeySelector="item => item.StateId">
+        @context.StateId
     </GridColumn>
 
     <GridColumn TItem="TaskItem" HeaderText="Opciones" PropertyName="Opciones">

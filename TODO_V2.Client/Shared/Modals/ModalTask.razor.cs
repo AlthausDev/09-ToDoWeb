@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
 using System.Net.Http.Json;
 using TODO_V2.Client.Pages;
 using TODO_V2.Shared.Models;
@@ -14,39 +15,76 @@ namespace TODO_V2.Client.Shared.Modals
     {
         [Parameter]
         public int UserId {  get; set; }
-        public int? TaskId { get; set; } 
+        [Parameter]
+        public int? TaskId { get; set; }
 
-
-        public string TaskName { get; set; } = string.Empty;
-        public string TaskCategory { get; set; }
+        public string TaskName { get; set; } = string.Empty;    
+        public int TaskCategory { get; set; } = 1;
         public DateTime ExpirationDate { get; set; } = DateTime.Now.Date;
-        public string state { get; set; }
+        public int StateId { get; set; } = 1;
 
 
         private TaskItem? NewTaskItem;
 
-        private string? DescripcionColor;
+        private string DescripcionColor = "#03e9f4";
+
         private bool IsInputValid = false;
+        public bool IsEditing { get; private set; } = false;
+
 
         List<ToastMessage> messages = new();
 
-        [Parameter] public EventCallback<MouseEventArgs> Crear { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> Aceptar { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> Cerrar { get; set; }
 
 
-        #region OnClick
-        protected async Task OnClickRegistro()
-        {       
-            if (!IsInputValid)
-            {
+        protected override async Task OnInitializedAsync()
+        {
+            IsEditing = TaskId.HasValue;
+            IsInputValid = IsEditing;
+            await LoadTaskById(TaskId ?? 0);
+
+            Debug.WriteLine(UserId);
+            Debug.WriteLine(TaskId);
+        }
+
+
+        #region OnClick     
+        protected async Task OnClickAceptar()
+        {
+            if (IsInputValid)
+            {               
+                if (IsEditing)
+                {                    
+                    NewTaskItem.Name = TaskName;
+                    NewTaskItem.CategoryId = TaskCategory;
+                    NewTaskItem.StateId = StateId;
+                    NewTaskItem.ExpirationDate = ExpirationDate;
+
+                    await EditItem();
+                }
+                else
+                {
+                    NewTaskItem = new(TaskCategory, UserId, StateId, TaskName, ExpirationDate);
+
+                    await NewItem();
+                }
+
+                Debug.WriteLine($"Nombre de la tarea: {NewTaskItem.Name}");
+                Debug.WriteLine($"Categoría de la tarea: {NewTaskItem.CategoryId}");
+                Debug.WriteLine($"Fecha de expiración: {NewTaskItem.ExpirationDate}");
+                Debug.WriteLine($"Estado de la tarea: {NewTaskItem.StateId}");
+
+
+                ClearFields();
+                await Aceptar.InvokeAsync();
+            }
+            else {
                 ShowMessage(ToastType.Danger, "Introduzca la descripción de su tarea");
                 DescripcionColor = ColorsEnum.crimson.ToString();
                 return;
-            }          
-                ClearFields();
-                //await Registrar.InvokeAsync();      
+            }
         }
-
 
         protected void OnClickClose()
         {
@@ -59,21 +97,50 @@ namespace TODO_V2.Client.Shared.Modals
         #region Handlers
         private void ValueChangeHandler()
         {
-            IsInputValid = TaskName.IsNullOrEmpty();      
-        }              
-        
+            DescripcionColor = "#03e9f4";
+            IsInputValid = !TaskName.IsNullOrEmpty();
+        }
+
         #endregion Handlers
 
-
         #region Api
+        private async Task LoadTaskById(int taskId)
+        {
+            if (taskId != 0) 
+            {
+                try
+                {
+                    var task = await Http.GetFromJsonAsync<TaskItem>($"api/TaskItem/{taskId}");
+
+                    if (task != null)
+                    {
+                        NewTaskItem = task;
+                        
+                        TaskName = NewTaskItem.Name;
+                        TaskCategory = NewTaskItem.CategoryId;
+                        ExpirationDate = (DateTime)NewTaskItem.ExpirationDate;
+                        StateId = NewTaskItem.StateId;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al cargar la tarea por Id: {ex.Message}");                  
+                }
+            }
+            else
+            {               
+                NewTaskItem = new TaskItem();
+            }
+        }
+
         private async Task NewItem()
-        {            
-            await Http.PostAsJsonAsync("TaskItem", NewTaskItem);            
+        {
+            await Http.PostAsJsonAsync("api/TaskItem", NewTaskItem);
         }
 
         private async Task EditItem()
         {
-            await Http.PutAsJsonAsync("TaskItem", NewTaskItem);
+            await Http.PutAsJsonAsync($"api/TaskItem/{TaskId}", NewTaskItem);
         }
         #endregion Api
 
@@ -91,16 +158,12 @@ namespace TODO_V2.Client.Shared.Modals
         #endregion Toast
 
         #region Aux
-        private bool CheckFieldFormat(string fieldValue, string fieldType, ref string fieldColor)
-        {
-            bool isValid = Validation.CheckFormat(fieldValue, fieldType);
-            fieldColor = isValid ? ColorsEnum.lime.ToString() : ColorsEnum.white.ToString();
-            return isValid;
-        }
-
         private void ClearFields()
         {
-            TaskName = TaskCategory = state = string.Empty;           
+            TaskName = string.Empty;
+            TaskCategory = StateId = 1;
+            IsInputValid = false;
+            DescripcionColor = "#03e9f4";
         }
         #endregion Aux
     }

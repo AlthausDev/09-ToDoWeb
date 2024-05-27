@@ -27,8 +27,8 @@ namespace TODO_V2.Server.Repository.Impl
                 using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
                 {
                     await dbConnection.ExecuteAsync(@"
-                        INSERT INTO Tasks (CategoryId, UserId, Name, State, ExpirationDate) 
-                        VALUES (@CategoryId, @UserId, @Name, @State, @ExpirationDate)", taskItem);
+                        INSERT INTO Tasks (CategoryId, UserId, Name, StateId, ExpirationDate) 
+                        VALUES (@CategoryId, @UserId, @Name, @StateId, @ExpirationDate)", taskItem);
                 }
                 return true;
             }
@@ -114,13 +114,13 @@ namespace TODO_V2.Server.Repository.Impl
                     await dbConnection.ExecuteAsync(@"
                         UPDATE Tasks 
                         SET CategoryId = @CategoryId, UserId = @UserId, Name = @Name, 
-                            State = @State, ExpirationDate = @ExpirationDate, UpdatedAt = GETDATE(), UpdatedBy = @UpdatedBy
+                            StateId = @StateId, ExpirationDate = @ExpirationDate, UpdatedAt = GETDATE(), UpdatedBy = @UpdatedBy
                         WHERE Id = @Id", new
                     {
                         taskItem.CategoryId,
                         taskItem.UserId,
                         taskItem.Name,
-                        taskItem.State,
+                        taskItem.StateId,
                         taskItem.ExpirationDate,
                         taskItem.UpdatedBy,
                         taskItem.Id
