@@ -38,14 +38,22 @@ namespace TODO_V2.Client.Shared.Modals
         [Parameter] public EventCallback<MouseEventArgs> Cerrar { get; set; }
 
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnParametersSetAsync()
         {
-            IsEditing = TaskId.HasValue;
-            IsInputValid = IsEditing;
-            await LoadTaskById(TaskId ?? 0);
+            if (TaskId.HasValue)
+            {
+                IsEditing = true;
+                IsInputValid = true;
+                await LoadTaskById(TaskId.Value);
+            }
+            else
+            {
+                IsEditing = false;
+                IsInputValid = false;
+                ClearFields();
+            }
 
-            Debug.WriteLine(UserId);
-            Debug.WriteLine(TaskId);
+            await base.OnParametersSetAsync();
         }
 
 
@@ -75,8 +83,7 @@ namespace TODO_V2.Client.Shared.Modals
                 Debug.WriteLine($"Fecha de expiración: {NewTaskItem.ExpirationDate}");
                 Debug.WriteLine($"Estado de la tarea: {NewTaskItem.StateId}");
 
-
-                ClearFields();
+                ClearFields();            
                 await Aceptar.InvokeAsync();
             }
             else {

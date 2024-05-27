@@ -10,7 +10,6 @@ namespace TODO_V2.Client.Data
     {
         public static Dictionary<int, string> categoryDictionary = new Dictionary<int, string>();
 
-       
         public static async Task LoadCategoryDictionary(HttpClient http)
         {
             try
@@ -20,7 +19,10 @@ namespace TODO_V2.Client.Data
                 {
                     foreach (var category in categories)
                     {
-                        categoryDictionary.Add(category.Id, category.Name);
+                        if (!categoryDictionary.ContainsKey(category.Id))
+                        {
+                            categoryDictionary.Add(category.Id, category.Name);
+                        }                       
                     }
                 }
                 PrintDictionary();
@@ -30,6 +32,7 @@ namespace TODO_V2.Client.Data
                 Debug.WriteLine($"Error loading category dictionary: {ex.Message}");
             }
         }
+
 
         public static string GetCategoryName(int categoryId)
         {

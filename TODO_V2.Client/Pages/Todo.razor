@@ -1,5 +1,7 @@
 ﻿ @page "/todo/{Id}"
+@using TODO_V2.Client.Data
 @using TODO_V2.Shared.Models
+@using TODO_V2.Shared.Models.Enum
 <PageTitle>ToDo List!</PageTitle>
 
 @inject HttpClient Http
@@ -14,26 +16,29 @@
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
 <nav class="upper-buttons">
-    <button type="button" class="button-style" @onclick="OnClickTaskForm">Nueva Tarea</button>
+    <button type="button" class="button-style" @onclick="() => OnClickTaskForm(null)">Nueva Tarea</button>
     <button type="button" class="button-style" @onclick="OnClickLogOut">Logout</button>
 </nav>
 
-<Grid TItem="TaskItem"
+<Grid TItem="TaskItem"    
     AllowFiltering="false"
     AllowPaging="true"
     PageSize="15"
-    
+    AllowRowClick="true"
     AllowSorting="true"
     HeaderRowCssClass="bg-black text-black"    
     DataProvider="UsersDataProvider"
-    Responsive="true" class="table rounded-grid">
+    OnRowClick="SelectTaskItem"    
+    Responsive="true"
+    class="table rounded-grid"
+    @ref="DataGrid">
 
     <GridColumn TItem="TaskItem" HeaderText="Tarea" PropertyName="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true">
         @context.Name
     </GridColumn>
 
     <GridColumn TItem="TaskItem" HeaderText="Categoria" PropertyName="CategoryId" SortKeySelector="item => item.CategoryId">
-        @context.CategoryId
+        @CategoryDictionary.GetCategoryName(@context.CategoryId)
     </GridColumn>
 
     <GridColumn TItem="TaskItem" HeaderText="Fecha Creacion" PropertyName="Nombre" SortKeySelector="item => item.CreatedAt">
@@ -44,14 +49,15 @@
         @context.ExpirationDate?.ToString("dd/MM/yyyy")
     </GridColumn>
 
-    <GridColumn TItem="TaskItem" HeaderText="Estado" PropertyName="Estado" SortKeySelector="item => item.StateId">
-        @context.StateId
-    </GridColumn>
+  <GridColumn TItem="TaskItem" HeaderText="Estado" PropertyName="Estado" SortKeySelector="item => item.StateId">
+    @((TaskStateEnum)@context.StateId)
+</GridColumn>
+
 
     <GridColumn TItem="TaskItem" HeaderText="Opciones" PropertyName="Opciones">
         <div class="options-container">
-            <button class="option-button" @onclick="OnClickTaskForm">Editar</button>
-            <button class="option-button" @onclick="DeleteTaskAsync">Eliminar</button>
+            <button class="option-button" @onclick="() => OnClickTaskForm(context)">Editar</button>
+            <button class="option-button" @onclick="() => DeleteTaskAsync(context)">Eliminar</button>
         </div>
     </GridColumn>
 </Grid>
@@ -147,131 +153,6 @@
         display: inline-grid;
         justify-content: center;
         justify-items: center;
-    }
-    
-    /* .page-item.disabled .page-link {
-        color: #03e9f4;
-        background-color: transparent;
-        border: 1px solid #03e9f4;
-    }
-
-        .page-item.disabled:hover .page-link:hover {
-            color: red; 
-            background-color: #f0f0f0; 
-            border-color: red;
-        } */
-
-
-   /*  .page-item.active .page-link { 
-        box-shadow: 0 8px 22px rgba(3,233,244,.5);
-        background-color: transparent;
-        border: 1px solid #03e9f4;        
-    } */
+    }   
 </style>
 
-@* <Modal @ref="modal" Title="Formulario" Size="ModalSize.ExtraLarge">
-    <BodyTemplate>
-        <div id="formDiv">
-            <label for="formTextBox">TaskItemName</label>
-            <input type="text" id="formTextBox" Placeholder='Campo de texto de prueba'
-                   @bind="@NuevaTaskItem.TaskItemName" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
-        </div>
-
-        <div id="formDiv">
-            <label for="textaskitem">
-                Descripción
-            </label>
-            <textaskitem name="textaskitem" rows="20" id="formTextBox" Placeholder='Descripcion de prueba'
-                      @bind="@NuevaTaskItem.Descripcion" @bind:event="oninput" @onkeyup="ValueChangeHandler" />
-
-        </div>
-
-        <div id="formDiv">
-            <input type="checkbox" id="finalizadoCheckBox" name="Finalizado" @bind="NuevaTaskItem.Finalizado" />
-            <label id="checkBoxLabel" for="finalizadoCheckBox">Finalizado</label>
-        </div>
-    </BodyTemplate>
-    <FooterTemplate>
-        <div id="FormButtons">
-            <button class="btn btn-success" @onclick="execTaskItem" disabled="@IsDisabled">Aceptar</button>
-            <button class="btn btn-danger" @onclick="HideModal">Cancelar</button>
-        </div>
-    </FooterTemplate>
-</Modal>
-
-
-<div class="scroll">   
-    <div id="scrollBtnContainer">
-        <button id="scrollBtnDown" onclick="bottomFuction()" title="Scroll to Bottom">
-            <i class="oi oi-chevron-bottom"></i>
-        </button>
-    </div>
-    <div id="scrollBtnContainertop">
-        <button id="scrollBtn" onclick="topFunction()" title="Scroll to Top">
-            <i class="oi oi-chevron-top"></i>
-        </button>
-    </div>
-</div>
-
-
-
-<style>
-
-    .scroll {
-        margin: 2%;
-    }      
-
-    #scrollBtn, #scrollBtnDown {
-        position: fixed;
-        right: 2%;
-        border: 1px solid white;
-        z-index: 99;
-        background: linear-gradient(145deg, rgba(7,54,141,1) 0%, rgba(42,33,121,1) 33%, rgba(81,9,99,1) 70%, rgba(81,9,99,1) 100%);
-        color: white;
-        cursor: pointer;
-        padding: 10px 15px 10px 15px;
-        border-radius: 12px;
-        font-size: 18px;
-        box-shadow: 1px 1px 20px 4px rgba(107,11,131,1);
-    }
-
-    #scrollBtn {
-        /* position: fixed; */
-        display: none;
-        bottom: 5%;
-    }
-
-    #scrollBtnDown {
-        display: block;
-        top: 20px;
-    }
-
-        #scrollBtn:hover, #scrollBtnDown:hover {
-            background: linear-gradient(290deg, rgba(9,72,190,1) 0%, rgba(55,43,162,1) 33%, rgba(107,11,131,1) 70%, rgba(107,11,131,1) 100%);
-        }
-            
-
-    #formDiv {
-        display: flex;
-        flex-direction: row;
-        margin: 2% 5% 5%;
-    }
-
-        #formDiv label {
-            display: inline-block;
-            width: 10%;
-            font-size: 14px;
-            margin-right:5%;
-        }
-
-    label textaskitem {
-        vertical-align: top;
-    }
-
-    label {
-        text-align: left;
-    }
-    
-</style>
-
- *@

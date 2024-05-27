@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlazorBootstrap;
+using System;
 
 namespace TODO_V2.Shared.Models
 {
@@ -20,6 +21,6 @@ namespace TODO_V2.Shared.Models
             StateId = stateId; 
             Name = name;
             ExpirationDate = expirationDate;
-        }
+        }        
     }
 }
