@@ -13,12 +13,12 @@ using TODO_V2.Shared.Models;
 namespace TODO_V2.Client.Pages
 {
     public partial class StartUp
-    {      
-     
+    {
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await LoadTestDataIfNeeded();
-            await CategoryDictionary.LoadCategoryDictionary(Http);           
+            await CategoryDictionary.LoadCategoryDictionary(Http);
             await CheckToken();
         }
 
@@ -33,22 +33,22 @@ namespace TODO_V2.Client.Pages
 
             if (!await ExistAnyTask())
                 await TaskItemData.LoadTestTasks(Http);
-        }        
+        }
         #endregion
 
         #region Data Existence Checks 
         private async Task<bool> ExistAnyUser()
         {
             return await ExistAnyElement("api/User/count", "User");
-        }       
+        }
 
         private async Task<bool> ExistAnyCategory()
-        {            
+        {
             return await ExistAnyElement("api/Category/count", "Category");
         }
 
         private async Task<bool> ExistAnyTask()
-        {            
+        {
             return await ExistAnyElement("api/TaskItem/count", "TaskItem");
         }
 
@@ -61,7 +61,7 @@ namespace TODO_V2.Client.Pages
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error al verificar la existencia de {elementName}: {ex.Message}");
+                // Debug.WriteLine($"Error al verificar la existencia de {elementName}: {ex.Message}");
                 return false;
             }
         }
@@ -69,11 +69,10 @@ namespace TODO_V2.Client.Pages
         #endregion
 
         private async Task CheckToken()
-        {     
+        {
             try
             {
-                string getToken = await storageService.GetItemAsStringAsync("token");
-                Debug.WriteLine(getToken);
+                string getToken = await storageService.GetItemAsStringAsync("token");               
 
                 if (string.IsNullOrEmpty(getToken))
                 {
@@ -86,7 +85,9 @@ namespace TODO_V2.Client.Pages
                 List<Claim> claims = jwtSecurityToken.Claims.ToList();
 
                 int userId = int.Parse(claims.ElementAt(0).Value);
-                NavManager.NavigateTo($"/todo/{userId}");
+                string UserType = claims.ElementAt(2).Value;
+
+                NavigateBasedOnUserType(UserType, userId);
             }
             catch (Exception)
             {
@@ -94,5 +95,21 @@ namespace TODO_V2.Client.Pages
                 NavManager.NavigateTo("/login");
             }
         }
+
+        private void NavigateBasedOnUserType(string UserType, int Id)
+        {
+            switch (UserType)
+            {
+                case "USUARIO":
+                    NavManager.NavigateTo($"/todo/{Id}");
+                    break;
+                case "ADMINISTRADOR":
+                    NavManager.NavigateTo("/admin");
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 }

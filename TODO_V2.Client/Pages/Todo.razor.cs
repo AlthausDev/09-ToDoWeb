@@ -1,24 +1,19 @@
 ﻿using BlazorBootstrap;
-using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http.Json;
-using TODO_V2.Client.Layout;
 using TODO_V2.Client.Shared.Modals;
 using TODO_V2.Shared.Models;
 using ToastType = BlazorBootstrap.ToastType;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using TODO_V2.Client.Data;
 
 
 namespace TODO_V2.Client.Pages
 {
+    //TODO Revisar PreloadService, no se muestra cuando se realiza recarga forzada de la página "F5"
     public partial class Todo
     {
         [Parameter]
@@ -30,28 +25,12 @@ namespace TODO_V2.Client.Pages
         private ConfirmDialog dialog = default!;
 
         [Inject] ToastService ToastService { get; set; } = default!;
+        [Inject] protected PreloadService PreloadService { get; set; }
 
         private List<ToastMessage> messages = new();
 
         Grid<TaskItem> DataGrid = default!;
         private ObservableCollection<TaskItem> TaskItemList { get; set; } = new ObservableCollection<TaskItem>();
-
-
-        private TaskItem newTaskItem { get; set; } = new TaskItem();
-        private TaskItem NewTaskItem
-        {
-            get
-            {
-                return newTaskItem;
-            }
-            set
-            {
-                if (newTaskItem != value)
-                {
-                    newTaskItem = value;
-                }
-            }
-        }
 
         private TaskItem? selectedTaskItem { get; set; } = null;
         public TaskItem? SelectedTaskItem
@@ -68,15 +47,39 @@ namespace TODO_V2.Client.Pages
                 }
             }
         }
-      
+
+        private bool isLoading = true;
 
         protected override async Task OnInitializedAsync()
-        {   
-            await CategoryDictionary.LoadCategoryDictionary(Http);       
-            await GetUserData();            
-            await GetTaskData();
+        {           
+            try
+            {
+                isLoading = true;
+                PreloadService.Show(SpinnerColor.Light, "Cargando...");
+
+                await CategoryDictionary.LoadCategoryDictionary(Http);       
+                await GetUserData();            
+                await GetTaskData();
+            }
+            finally
+            {                
+                isLoading = false;
+                await Task.Delay(1000);
+                PreloadService.Hide();
+            }
         }
-       
+
+        private RenderFragment RenderLoadingIndicator() => builder =>
+        {
+            if (isLoading)
+            {               
+                builder.OpenElement(0, "div");
+                builder.AddAttribute(1, "class", "loading-indicator");
+                builder.AddContent(2, "Cargando...");
+                builder.CloseElement();
+            }
+        };
+
 
         #region StartUp
         private async Task GetUserData()
@@ -103,18 +106,14 @@ namespace TODO_V2.Client.Pages
 
         private async Task GetTaskData()
         {
-            Debug.WriteLine(Id);
-            TaskItemList = new ObservableCollection<TaskItem>(await Http.GetFromJsonAsync<List<TaskItem>>($"api/TaskItem/user/{Id}/tasks"));
-            await DataGrid.RefreshDataAsync();
+            TaskItemList = new ObservableCollection<TaskItem>(await Http.GetFromJsonAsync<List<TaskItem>>($"api/TaskItem/user/{Id}/tasks"));            
         }
         #endregion
 
         #region SelectRow    
         private async Task SelectTaskItem(GridRowEventArgs<TaskItem> args)
         {
-                SelectedTaskItem = args.Item; 
-                Debug.WriteLine(SelectedTaskItem.ToString());
-                Debug.WriteLine(SelectedTaskItem.Id);
+                SelectedTaskItem = args.Item;                 
         }
 
         #endregion SelectRow        
@@ -127,7 +126,6 @@ namespace TODO_V2.Client.Pages
         }
 
         #region Task Item Form    
-
         private async Task OnClickTaskForm(TaskItem? taskItem)
         {
             SelectedTaskItem = taskItem;
@@ -146,7 +144,8 @@ namespace TODO_V2.Client.Pages
         {
             ShowMessage(ToastType.Success, "El Registro se ha realizado exitosamente");
             await HideModal();
-            await GetTaskData(); 
+            await GetTaskData();
+            await DataGrid.RefreshDataAsync();
         }
         #endregion
 
@@ -165,10 +164,23 @@ namespace TODO_V2.Client.Pages
 
             var parameters = new Dictionary<string, object?>
             {
-                { "TaskId", SelectedTaskItem.Id }
+                { "Name", SelectedTaskItem.Name },
+                { "Message", "esta tarea" }
             };
 
-            var response = await dialog.ShowAsync<ModalDelete>("¿Está seguro de que desea eliminar esto?", parameters);
+            var options = new ConfirmDialogOptions
+            {                
+                YesButtonColor = ButtonColor.Danger, 
+                YesButtonText = "Eliminar", 
+                NoButtonText = "Cancelar",      
+                IsVerticallyCentered = true,
+                Dismissable = true
+            };
+
+            var response = await dialog.ShowAsync<ModalDelete>(                
+                title: "Confirmar Eliminación", 
+                parameters,
+                confirmDialogOptions: options);
 
             if (response)
             {
@@ -183,10 +195,13 @@ namespace TODO_V2.Client.Pages
 
         private async Task DeleteTaskItem(int Id)
         {
-            await Http.DeleteAsync($"api/TaskItem/{Id}");
-            ShowMessage(ToastType.Success, "Tarea eliminada con éxito.");
-            await GetTaskData();
             SelectedTaskItem = null;
+
+            await Http.DeleteAsync($"api/TaskItem/{Id}");            
+            await GetTaskData();
+            await DataGrid.RefreshDataAsync();
+
+            ShowMessage(ToastType.Success, "Tarea eliminada con éxito.");
         }
         #endregion 
 
@@ -212,9 +227,7 @@ namespace TODO_V2.Client.Pages
 
             return toastMessage;
         }
-        #endregion Toast     
+        #endregion Toast    
 
-        #region Handlers
-        #endregion Handlers   
     }    
 }

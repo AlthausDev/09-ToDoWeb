@@ -1,23 +1,47 @@
 ﻿@using TODO_V2.Shared.Models
-<div class="row">
-    <div class="col-5 col-md-3 text-end">Employee Id :</div>
-    <div class="col-7 col-md-9">Id</div>
+@inject IJSRuntime JS
+
+<div>
+<p>@Name</p>
 </div>
-<div class="row">
-    <div class="col-5 col-md-3 text-end">First Name :</div>
-    <div class="col-7 col-md-9">Name</div>
+<div>
+<p class="text-danger">¿Está seguro de que desea eliminar @Message?</p>
 </div>
+
+<style>
+    .modal-title{
+        font-size: large;
+    }
+
+    .modal-header {
+        display: flex;
+        border-bottom: 1px solid #03e9f4;
+        flex-direction: column;
+    }
+
+    .modal-content{
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #03e9f4;
+        box-shadow: 0 8px 22px rgba(3,233,244,.5);
+        border: 1px solid #03e9f4;
+        border-radius: 8px;
+    }
+
+    .modal-content div {
+        margin: 3%;       
+    }
+</style>
+
 
 @code {
-    private TaskItem? taskItem;
 
-    [Parameter] public int TaskId { get; set; }
+//TODO revisar estilo y parámetros, mejorar visualemnte y control de datos
+
+    [Parameter] public string Name { get; set; }
+    [Parameter] public string Message { get; set; }
 
     protected override void OnInitialized()
     {
-        // get employee with {EmployeeId} from DB
-      
-
         base.OnInitialized();
     }
 }

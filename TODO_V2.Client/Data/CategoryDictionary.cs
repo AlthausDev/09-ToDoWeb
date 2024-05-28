@@ -29,7 +29,7 @@ namespace TODO_V2.Client.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error loading category dictionary: {ex.Message}");
+                // Debug.WriteLine($"Error loading category dictionary: {ex.Message}");
             }
         }
 
@@ -48,10 +48,10 @@ namespace TODO_V2.Client.Data
 
         public static void PrintDictionary()
         {
-            Debug.WriteLine("Category Dictionary Contents:");
+            // Debug.WriteLine("Category Dictionary Contents:");
             foreach (var kvp in categoryDictionary)
             {
-                Debug.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}");
+                // Debug.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}");
             }
         }
     }

@@ -18,6 +18,7 @@ using TODO_V2.Shared.Models.Enum;
 
 namespace TODO_V2.Client.Pages
 {
+    //TODO Implementar accion con el teclado, acceso mediante enter
     public partial class Login 
     {
         

@@ -112,10 +112,10 @@ namespace TODO_V2.Server.Controllers.Impl
         public async Task<ActionResult<User>> Put(UserCredentialsRequest request)
         {
             User user = request.user;
-            Debug.WriteLine(user.ToString());
+            // Debug.WriteLine(user.ToString());
             LoginCredentials credentials = new(request.Credentials.Username, request.Credentials.Password);            
             
-            Debug.WriteLine(credentials.ToString());
+            // Debug.WriteLine(credentials.ToString());
 
 
             var result = await _userService.Update(user, credentials);

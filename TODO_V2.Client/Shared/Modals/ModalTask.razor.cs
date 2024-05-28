@@ -78,10 +78,10 @@ namespace TODO_V2.Client.Shared.Modals
                     await NewItem();
                 }
 
-                Debug.WriteLine($"Nombre de la tarea: {NewTaskItem.Name}");
-                Debug.WriteLine($"Categoría de la tarea: {NewTaskItem.CategoryId}");
-                Debug.WriteLine($"Fecha de expiración: {NewTaskItem.ExpirationDate}");
-                Debug.WriteLine($"Estado de la tarea: {NewTaskItem.StateId}");
+                // Debug.WriteLine($"Nombre de la tarea: {NewTaskItem.Name}");
+                // Debug.WriteLine($"Categoría de la tarea: {NewTaskItem.CategoryId}");
+                // Debug.WriteLine($"Fecha de expiración: {NewTaskItem.ExpirationDate}");
+                // Debug.WriteLine($"Estado de la tarea: {NewTaskItem.StateId}");
 
                 ClearFields();            
                 await Aceptar.InvokeAsync();
