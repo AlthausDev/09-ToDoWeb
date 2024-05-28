@@ -1,13 +1,11 @@
-﻿using Azure;
-using System.Reflection.Metadata;
-using TODO_V2.Client.Layout;
-using TODO_V2.Shared.Models;
-using static System.Net.WebRequestMethods;
+﻿using BlazorBootstrap;
 
 namespace TODO_V2.Client.Pages
 {
     partial class Admin
     {
+
+        public static Modal ModalInstance = default!;
 
         private string ShowUsersMannager = "none";
         private string ShowCategoriesMannager = "block";
@@ -23,7 +21,7 @@ namespace TODO_V2.Client.Pages
             ShowUsersMannager = "none";
             ShowCategoriesMannager = "block";
         }
-
+      
         private async Task OnClickLogOut()
         {
    
@@ -32,6 +30,11 @@ namespace TODO_V2.Client.Pages
                 await storageService.RemoveItemAsync("token");
                 NavManager.NavigateTo("/");
                 Http.DefaultRequestHeaders.Remove("Authorization");
+        }
+
+        public static async Task HideModal()
+        {       
+            await ModalInstance.HideAsync();
         }
     }
 }

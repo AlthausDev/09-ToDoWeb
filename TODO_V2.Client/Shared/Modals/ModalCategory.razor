@@ -1,5 +1,43 @@
-﻿<h3>ModalCategory</h3>
+﻿@using TODO_V2.Client.Data
+@using TODO_V2.Shared.Models
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
 
-@code {
+@using TODO_V2.Client.Pages
+@using TODO_V2.Shared
 
-}
+@inject HttpClient Http
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
+
+<div class="main-box">
+    <form>
+        <div class="core-box">
+            <input type="text" name="" required="true" @bind="CategoryName" @bind:event="oninput" style="border: 2px solid @DescripcionColor; box-shadow: 0 3px 26px @DescripcionColor;" @onkeyup="ValueChangeHandler">
+            <label>Descripcion de la tarea</label>
+        </div>       
+
+        <button type="button" class="button-style" @onclick="OnClickAceptar">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Aceptar
+        </button>
+        <button type="button" class="button-style" @onclick="OnClickClose">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Salir
+        </button>
+    </form>
+</div>
+
+<style>
+    div.core-box > select + label {
+        top: -5px !important;
+        left: 12px !important;
+        color: #03e9f4 !important;
+        font-size: 14px !important;
+    }
+</style>

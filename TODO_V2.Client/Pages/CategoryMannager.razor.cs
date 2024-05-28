@@ -106,17 +106,15 @@ namespace TODO_V2.Client.Pages
         private async Task SelectCategory(GridRowEventArgs<Category> args)
         {
             SelectedCategory = args.Item;
+
+            Debug.WriteLine(SelectedCategory.Id);
+            Debug.WriteLine(SelectedCategory.Name);
         }
 
         #endregion SelectRow        
 
-        #region Modal  
-        private async Task HideModal()
-        {
-            SelectedCategory = null;
-            await ModalInstance.HideAsync();
-        }
 
+        #region Modal  
         #region Category Item Form    
 
         private async Task OnClickCategoryForm(Category? category)
@@ -124,19 +122,19 @@ namespace TODO_V2.Client.Pages
             SelectedCategory = category;
             var parameters = new Dictionary<string, object>
              {
-                { "CategoryName", SelectedCategory?.Name},
                 { "CategoryId", SelectedCategory?.Id },
+                { "CategoryName", SelectedCategory?.Name},                
                 { "Aceptar", EventCallback.Factory.Create<MouseEventArgs>(this, CategoryFormResult) },
-                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
+                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, Admin.HideModal) }
             };
-            await ModalInstance.ShowAsync<ModalCategory>(title: "Categorias", parameters: parameters);
+            await Admin.ModalInstance.ShowAsync<ModalCategory>(title: "Categorias", parameters: parameters);
         }
 
 
         private async Task CategoryFormResult()
         {
             ShowMessage(ToastType.Success, "Se ha creado exitosamente la categoría");
-            await HideModal();
+            await Admin.HideModal();
             await GetCategoryData();
             await DataGrid.RefreshDataAsync();
         }
@@ -145,7 +143,6 @@ namespace TODO_V2.Client.Pages
         #endregion Modal       
 
         #region Delete
-
         private async Task DeleteCategoryAsync(Category category)
         {
             SelectedCategory = category;
@@ -185,6 +182,7 @@ namespace TODO_V2.Client.Pages
             }
         }
 
+        //TODO Añadir mensaje de error al borrar si tiene tareas asociadas
         private async Task DeleteCategory(int Id)
         {
             SelectedCategory = null;
