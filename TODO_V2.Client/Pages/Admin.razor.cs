@@ -4,7 +4,7 @@ namespace TODO_V2.Client.Pages
 {
     partial class Admin
     {
-
+        //TODO Implementar boton de navegación interna y permitir al administrador acceder también a su lista de tareas
         public static Modal ModalInstance = default!;
 
         private string ShowUsersMannager = "none";

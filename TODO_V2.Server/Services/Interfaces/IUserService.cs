@@ -14,5 +14,7 @@ namespace TODO_V2.Server.Services.Interfaces
         Task<User?> GetByUserName(string username);
         Task<ActionResult<LoginResponse>> Login(LoginCredentials credentials);
         Task<bool> Logout();
+        Task<LoginCredentials> GetCredentialsByUserId(int userId);
+
     }
 }

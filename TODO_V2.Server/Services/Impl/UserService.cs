@@ -52,6 +52,8 @@ namespace TODO_V2.Server.Services.Impl
         {
             UserCredentials userCredentials = await GetUserCredentialsByUserName(credentials.Username);
             userCredentials.EncryptedPassword = EncryptionUtil.Encrypt(credentials.Password);
+            userCredentials.UserName = credentials.Username;
+
             return await UserRepository.Update(user, userCredentials);
         }
 
@@ -172,6 +174,13 @@ namespace TODO_V2.Server.Services.Impl
         private async Task<UserCredentials> GetUserCredentialsByUserName(string username)
         {
             return await UserRepository.GetUserCredentialsByUserName(username.ToUpper());
+        }
+
+        public async Task<LoginCredentials> GetCredentialsByUserId(int userId)
+         {   
+            UserCredentials userCredentials = await UserRepository.GetUserCredentialsById(userId);
+            LoginCredentials loginCredentials = new(userCredentials.UserName, EncryptionUtil.Decrypt(userCredentials.EncryptedPassword));
+            return loginCredentials;
         }
 
         private UserCredentials CreateUserCredentials(LoginCredentials credentials)

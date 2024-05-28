@@ -10,20 +10,22 @@ using System.Net.Http.Json;
 using System.Diagnostics;
 using TODO_V2.Client.DTO;
 using TODO_V2.Shared.Models.Request;
+using System.Threading.Tasks;
+using Fare;
 
 namespace TODO_V2.Client.Shared.Modals
 {
     partial class ModalRegistro
     {
-        public string Name { get; set; } = string.Empty;
-        public string Surname { get; set; } = string.Empty;
-        public string UserName { get; set; } = string.Empty;
+        [Parameter]
+        public int? Id { get; set; }  
         public string Password { get; set; } = string.Empty;
         public string CheckPassword { get; set; } = string.Empty;
-        public string Clave { get; set; } = string.Empty;
-        private string UserType { get; set; } = UserTypeEnum.USUARIO.ToString();
+        public string Clave { get; set; } = string.Empty;   
+        public string UserType { get; set; } = UserTypeEnum.USUARIO.ToString();
 
-        private User? NewUser;
+
+        private User? NewUser = new();
         private LoginCredentials? Credentials { get; set; }
 
         private string? PasswordColor = "#03e9f4";
@@ -33,11 +35,35 @@ namespace TODO_V2.Client.Shared.Modals
         private string? ClaveColor = "#03e9f4";
 
         private bool IsInputValid = false;
+        public bool IsEditing { get; private set; } = false;
+
+        [Parameter]
+        public bool IsAdminDisplay {get; set; } = false;
+
 
         List<ToastMessage> messages = new();
 
-        [Parameter] public EventCallback<MouseEventArgs> Registrar { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> Aceptar { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> Cerrar { get; set; }
+
+
+        protected override async Task OnParametersSetAsync()
+        {
+            if (Id.HasValue)
+            {
+                IsEditing = true;
+                IsInputValid = true;
+                await LoadUserById(Id.Value);                
+            }
+            else
+            {
+                IsEditing = false;
+                IsInputValid = false;
+                ClearFields();
+            }
+
+            await base.OnParametersSetAsync();
+        }
 
 
         #region OnClick
@@ -65,21 +91,31 @@ namespace TODO_V2.Client.Shared.Modals
                 ShowMessage(ToastType.Danger, "Los datos introducidos no son correctos.");
                 return;
             }
-
-            NewUser = new(UserName, Name, Surname, UserTypeEnum.USUARIO.ToString());
-            Credentials = new(UserName, Password);
-
-            if (await RegisterUser())
+            if (IsEditing)
             {
-                Login.user = NewUser;
-                ClearFields();
-                await Registrar.InvokeAsync();
+                Credentials.Username = NewUser.UserName;
+                Credentials.Password = Password;
+                await EditUser();
             }
             else
-            {
-                ShowMessage(ToastType.Danger, "El Username introducido ya existe. Por favor, introduzca un nuevo Username");
-                UserNameColor = ColorsEnum.crimson.ToString();
+            {               
+                NewUser.UserType = UserTypeEnum.USUARIO.ToString();
+                Credentials = new(NewUser.UserName, Password);
+
+                if (await RegisterUser())
+                {
+                    Login.user = NewUser;
+                    ClearFields();
+                    await Aceptar.InvokeAsync();
+                }
+                else
+                {
+                    //TODO Error: Al saltar este error, limpia los campos
+                    ShowMessage(ToastType.Danger, "El Username introducido ya existe. Por favor, introduzca un nuevo Username");
+                    UserNameColor = ColorsEnum.crimson.ToString();
+                }
             }
+           
         }
 
 
@@ -116,6 +152,8 @@ namespace TODO_V2.Client.Shared.Modals
             {
                 return false;
             }
+            Debug.WriteLine(Password);
+            Debug.WriteLine(CheckPassword);
 
             bool passwordsMatch = Password.Equals(CheckPassword);
             PasswordColor = passwordsMatch ? ColorsEnum.lime.ToString() : ColorsEnum.crimson.ToString();
@@ -125,17 +163,17 @@ namespace TODO_V2.Client.Shared.Modals
 
         private bool CheckUserNameHandler()
         {
-            return CheckFieldFormat(UserName, FieldTypeEnum.AlphaNumeric.ToString(), ref UserNameColor);
+            return CheckFieldFormat(NewUser.UserName, FieldTypeEnum.AlphaNumeric.ToString(), ref UserNameColor);
         }
 
         private bool CheckNameHandler()
         {
-            return CheckFieldFormat(Name, FieldTypeEnum.Alphabetical.ToString(), ref NameColor);
+            return CheckFieldFormat(NewUser.Name, FieldTypeEnum.Alphabetical.ToString(), ref NameColor);
         }
 
         private bool CheckSurnameHandler()
         {
-            return CheckFieldFormat(Surname, FieldTypeEnum.Alphabetical.ToString(), ref SurnameColor);
+            return CheckFieldFormat(NewUser.Surname, FieldTypeEnum.Alphabetical.ToString(), ref SurnameColor);
         }
 
         private bool CheckClaveHandler()
@@ -160,7 +198,7 @@ namespace TODO_V2.Client.Shared.Modals
             {
                 UserCredentialsRequest request = new(NewUser, Credentials);
 
-                HttpResponseMessage response = await Http.PostAsJsonAsync("user", request);
+                HttpResponseMessage response = await Http.PostAsJsonAsync("api/User", request);
                 response.EnsureSuccessStatusCode();
 
                 var data = await response.Content.ReadAsStringAsync();               
@@ -173,33 +211,64 @@ namespace TODO_V2.Client.Shared.Modals
             }
         }
 
-        private async Task<User?> GetUserByUserName(string Username)
+        private async Task<bool> EditUser()
         {
             try
             {
-                return await Http.GetFromJsonAsync<User>($"api/User/{Username}");
+                UserCredentialsRequest request = new(NewUser, Credentials);
+
+                HttpResponseMessage response = await Http.PutAsJsonAsync($"api/User/{Id}", request);
+                response.EnsureSuccessStatusCode();
+
+                var data = await response.Content.ReadAsStringAsync();
+                return data.Equals("true");
             }
             catch (HttpRequestException)
-            {               
-                return null;
+            {
+                ClearFields();
+                return false;
+            }
+        }
+        #endregion Api
+
+        private async Task LoadUserById(int UserId)
+        {
+            if (UserId != 0)
+            {
+                try
+                {
+                    User user = await Http.GetFromJsonAsync<User>($"api/User/{UserId}");                     
+
+                    if (user != null)
+                    {
+                        await LoadCredentialsById(user.Id);
+                        Debug.WriteLine(Credentials.Password);
+                        NewUser = user;                                            
+                        Clave = "a";                       
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al cargar la tarea por Id: {ex.Message}");
+                }
+            }
+            else
+            {
+                NewUser = new User();
             }
         }
 
-        //private async Task<bool> RegisterUser()
-        //{
-        //    HttpResponseMessage response = await Http.PostAsJsonAsync("user", NewUser);
-        //    var data = await response.Content.ReadAsStringAsync();
-
-        //    if (data.Equals("false"))
-        //    {
-        //        return false;
-        //    }
-
-        //    ClearFields();
-        //    return true;
-        //}
-        
-        #endregion Api
+        private async Task LoadCredentialsById(int userId)
+        {
+            try
+            {
+                Credentials = await Http.GetFromJsonAsync<LoginCredentials>($"api/User/credentials/{userId}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al cargar las credenciales del usuario: {ex.Message}");              
+            }
+        } 
 
         #region Toast
         private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
@@ -224,7 +293,7 @@ namespace TODO_V2.Client.Shared.Modals
 
         private void ClearFields()
         {
-            UserName = Password = CheckPassword = Name = Surname = Clave = string.Empty;
+            NewUser.UserName = Password = CheckPassword = NewUser.Name = NewUser.Surname = Clave = string.Empty;
             PasswordColor = UserNameColor = NameColor = SurnameColor = ClaveColor = "#03e9f4";
         }
         #endregion Aux

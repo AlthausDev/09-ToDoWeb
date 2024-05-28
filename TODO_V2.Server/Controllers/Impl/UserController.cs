@@ -112,11 +112,7 @@ namespace TODO_V2.Server.Controllers.Impl
         public async Task<ActionResult<User>> Put(UserCredentialsRequest request)
         {
             User user = request.user;
-            // Debug.WriteLine(user.ToString());
-            LoginCredentials credentials = new(request.Credentials.Username, request.Credentials.Password);            
-            
-            // Debug.WriteLine(credentials.ToString());
-
+            LoginCredentials credentials = request.Credentials;
 
             var result = await _userService.Update(user, credentials);
             if (result == null)
@@ -138,6 +134,18 @@ namespace TODO_V2.Server.Controllers.Impl
             _userService.Delete(id);
             return NoContent();
         }
+
+        [HttpGet("credentials/{id}")]
+        public async Task<ActionResult<LoginCredentials>> GetCredentials(int id)
+        {
+            var credentials = await _userService.GetCredentialsByUserId(id);
+            if (credentials == null)
+            {
+                return NotFound();
+            }
+            return credentials;
+        }
+
 
         //[HttpDelete("{id}")]
         //public ActionResult Delete(int id)

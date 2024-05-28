@@ -1,33 +1,54 @@
 ﻿@using TODO_V2.Client.Pages
 @using TODO_V2.Shared
+@using TODO_V2.Shared.Models.Enum
 
 @inject HttpClient Http
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
+@* TODO Dividir en 2, por un lado primero usuario, clave y contraseña y luego, nombre y apellidos*@
 <div class="main-box">
     <h2>REGISTRO</h2>
     <form>
         <div class="core-box">
-            <input autofocus type="text" name="" required="true" @bind="UserName" @bind:event="oninput" style="border: 2px solid @UserNameColor; box-shadow: 0 3px 26px @UserNameColor;" @onkeyup="ValueChangeHandler">
+            <input autofocus type="text" name="" required="true" @bind="@NewUser.UserName" @bind:event="oninput" style="border: 2px solid @UserNameColor; box-shadow: 0 3px 26px @UserNameColor;" @onkeyup="ValueChangeHandler">
             <label>Username</label>
         </div>
         <div class="core-box">
-            <input type="Password" name="" required="true" @bind="Password" @bind:event="oninput" style="border: 2px solid var(--password-color); box-shadow: 0 3px 26px var(--password-color);" @onkeyup="ValueChangeHandler">
+            <input type="Password" name="" required="true" @bind="Password" @bind:event="oninput" style="border: 2px solid var(--password-color); box-shadow: 0 3px 26px var(--password-color);" @onkeyup="ValueChangeHandler" placeholder="*******" autocomplete="new-password">
             <label>Contraseña </label>
         </div>
-        <div class="core-box">
-            <input type="Password" name="" required="true" @bind="@CheckPassword" @bind:event="oninput" style="border: 2px solid var(--password-color); box-shadow: 0 3px 26px var(--password-color);" @onkeyup="ValueChangeHandler">
+        <div class="core-box" style="display: @(IsAdminDisplay ? "none" :  "block");">
+            @if (IsAdminDisplay)
+            {               
+                CheckPassword = Password;  
+            }
+            else
+            {
+                <input type="password" name="" required="true" @bind="CheckPassword" @bind:event="oninput" style="border: 2px solid var(--password-color); box-shadow: 0 3px 26px var(--password-color);" @onkeyup="ValueChangeHandler">
+            }
             <label>Repetir Contraseña</label>
         </div>
+
         <div class="core-box">
-            <input type="text" name="" required="true" @bind="@Name" @bind:event="oninput" style="border: 2px solid @NameColor; box-shadow: 0 3px 26px @NameColor;" @onkeyup="ValueChangeHandler">
+            <input type="text" name="" required="true" @bind="@NewUser.Name" @bind:event="oninput" style="border: 2px solid @NameColor; box-shadow: 0 3px 26px @NameColor;" @onkeyup="ValueChangeHandler">
             <label>Nombre</label>
         </div>
         <div class="core-box">
-            <input type="text" name="" required="true" @bind="@Surname" @bind:event="oninput" style="border: 2px solid @SurnameColor; box-shadow: 0 3px 26px @SurnameColor;" @onkeyup="ValueChangeHandler">
+            <input type="text" name="" required="true" @bind="@NewUser.Surname" @bind:event="oninput" style="border: 2px solid @SurnameColor; box-shadow: 0 3px 26px @SurnameColor;" @onkeyup="ValueChangeHandler">
             <label>Apellido</label>
         </div>
-        <div class="core-box">
+        <div class="core-box" style="display: @(IsAdminDisplay ? "block" : "none");">
+            <select @bind="@NewUser.UserType" id="TipoUsuario" name="Tipo Usuario">
+                <option value="0" disabled selected hidden>@NewUser.UserType</option>
+                @foreach (UserTypeEnum userType in Enum.GetValues(typeof(UserTypeEnum)))
+                {
+                    <option value="@userType">@userType.ToString()</option>
+                }
+            </select>
+            <label for="status">Tipo Usuario</label>
+        </div>
+
+        <div class="core-box" style="display: @(IsAdminDisplay ? "none" : "block");">
             <input type="text" name="" required="true" @bind="@Clave" @bind:event="oninput" style="border: 2px solid @ClaveColor; box-shadow: 0 3px 26px @ClaveColor;" @onkeyup="ValueChangeHandler">
             <label>Clave</label>
         </div>
@@ -36,7 +57,7 @@
             <span></span>
             <span></span>
             <span></span>
-            Registrarse
+            Aceptar
         </button>
         <button type="button" class="button-style" @onclick="OnClickClose">
             <span></span>
@@ -58,5 +79,12 @@
         width: 100%;
         text-align: center;
     }
-}
+
+
+    div.core-box > select + label {
+        top: -5px !important;
+        left: 12px !important;
+        color: #03e9f4 !important;
+        font-size: 14px !important;
+    }
 </style>

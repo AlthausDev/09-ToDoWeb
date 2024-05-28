@@ -105,6 +105,8 @@ namespace TODO_V2.Client.Pages
         private async Task SelectUser(GridRowEventArgs<User> args)
         {
             SelectedUser = args.Item;
+            Debug.WriteLine(SelectedUser.Id);
+            Debug.WriteLine(SelectedUser.Name);
         }
 
         #endregion SelectRow        
@@ -123,12 +125,12 @@ namespace TODO_V2.Client.Pages
             SelectedUser = user;
             var parameters = new Dictionary<string, object>
              {
-                { "UserName", SelectedUser?.Name},
-                { "UserId", SelectedUser?.Id },
+                { "Id", SelectedUser?.Id},
+                { "IsAdminDisplay", true },
                 { "Aceptar", EventCallback.Factory.Create<MouseEventArgs>(this, UserFormResult) },
-                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
+                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, Admin.HideModal) }
             };
-            await ModalInstance.ShowAsync<ModalRegistro>(title: "Categorias", parameters: parameters);
+            await Admin.ModalInstance.ShowAsync<ModalRegistro>(title: "Usuario", parameters: parameters);
         }
 
 
@@ -150,14 +152,14 @@ namespace TODO_V2.Client.Pages
             SelectedUser = user;
             if (SelectedUser == null)
             {
-                ToastService.Notify(new ToastMessage(ToastType.Warning, "Ninguna categoria seleccionada."));
+                ToastService.Notify(new ToastMessage(ToastType.Warning, "No se ha seleccionado ningún Usuario."));
                 return;
             }
 
             var parameters = new Dictionary<string, object?>
             {
                 { "Name", SelectedUser.Name },
-                { "Message", "esta categoria" }
+                { "Message", "este usuario" }
             };
 
             var options = new ConfirmDialogOptions

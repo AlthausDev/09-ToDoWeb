@@ -78,7 +78,7 @@ namespace TODO_V2.Client.Pages
         {
             var parameters = new Dictionary<string, object>
             {
-                { "Registrar", EventCallback.Factory.Create<MouseEventArgs>(this, Registro) },
+                { "Aceptar", EventCallback.Factory.Create<MouseEventArgs>(this, Registro) },
                 { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
             };
             await ModalInstance.ShowAsync<ModalRegistro>(title: "Registrarse", parameters: parameters);

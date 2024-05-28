@@ -54,7 +54,7 @@ namespace TODO_V2.Server.Repository.Impl
             WHERE Id = @Id", user);
 
                 await dbConnection.ExecuteAsync(@"
-            UPDATE UserCredentials SET EncryptedPassword = @EncryptedPassword, UpdatedAt = GETDATE() WHERE UserId = @Id", userCredentials);
+            UPDATE UserCredentials SET UserName = @UserName, EncryptedPassword = @EncryptedPassword, UpdatedAt = GETDATE() WHERE UserId = @Id", userCredentials);
             }
             return user;
         }
@@ -120,6 +120,16 @@ namespace TODO_V2.Server.Repository.Impl
                 return await dbConnection.QueryFirstOrDefaultAsync<UserCredentials>(
                     "SELECT * FROM UserCredentials WHERE UserName = @UserName AND IsDeleted = 0",
                     new { UserName = username });
+            }
+        }
+
+        public async Task<UserCredentials> GetUserCredentialsById(int userId)
+        {
+            using (var dbConnection = CreateConnection())
+            {
+                return await dbConnection.QueryFirstOrDefaultAsync<UserCredentials>(
+                    "SELECT * FROM UserCredentials WHERE UserId = @userId AND IsDeleted = 0",
+                    new { UserId = userId });
             }
         }
 

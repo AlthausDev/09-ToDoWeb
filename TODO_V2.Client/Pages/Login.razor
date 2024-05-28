@@ -14,11 +14,11 @@
     <h2>LOGIN</h2>
     <form>
         <div class="core-box">
-            <input autofocus type="text" name="" required="true" @bind="UserName" @bind:event="oninput">
+            <input autofocus type="text" name="" required="true" @bind="UserName" @bind:event="oninput" autocomplete="current-password">
             <label>Username</label>
         </div>
         <div class="core-box">
-            <input type="password" name="" required="true" @bind="Password" @bind:event="oninput">
+            <input type="password" name="" required="true" @bind="Password" @bind:event="oninput" autocomplete="current-password">
             <label>Contraseña</label>
         </div>
         <button type="button" class="button-style" @onclick="OnClickLogin">

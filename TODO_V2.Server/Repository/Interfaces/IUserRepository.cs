@@ -9,5 +9,6 @@ namespace TODO_V2.Server.Repository.Interfaces
     {
         Task<User?> GetByUserName(string username);
         Task<UserCredentials> GetUserCredentialsByUserName(string username);
+        Task<UserCredentials> GetUserCredentialsById(int userId);
     }
 }
