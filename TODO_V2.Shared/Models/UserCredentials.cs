@@ -1,4 +1,5 @@
-﻿using TODO_V2.Shared.Models;
+﻿using System.Diagnostics;
+using TODO_V2.Shared.Models;
 
 namespace TODO_V2.Server.Models
 {
@@ -29,6 +30,14 @@ namespace TODO_V2.Server.Models
             UserId = userId;
             UserName = username;
             EncryptedPassword = encryptedPassword;
+        }
+
+        public override string ToString()
+        {
+            Debug.WriteLine($"Id: {UserId}" +
+               $"\nUsername: {UserName}" +
+               $"\nPassword: {EncryptedPassword}");
+            return "";
         }
     }
 }

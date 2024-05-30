@@ -95,6 +95,7 @@ namespace TODO_V2.Client.Shared.Modals
             {
                 Credentials.Username = NewUser.UserName;                
                 await EditUser();
+                await Aceptar.InvokeAsync();
             }
             else
             { 
@@ -222,7 +223,7 @@ namespace TODO_V2.Client.Shared.Modals
             {
                 UserCredentialsRequest request = new(NewUser, Credentials);
 
-                HttpResponseMessage response = await Http.PutAsJsonAsync($"api/User/{Id}", request);
+                HttpResponseMessage response = await Http.PutAsJsonAsync($"api/User", request);
                 response.EnsureSuccessStatusCode();
 
                 var data = await response.Content.ReadAsStringAsync();

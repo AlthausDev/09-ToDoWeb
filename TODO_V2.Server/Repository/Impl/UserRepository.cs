@@ -54,7 +54,7 @@ namespace TODO_V2.Server.Repository.Impl
             WHERE Id = @Id", user);
 
                 await dbConnection.ExecuteAsync(@"
-            UPDATE UserCredentials SET UserName = @UserName, EncryptedPassword = @EncryptedPassword, UpdatedAt = GETDATE() WHERE UserId = @Id", userCredentials);
+            UPDATE UserCredentials SET UserName = @UserName, EncryptedPassword = @EncryptedPassword, UpdatedAt = GETDATE() WHERE UserId = @UserId", userCredentials);
             }
             return user;
         }

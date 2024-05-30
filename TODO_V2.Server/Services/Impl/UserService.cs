@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using System.Security.Claims;
@@ -74,9 +75,16 @@ namespace TODO_V2.Server.Services.Impl
         /// <returns>Devuelve el usuario actualizado.</returns>
         public async Task<User> Update(User user, LoginCredentials credentials)
         {
-            UserCredentials userCredentials = await GetUserCredentialsByUserName(credentials.Username);
+            Debug.WriteLine(user.Id);            
+           
+            UserCredentials userCredentials = await UserRepository.GetUserCredentialsById(user.Id);
+
+            Debug.WriteLine("Credenciales 1" + userCredentials.ToString());
+
             userCredentials.EncryptedPassword = EncryptionUtil.Encrypt(credentials.Password);
+            Debug.WriteLine("Credenciales 2" + userCredentials.ToString());
             userCredentials.UserName = credentials.Username;
+            Debug.WriteLine("Credenciales 3" + userCredentials.ToString());
 
             return await UserRepository.Update(user, userCredentials);
         }
