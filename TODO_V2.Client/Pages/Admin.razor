@@ -1,4 +1,4 @@
-﻿@page "/admin"
+﻿@page "/admin/{Id}"
 @inject HttpClient Http
 @inject IJSRuntime JS
 @inject NavigationManager NavManager
@@ -11,6 +11,7 @@
     <div class="NavButtons">
         <button type="button" class="button-style" @onclick="OnClickShowCategories">Gestión Categorias</button>
         <button type="button" class="button-style" @onclick="OnClickShowUsers">Gestión Usuarios</button>
+        <button type="button" class="button-style" @onclick="OnClickShowTodoList">Tareas</button>
         <button type="button" class="button-style" @onclick="OnClickLogOut">Cerrar Sesion</button>
 
     </div>
@@ -22,6 +23,10 @@
 
         <div class="categoriesContainer">
             <CategoryMannager/>
+        </div>
+
+        <div class="todoContainer">
+            <Todo Id="@Id" />
         </div>
     </div>
 </div>
@@ -35,7 +40,8 @@
 
         }
     }
-   
+
+    /*TODO Modificar style*/
     .container{
         position: fixed;
         border: solid 2px black;
@@ -52,5 +58,15 @@
         .categoriesContainer{
             display: @ShowCategoriesMannager;
         }
-    }
+
+        .todoContainer{
+            display: @ShowTodoList;
+
+            .upper-buttons #logout-button
+                {
+                    display: none;
+                }
+        }  
+
+    
 </style>

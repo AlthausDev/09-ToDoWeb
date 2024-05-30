@@ -104,7 +104,7 @@ namespace TODO_V2.Client.Pages
                     NavManager.NavigateTo($"/todo/{Id}");
                     break;
                 case "ADMINISTRADOR":
-                    NavManager.NavigateTo("/admin");
+                    NavManager.NavigateTo($"/admin/{Id}");
                     break;
                 default:
                     break;

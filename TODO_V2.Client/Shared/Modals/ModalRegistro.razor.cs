@@ -12,6 +12,7 @@ using TODO_V2.Client.DTO;
 using TODO_V2.Shared.Models.Request;
 using System.Threading.Tasks;
 using Fare;
+using Microsoft.JSInterop;
 
 namespace TODO_V2.Client.Shared.Modals
 {
@@ -19,7 +20,6 @@ namespace TODO_V2.Client.Shared.Modals
     {
         [Parameter]
         public int? Id { get; set; }  
-        //public string Password { get; set; } = string.Empty;
         public string CheckPassword { get; set; } = string.Empty;
         public string Clave { get; set; } = string.Empty;   
         public string UserType { get; set; } = UserTypeEnum.USUARIO.ToString();
@@ -93,7 +93,7 @@ namespace TODO_V2.Client.Shared.Modals
             }
             if (IsEditing)
             {
-                Credentials.Username = NewUser.UserName;                
+                Credentials.Username = NewUser.UserName;
                 await EditUser();
                 await Aceptar.InvokeAsync();
             }
@@ -118,7 +118,7 @@ namespace TODO_V2.Client.Shared.Modals
         }
 
         protected void OnClickClose()
-        {
+        { 
             ClearFields();
             Cerrar.InvokeAsync();
         }

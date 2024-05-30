@@ -28,8 +28,17 @@ namespace TODO_V2.Client.Pages
         List<ToastMessage> messages = new();
 
         private string UserName { get; set; } = string.Empty;
-        private string Password { get; set; } = string.Empty;        
+        private string Password { get; set; } = string.Empty;
 
+        private bool IsRegistering { get; set; } = false;
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await JS.InvokeVoidAsync("addEnterEventListener", "loginButton", IsRegistering);
+            }
+        }
 
         #region Login     
         private async Task OnClickLogin()
@@ -64,7 +73,7 @@ namespace TODO_V2.Client.Pages
                     NavManager.NavigateTo($"/todo/{user.Id}");
                     break;
                 case "ADMINISTRADOR":
-                    NavManager.NavigateTo("/admin");
+                    NavManager.NavigateTo($"/admin/{user.Id}");
                     break;
                 default:
                     ShowMessage(ToastType.Danger, $"Tipo de usuario desconocido: {user.UserType}");
@@ -76,12 +85,17 @@ namespace TODO_V2.Client.Pages
         #region Register
         private async Task OnClickRegister()
         {
+            IsRegistering = true;
+            await JS.InvokeVoidAsync("addEnterEventListener", "loginButton", IsRegistering);
+
+
             var parameters = new Dictionary<string, object>
             {
                 { "Aceptar", EventCallback.Factory.Create<MouseEventArgs>(this, Registro) },
                 { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
             };
             await ModalInstance.ShowAsync<ModalRegistro>(title: "Registrarse", parameters: parameters);
+            
         }
 
 
@@ -89,12 +103,17 @@ namespace TODO_V2.Client.Pages
         {
             ShowMessage(ToastType.Success, "El Registro se ha realizado exitosamente");
             await HideModal();
+
+            IsRegistering = false;
+            await JS.InvokeVoidAsync("addEnterEventListener", "loginButton", IsRegistering);
         }
 
         private async Task HideModal()
         {
             user = new User();
             await ModalInstance.HideAsync();
+            IsRegistering = false;
+            await JS.InvokeVoidAsync("addEnterEventListener", "loginButton", IsRegistering);
         }
         #endregion Register
 

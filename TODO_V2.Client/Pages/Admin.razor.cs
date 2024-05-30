@@ -1,27 +1,43 @@
 ﻿using BlazorBootstrap;
+using Microsoft.AspNetCore.Components;
+using System.Diagnostics;
 
 namespace TODO_V2.Client.Pages
 {
     partial class Admin
     {
-        //TODO Implementar boton de navegación interna y permitir al administrador acceder también a su lista de tareas
         public static Modal ModalInstance = default!;
+
+        [Parameter]
+        public string Id { get; set; }
 
         private string ShowUsersMannager = "none";
         private string ShowCategoriesMannager = "block";
+        private string ShowTodoList = "none";
 
         private void OnClickShowUsers()
         {
-            ShowCategoriesMannager = "none";
             ShowUsersMannager = "block";
+            ShowCategoriesMannager = "none";            
+            ShowTodoList = "none";
         }
 
         private void OnClickShowCategories()
         {
             ShowUsersMannager = "none";
             ShowCategoriesMannager = "block";
+            ShowTodoList = "none";
         }
-      
+
+        private void OnClickShowTodoList()
+        {
+            Debug.WriteLine(Id);
+
+            ShowUsersMannager = "none";
+            ShowCategoriesMannager = "none";
+            ShowTodoList = "block";
+        }
+
         private async Task OnClickLogOut()
         {   
                 var response = await Http.DeleteAsync("/api/User/logout");

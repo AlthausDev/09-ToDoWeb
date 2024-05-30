@@ -3,6 +3,8 @@
 @using TODO_V2.Shared.Models.Enum
 
 @inject HttpClient Http
+@inject IJSRuntime JS
+
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
 @* TODO Dividir en 2, por un lado primero usuario, clave y contraseña y luego, nombre y apellidos*@
@@ -59,7 +61,7 @@
             <span></span>
             Aceptar
         </button>
-        <button type="button" class="button-style" @onclick="OnClickClose">
+        <button type="button" id="acceptButton" class="button-style" @onclick="OnClickClose">
             <span></span>
             <span></span>
             <span></span>
