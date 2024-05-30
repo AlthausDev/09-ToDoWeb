@@ -7,6 +7,7 @@
 <PageTitle>TODO APP</PageTitle>
 
 <Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true" />
+
 <div class="mainContainer">
     <div class="NavButtons">
         <button type="button" class="button-style" @onclick="OnClickShowCategories">Gestión Categorias</button>
@@ -29,25 +30,17 @@
             <Todo Id="@Id" />
         </div>
     </div>
-</div>
+</div> 
 
-<style>
-
-    .NavButtons{
-        margin: 1%;
-
-        .btn{
-
-        }
-    }
-
+<style>        
     /*TODO Modificar style*/
     .container{
         position: fixed;
-        border: solid 2px black;
+        /* border: solid 2px black; */
+        border-top: solid 2px white;
         height: 88%;
         padding: 2%;
-        margin: 1%;
+        margin: 0% 1% 1% 1%;
         min-width: -webkit-fill-available;
         
 
@@ -65,8 +58,7 @@
             .upper-buttons #logout-button
                 {
                     display: none;
-                }
-        }  
+                } 
 
     
 </style>

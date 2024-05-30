@@ -127,5 +127,21 @@ namespace TODO_V2.Server.Controllers
             return Ok(tasks);
         }
 
+        [HttpGet("category/{categoryId}/tasks")]
+        public async Task<ActionResult<IEnumerable<TaskItem>>> GetTasksByCategoryId(int categoryId)
+        {
+            try
+            {
+                var tasks = await _TaskItemService.GetTasksByCategoryId(categoryId);
+                return Ok(tasks);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener las tareas de la categoría: {ex.Message}");
+                return StatusCode(500, "Error interno del servidor al obtener las tareas de la categoría.");
+            }
+        }
+
+
     }
 }

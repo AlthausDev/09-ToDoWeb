@@ -146,17 +146,12 @@ namespace TODO_V2.Client.Pages
         private async Task DeleteCategoryAsync(Category category)
         {
             SelectedCategory = category;
-            if (SelectedCategory == null)
-            {
-                ToastService.Notify(new ToastMessage(ToastType.Warning, "Ninguna categoria seleccionada."));
-                return;
-            }
 
             var parameters = new Dictionary<string, object?>
-            {
-                { "Name", SelectedCategory.Name },
-                { "Message", "esta categoria" }
-            };
+    {
+        { "Name", SelectedCategory.Name },
+        { "Message", "esta categoria" }
+    };
 
             var options = new ConfirmDialogOptions
             {
@@ -174,7 +169,7 @@ namespace TODO_V2.Client.Pages
 
             if (response)
             {
-                await DeleteCategory(SelectedCategory.Id);
+                await ConfirmAndDeleteCategoryAsync(SelectedCategory.Id);
             }
             else
             {
@@ -182,19 +177,57 @@ namespace TODO_V2.Client.Pages
             }
         }
 
-        //TODO Añadir mensaje de error al borrar si tiene tareas asociadas
-        private async Task DeleteCategory(int Id)
+        private async Task ConfirmAndDeleteCategoryAsync(int categoryId)
         {
-            SelectedCategory = null;
+            try
+            {
+                if (await HasAssociatedTasksAsync(categoryId))
+                {
+                    ShowMessage(ToastType.Danger, "Error: No se puede eliminar una categoría que tenga tareas asociadas.");
+                    return;
+                }
 
-            await Http.DeleteAsync($"api/Category/{Id}");
-            await GetCategoryData();
-            await DataGrid.RefreshDataAsync();
-
-            ShowMessage(ToastType.Success, "Categoria eliminada con éxito.");
+                await Http.DeleteAsync($"api/Category/{categoryId}");
+                await GetCategoryData();
+                await DataGrid.RefreshDataAsync();
+                ShowMessage(ToastType.Success, "Categoría eliminada con éxito.");
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ToastType.Danger, $"Error al eliminar la categoría: {ex.Message}");
+            }
+            finally
+            {
+                SelectedCategory = null;
+            }
         }
-        #endregion 
-      
+
+        private async Task<bool> HasAssociatedTasksAsync(int categoryId)
+        {
+            try
+            {
+                var tasksResponse = await Http.GetAsync($"api/TaskItem/category/{categoryId}/tasks");
+
+                if (tasksResponse.IsSuccessStatusCode)
+                {
+                    var tasks = await tasksResponse.Content.ReadFromJsonAsync<List<TaskItem>>();
+                    return tasks != null && tasks.Any();
+                }
+                else
+                {
+                    ShowMessage(ToastType.Danger, "Error al obtener las tareas asociadas.");
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ToastType.Danger, $"Error al verificar las tareas asociadas: {ex.Message}");
+                return true;
+            }
+        }
+        #endregion
+
+
 
         #region Toast
         private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));

@@ -109,7 +109,6 @@ namespace TODO_V2.Client.Shared.Modals
                 }
                 else
                 {
-                    //TODO Error: Al saltar este error, limpia los campos
                     ShowMessage(ToastType.Danger, "El Username introducido ya existe. Por favor, introduzca un nuevo Username");
                     UserNameColor = ColorsEnum.crimson.ToString();
                 }

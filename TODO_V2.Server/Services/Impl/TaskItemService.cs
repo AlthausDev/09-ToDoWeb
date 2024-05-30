@@ -136,5 +136,17 @@ namespace TODO_V2.Server.Services.Impl
         {
             return await TaskRepository.GetTasksByUserId(userId);
         }
+
+        public async Task<IEnumerable<TaskItem>> GetTasksByCategoryId(int categoryId)
+        {
+            try
+            {
+                return await TaskRepository.GetTasksByCategoryId(categoryId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener las tareas de la categoría: {ex.Message}", ex);
+            }
+        }
     }
 }
