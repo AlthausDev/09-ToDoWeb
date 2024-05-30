@@ -14,13 +14,13 @@
             <label>Username</label>
         </div>
         <div class="core-box">
-            <input type="Password" name="" required="true" @bind="Password" @bind:event="oninput" style="border: 2px solid var(--password-color); box-shadow: 0 3px 26px var(--password-color);" @onkeyup="ValueChangeHandler" placeholder="*******" autocomplete="new-password">
+            <input type="Password" name="" required="true" @bind="@Credentials.Password" @bind:event="oninput" style="border: 2px solid var(--password-color); box-shadow: 0 3px 26px var(--password-color);" @onkeyup="ValueChangeHandler" placeholder="*******" autocomplete="new-password">
             <label>Contraseña </label>
         </div>
         <div class="core-box" style="display: @(IsAdminDisplay ? "none" :  "block");">
             @if (IsAdminDisplay)
-            {               
-                CheckPassword = Password;  
+            {
+                CheckPassword = @Credentials.Password;
             }
             else
             {

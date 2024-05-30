@@ -9,9 +9,6 @@
 @inject IJSRuntime JS
 @inject ILocalStorageService storageService
 
-
-<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true" />
-
 <ConfirmDialog @ref="dialog" />
 
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />

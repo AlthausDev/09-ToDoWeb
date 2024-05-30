@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace TODO_V2.Client.Pages
 {
+    //TODO Implementar opcion entre eliminación definitiva de usuario y desactivación
     partial class UsersMannager
     {
         [Parameter]
@@ -18,7 +19,6 @@ namespace TODO_V2.Client.Pages
 
         private User User { get; set; }
 
-        private Modal ModalInstance = default!;
         private ConfirmDialog dialog = default!;
 
         [Inject] ToastService ToastService { get; set; } = default!;
@@ -81,7 +81,7 @@ namespace TODO_V2.Client.Pages
         private async Task<GridDataProviderResult<User>> UserDataProvider(GridDataProviderRequest<User> request)
         {
             Stopwatch stopwatch = new();
-            stopwatch.Start();
+            stopwatch.Start();          
 
             while (UserList.IsNullOrEmpty())
             {
@@ -111,12 +111,7 @@ namespace TODO_V2.Client.Pages
 
         #endregion SelectRow        
 
-        #region Modal  
-        private async Task HideModal()
-        {
-            SelectedUser = null;
-            await ModalInstance.HideAsync();
-        }
+        #region Modal        
 
         #region User Item Form    
 
@@ -137,8 +132,8 @@ namespace TODO_V2.Client.Pages
         private async Task UserFormResult()
         {
             ShowMessage(ToastType.Success, "Se ha creado exitosamente la categoría");
-            await HideModal();
-            await GetUserData();
+            await Admin.HideModal();
+            await GetUserData();            
             await DataGrid.RefreshDataAsync();
         }
         #endregion
@@ -190,11 +185,12 @@ namespace TODO_V2.Client.Pages
         {
             SelectedUser = null;
 
-            await Http.DeleteAsync($"api/User/{Id}");
-            await GetUserData();
-            await DataGrid.RefreshDataAsync();
+            await Http.DeleteAsync($"api/User/{Id}");     
 
-            ShowMessage(ToastType.Success, "Categoria eliminada con éxito.");
+            UserList.Remove(UserList.FirstOrDefault(u => u.Id == Id));
+            await DataGrid.RefreshDataAsync();           
+
+            ShowMessage(ToastType.Success, "Usuario eliminado con éxito.");
         }
         #endregion
 

@@ -19,14 +19,14 @@ namespace TODO_V2.Client.Shared.Modals
     {
         [Parameter]
         public int? Id { get; set; }  
-        public string Password { get; set; } = string.Empty;
+        //public string Password { get; set; } = string.Empty;
         public string CheckPassword { get; set; } = string.Empty;
         public string Clave { get; set; } = string.Empty;   
         public string UserType { get; set; } = UserTypeEnum.USUARIO.ToString();
 
 
         private User? NewUser = new();
-        private LoginCredentials? Credentials { get; set; }
+        private LoginCredentials? Credentials { get; set; } = new();
 
         private string? PasswordColor = "#03e9f4";
         private string? UserNameColor = "#03e9f4";
@@ -93,14 +93,12 @@ namespace TODO_V2.Client.Shared.Modals
             }
             if (IsEditing)
             {
-                Credentials.Username = NewUser.UserName;
-                Credentials.Password = Password;
+                Credentials.Username = NewUser.UserName;                
                 await EditUser();
             }
             else
-            {               
-                NewUser.UserType = UserTypeEnum.USUARIO.ToString();
-                Credentials = new(NewUser.UserName, Password);
+            { 
+                Credentials = new(NewUser.UserName, Credentials.Password);
 
                 if (await RegisterUser())
                 {
@@ -117,7 +115,6 @@ namespace TODO_V2.Client.Shared.Modals
             }
            
         }
-
 
         protected void OnClickClose()
         {
@@ -142,20 +139,24 @@ namespace TODO_V2.Client.Shared.Modals
 
         private bool CheckPasswordHandler()
         {
-            if (string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(CheckPassword))
+            if (!IsAdminDisplay)
             {
-                PasswordColor = "#03e9f4";
-                return false;
-            }
+                if (string.IsNullOrEmpty(Credentials.Password) || string.IsNullOrEmpty(CheckPassword))
+                {
+                    PasswordColor = "#03e9f4";
+                    return false;
+                }
 
-            if (!CheckFieldFormat(Password, FieldTypeEnum.AlphaNumeric.ToString(), ref PasswordColor))
-            {
-                return false;
+                if (!CheckFieldFormat(Credentials.Password, FieldTypeEnum.AlphaNumeric.ToString(), ref PasswordColor))
+                {
+                    return false;
+                }
             }
-            Debug.WriteLine(Password);
+           
+            Debug.WriteLine(Credentials.Password);
             Debug.WriteLine(CheckPassword);
 
-            bool passwordsMatch = Password.Equals(CheckPassword);
+            bool passwordsMatch = Credentials.Password.Equals(CheckPassword);
             PasswordColor = passwordsMatch ? ColorsEnum.lime.ToString() : ColorsEnum.crimson.ToString();
             return passwordsMatch;
         }
@@ -178,15 +179,19 @@ namespace TODO_V2.Client.Shared.Modals
 
         private bool CheckClaveHandler()
         {
-            if (Validation.CheckKey(Clave))
+            if (!IsAdminDisplay)
             {
-                return true;
+                if (Validation.CheckKey(Clave))
+                {
+                    return true;
+                }
+                else
+                {
+                    ClaveColor = "#03e9f4";
+                    return false;
+                }
             }
-            else
-            {
-                ClaveColor = "#03e9f4";
-                return false;
-            }
+            return true;
         }
 
         #endregion Handlers
@@ -243,8 +248,7 @@ namespace TODO_V2.Client.Shared.Modals
                     {
                         await LoadCredentialsById(user.Id);
                         Debug.WriteLine(Credentials.Password);
-                        NewUser = user;                                            
-                        Clave = "a";                       
+                        NewUser = user;   
                     }
                 }
                 catch (Exception ex)
@@ -293,7 +297,8 @@ namespace TODO_V2.Client.Shared.Modals
 
         private void ClearFields()
         {
-            NewUser.UserName = Password = CheckPassword = NewUser.Name = NewUser.Surname = Clave = string.Empty;
+            NewUser.UserName = Credentials.Password = CheckPassword = NewUser.Name = NewUser.Surname = Clave = string.Empty;
+            NewUser.UserType = UserTypeEnum.USUARIO.ToString();
             PasswordColor = UserNameColor = NameColor = SurnameColor = ClaveColor = "#03e9f4";
         }
         #endregion Aux

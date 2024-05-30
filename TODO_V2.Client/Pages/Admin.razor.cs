@@ -23,8 +23,7 @@ namespace TODO_V2.Client.Pages
         }
       
         private async Task OnClickLogOut()
-        {
-   
+        {   
                 var response = await Http.DeleteAsync("/api/User/logout");
 
                 await storageService.RemoveItemAsync("token");

@@ -17,5 +17,9 @@
             Username = username;
             Password = password;
         }
+
+        public LoginCredentials()
+        {
+        }
     }
 }

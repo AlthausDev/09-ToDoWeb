@@ -9,6 +9,7 @@ using TODO_V2.Client.Shared.Modals;
 using TODO_V2.Shared.Models;
 using ToastType = BlazorBootstrap.ToastType;
 using TODO_V2.Client.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace TODO_V2.Client.Pages
@@ -16,23 +17,60 @@ namespace TODO_V2.Client.Pages
     //TODO Revisar PreloadService, no se muestra cuando se realiza recarga forzada de la página "F5"
     public partial class Todo
     {
+        /// <summary>
+        /// Parámetro que recibe el ID del usuario.
+        /// </summary>
         [Parameter]
         public string Id { get; set; }
 
+        /// <summary>
+        /// El usuario actual.
+        /// </summary>
         private User User { get; set; }
 
+        /// <summary>
+        /// Instancia del componente Modal para mostrar diálogos modales.
+        /// </summary>
         private Modal ModalInstance = default!;
+
+        /// <summary>
+        /// Instancia del componente ConfirmDialog para mostrar cuadros de diálogo de confirmación.
+        /// </summary>
         private ConfirmDialog dialog = default!;
 
+        /// <summary>
+        /// Servicio para mostrar notificaciones tipo Toast.
+        /// </summary>
         [Inject] ToastService ToastService { get; set; } = default!;
+
+        /// <summary>
+        /// Servicio para mostrar indicadores de precarga.
+        /// </summary>
         [Inject] protected PreloadService PreloadService { get; set; }
 
+        /// <summary>
+        /// Lista de mensajes Toast.
+        /// </summary>
         private List<ToastMessage> messages = new();
 
+        /// <summary>
+        /// Componente Grid para mostrar la lista de tareas.
+        /// </summary>
         Grid<TaskItem> DataGrid = default!;
+
+        /// <summary>
+        /// Colección observable de tareas del usuario.
+        /// </summary>
         private ObservableCollection<TaskItem> TaskItemList { get; set; } = new ObservableCollection<TaskItem>();
 
+        /// <summary>
+        /// La tarea seleccionada actualmente.
+        /// </summary>
         private TaskItem? selectedTaskItem { get; set; } = null;
+
+        /// <summary>
+        /// Propiedad para obtener y establecer la tarea seleccionada.
+        /// </summary>
         public TaskItem? SelectedTaskItem
         {
             get
@@ -43,13 +81,20 @@ namespace TODO_V2.Client.Pages
             {
                 if (selectedTaskItem != value)
                 {
-                    selectedTaskItem = value;                   
+                    selectedTaskItem = value;
                 }
             }
         }
 
+        /// <summary>
+        /// Indicador de si la página está cargando.
+        /// </summary>
         private bool isLoading = true;
 
+        /// <summary>
+        /// Método que se ejecuta al inicializar el componente.
+        /// Carga los datos del usuario y sus tareas.
+        /// </summary>
         protected override async Task OnInitializedAsync()
         {           
             try

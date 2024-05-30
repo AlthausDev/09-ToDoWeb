@@ -63,8 +63,9 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (var dbConnection = CreateConnection())
             {
-                await dbConnection.ExecuteAsync($"DELETE FROM Users WHERE Id = {id}");
                 await dbConnection.ExecuteAsync($"DELETE FROM UserCredentials WHERE UserId = {id}");
+                await dbConnection.ExecuteAsync($"DELETE FROM Users WHERE Id = {id}");
+                
             }
             return true;
         }
