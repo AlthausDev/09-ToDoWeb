@@ -30,6 +30,10 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Components\" />
+  </ItemGroup>
+
   <Import Project="..\TODO_V2.Shared\TODO_V2.Shared.projitems" Label="Shared" />
 
 </Project>

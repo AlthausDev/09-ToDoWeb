@@ -101,7 +101,7 @@ namespace TODO_V2.Client.Pages
             switch (UserType)
             {
                 case "USUARIO":
-                    NavManager.NavigateTo($"/todo/{Id}");
+                    NavManager.NavigateTo($"/user/{Id}");
                     break;
                 case "ADMINISTRADOR":
                     NavManager.NavigateTo($"/admin/{Id}");

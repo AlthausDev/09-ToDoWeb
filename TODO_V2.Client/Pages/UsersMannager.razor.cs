@@ -75,6 +75,12 @@ namespace TODO_V2.Client.Pages
             }
         };
 
+        private bool IsAllChecked
+        {
+            get => UserList.All(e => e.IsDeleted);
+            set => Array.ForEach(UserList.ToArray(), e => e.IsDeleted = value);
+        }
+
 
         #region StartUp       
 
@@ -123,16 +129,16 @@ namespace TODO_V2.Client.Pages
                 { "Id", SelectedUser?.Id},
                 { "IsAdminDisplay", true },
                 { "Aceptar", EventCallback.Factory.Create<MouseEventArgs>(this, UserFormResult) },
-                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, Admin.HideModal) }
+                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, AdminPanel.HideModal) }
             };
-            await Admin.ModalInstance.ShowAsync<ModalRegistro>(title: "Usuario", parameters: parameters);
+            await AdminPanel.ModalInstance.ShowAsync<ModalRegistro>(title: "Usuario", parameters: parameters);
         }
 
 
         private async Task UserFormResult()
         {
             ShowMessage(ToastType.Success, "Se ha creado exitosamente la categoría");
-            await Admin.HideModal();
+            await AdminPanel.HideModal();
             await GetUserData();            
             await DataGrid.RefreshDataAsync();
         }

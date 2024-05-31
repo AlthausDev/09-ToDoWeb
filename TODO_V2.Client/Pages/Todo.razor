@@ -16,10 +16,11 @@
 
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" StackLength="5" Placement="ToastsPlacement.TopRight" />
 
-<nav class="upper-buttons">
-    <button type="button" class="button-style" @onclick="() => OnClickTaskForm(null)">Nueva Tarea</button>
-    <button type="button" id="logout-button" class="button-style" @onclick="OnClickLogOut">Logout</button>
-</nav>
+<div class="main-container">
+    <nav class="upper-buttons">
+        <button type="button" class="button-style" @onclick="() => OnClickTaskForm(null)">Nueva Tarea</button>
+        <button type="button" id="logout-button" class="button-style" @onclick="OnClickLogOut">Logout</button>
+    </nav>
 
 @RenderLoadingIndicator() 
 
@@ -68,6 +69,8 @@
     </GridColumn>
 </Grid>
 }
+</div>
+
 
 <section id="bottom" />
 
@@ -107,59 +110,4 @@
     }
 </script>
 
-<style>
-    .upper-buttons {
-        padding-bottom: 2.5em;
-        display: flex;
-        justify-content: space-between;        
-    }
-
-    .upper-buttons button {        
-        box-shadow: 0 8px 22px rgba(3,233,244,.5);
-        border: 1px solid #03e9f4;
-        border-radius: 8px;
-    }
-
-    .rounded-grid {
-        border-collapse: separate; 
-        color:black;
-    }
-
-        .rounded-grid th,
-        .rounded-grid td {
-            padding: 10px;           
-            border-radius: 8px;            
-        }
-
-        .rounded-grid th {
-            background-color: #d9d9d9;
-            font-weight: bold;
-        }
-  
-
-    .rounded-grid tr:not(.selected-row) {
-        cursor: pointer;
-        background-color: white;
-    }
-
-    .rounded-grid tr:hover:not(.selected-row) {
-        background-color: lightcyan;
-    }
-
-    .selected-row {
-        background-color: #9ed9e0 !important;
-    }    
-
-    .bb-grid-pagination-text {
-        padding: .375rem;
-        color: white;
-    }
-
-    .options-container{
-        width: 100px;
-        display: inline-grid;
-        justify-content: center;
-        justify-items: center;
-    }   
-</style>
 

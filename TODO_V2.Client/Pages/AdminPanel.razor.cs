@@ -1,10 +1,11 @@
 ﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System.Diagnostics;
 
 namespace TODO_V2.Client.Pages
 {
-    partial class Admin
+    partial class AdminPanel
     {
         public static Modal ModalInstance = default!;
 
@@ -15,8 +16,12 @@ namespace TODO_V2.Client.Pages
         private string ShowCategoriesMannager = "block";
         private string ShowTodoList = "none";
 
+        private string activeButton = "Categories";
+
         private void OnClickShowUsers()
         {
+            activeButton = "Users";
+
             ShowUsersMannager = "block";
             ShowCategoriesMannager = "none";            
             ShowTodoList = "none";
@@ -24,6 +29,8 @@ namespace TODO_V2.Client.Pages
 
         private void OnClickShowCategories()
         {
+            activeButton = "Categories";
+
             ShowUsersMannager = "none";
             ShowCategoriesMannager = "block";
             ShowTodoList = "none";
@@ -31,7 +38,7 @@ namespace TODO_V2.Client.Pages
 
         private void OnClickShowTodoList()
         {
-            Debug.WriteLine(Id);
+            activeButton = "TodoList";
 
             ShowUsersMannager = "none";
             ShowCategoriesMannager = "none";

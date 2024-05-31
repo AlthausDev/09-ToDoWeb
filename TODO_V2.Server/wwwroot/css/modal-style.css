@@ -47,6 +47,12 @@
             box-shadow: 0 3px 26px rgba(3,233,244);
             border-radius: 5px;
             border: 2px solid #03e9f4;
+            
+        }
+
+        .main-box .core-box input:focus,
+        .main-box .core-box select:focus {
+            border: 2px solid white;
         }
 
         .main-box .core-box select option {
@@ -140,33 +146,14 @@
             animation-delay: 4500ms
         }
 
+    .main-box form button {
+        margin-inline:5%;
+    }
 
-
-    /* Estilos para la barra de desplazamiento */
+  
     .main-box::-webkit-scrollbar {
-        width: 9px; /* Ancho de la barra de desplazamiento */
-        position: fixed; /* Fijar la barra de desplazamiento */
-        right: 0; /* Colocar la barra de desplazamiento en el extremo derecho */
-        border-radius: 5px;
-    }
-
-    /* Estilo del riel de la barra de desplazamiento */
-    .main-box::-webkit-scrollbar-track {
-        background-color: #f1f1f1; /* Color de fondo del riel */
-        border-radius: 5px;
-    }
-
-    /* Estilo del pulgar de la barra de desplazamiento */
-    .main-box::-webkit-scrollbar-thumb {
-        background-color: #03e9f4; /* Color del pulgar */
-        border-radius: 5px; /* Bordes redondeados del pulgar */
-    }
-
-        /* Estilo del pulgar de la barra de desplazamiento cuando está activo (por ejemplo, cuando se hace clic y se arrastra) */
-        .main-box::-webkit-scrollbar-thumb:hover {
-            background-color: #028090; /* Color del pulgar cuando está activo */
-        }
-
+        width: 0px;         
+    }   
 
 
 keyframes btn-anim1, btn-anim2, btn-anim3, btn-anim4 {

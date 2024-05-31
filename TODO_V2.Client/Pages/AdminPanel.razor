@@ -1,0 +1,88 @@
+﻿@page "/admin/{Id}"
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inject NavigationManager NavManager
+@inject ILocalStorageService storageService
+
+<PageTitle>TODO APP</PageTitle>
+
+<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true" />
+
+<div class="mainContainer">
+    <div class="NavButtons">
+        <button type="button" class="button-style @(activeButton == "Categories" ? "active" : "")" @onclick="OnClickShowCategories">Gestión Categorias</button>
+        <button type="button" class="button-style @(activeButton == "Users" ? "active" : "")" @onclick="OnClickShowUsers">Gestión Usuarios</button>
+        <button type="button" class="button-style @(activeButton == "TodoList" ? "active" : "")" @onclick="OnClickShowTodoList">Tareas</button>
+        <button type="button" class="button-style @(activeButton == "LogOut" ? "active" : "")" @onclick="OnClickLogOut">Cerrar Sesion</button>
+    </div>
+
+
+    <div class="container">
+        <div class="usersContainer">
+            <UsersMannager />
+        </div>
+
+        <div class="categoriesContainer">
+            <CategoryMannager />
+        </div>
+
+        <div class="todoContainer">
+            <Todo Id="@Id" />
+        </div>
+    </div>
+</div>
+
+<style>    
+      .mainContainer {
+        height: 100vh;
+        overflow-y: auto;
+        position: relative;
+
+        .NavButtons {
+            display: flex;
+            justify-content: space-between;
+            padding-left: 2.5em;
+            padding-right: 2.5em;   
+        }
+
+        .NavButtons button {
+            box-shadow: 0 8px 22px rgba(3, 233, 244, .5);
+            border: 2px solid #03e9f4;
+            border-radius: 8px;        
+            margin-right: 1em;
+            z-index: 2;
+            top: 1px;
+            min-width: 20%;
+             margin-inline: 0%;
+        }
+    }
+     
+    .container {
+        padding: 0% 3% 3% 3%;
+        min-width: -webkit-fill-available; 
+        border-top: 2px solid #03e9f4;
+        margin: 4%;
+        border-radius: 20px;
+        .usersContainer
+
+    {
+        display: @ShowUsersMannager;
+    }
+
+    .categoriesContainer {
+        display: @ShowCategoriesMannager;
+    }
+
+    .todoContainer {
+        display: @ShowTodoList;
+        .upper-buttons #logout-button
+
+    {
+        display: none;
+    }
+
+    .main-container {
+        padding: 0%;
+        border-top: none;
+    }
+</style> 

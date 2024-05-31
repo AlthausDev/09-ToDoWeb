@@ -1,0 +1,50 @@
+﻿
+.container {
+    overflow: auto;
+}
+
+.upper-buttons {
+    padding-bottom: 2.5em;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.rounded-grid {
+    border-collapse: separate;
+    color: black;
+}
+
+    .rounded-grid th,
+    .rounded-grid td {
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .rounded-grid th {
+        background-color: #d9d9d9;
+        font-weight: bold;
+    }
+
+
+    .rounded-grid tr:not(.selected-row) {
+        cursor: pointer;
+        background-color: white;
+    }
+
+    .rounded-grid tr:hover:not(.selected-row) {
+        background-color: lightcyan;
+    }
+
+.selected-row {
+    background-color: #9ed9e0 !important;
+}
+
+.bb-grid-pagination-text {
+    padding: .375rem;
+    color: white;
+}
+
+.options-container {  
+    display: inline;    
+}

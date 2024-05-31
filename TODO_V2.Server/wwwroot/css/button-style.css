@@ -9,18 +9,28 @@
     text-transform: uppercase;
     overflow: hidden;
     transition: .5s;
-    margin-top: 40px;
-    letter-spacing: 4px;
+    margin-top: 40px;  
+    letter-spacing: 3px;
     background: transparent;
-    border: none;
     cursor: pointer;
+    min-width: 180px;
+    justify-content: space-between;
+    box-shadow: 0 8px 22px rgba(3,233,244,.5);
+    border: 2px solid #03e9f4 !important;
+    border-radius: 8px;
 }
 
-    .button-style:hover {
+    .button-style:hover,
+    .button-style:focus,
+    .button-style.active,
+    .button-style:visited {
+        border-radius: 8px;
+        z-index: 2;        
         background: #03e9f4;
         color: #fff;
-        border-radius: 9px;
-        box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 100px #03e9f4;
+        border-radius: 10px;
+        box-shadow: 0 0 5px #03e9f4, 0 0 19px #03e9f4, 0 0 19px #03e9f4, 0 0 15px #03e9f4;
+        border: 2px solid white !important;
         transition: all 0.25s ease-in-out;
     }
 
@@ -39,25 +49,34 @@
 }
 }
 
+#form-button {
+    margin-inline: 5%;
+}
+
 .option-button {
     width: 100px;
     font-weight: bold;
     position: relative;
-    display: flex;
     padding: 5px 10px;
     color: #006bb7;
     font-size: 16px;
     overflow: hidden;
     transition: .5s;
     background: transparent;
-    border: none;
-    justify-content: center;}
+    border: 2px solid transparent;
+    justify-content: center;
+    border-radius: 30px;
+    /*margin-inline: 5%;*/
+}
 
     .option-button:hover {
         background: #03e9f4;
         color: #fff;
-        border-radius: 5px;
+        border-radius: 8px;
         box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 100px #03e9f4;
+        transition: all 0.25s ease-in-out;
+        border: 2px solid white;
+        border-radius: 30px;
     }
 
     .option-button span {

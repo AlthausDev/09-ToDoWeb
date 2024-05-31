@@ -125,16 +125,16 @@ namespace TODO_V2.Client.Pages
                 { "CategoryId", SelectedCategory?.Id },
                 { "CategoryName", SelectedCategory?.Name},                
                 { "Aceptar", EventCallback.Factory.Create<MouseEventArgs>(this, CategoryFormResult) },
-                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, Admin.HideModal) }
+                { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, AdminPanel.HideModal) }
             };
-            await Admin.ModalInstance.ShowAsync<ModalCategory>(title: "Categorias", parameters: parameters);
+            await AdminPanel.ModalInstance.ShowAsync<ModalCategory>(title: "Categorias", parameters: parameters);
         }
 
 
         private async Task CategoryFormResult()
         {
             ShowMessage(ToastType.Success, "Se ha creado exitosamente la categoría");
-            await Admin.HideModal();
+            await AdminPanel.HideModal();
             await GetCategoryData();
             await DataGrid.RefreshDataAsync();
         }
