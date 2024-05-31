@@ -12,7 +12,7 @@ using TODO_V2.Client.Data;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
-namespace TODO_V2.Client.Pages
+namespace TODO_V2.Client.Pages.Components
 {
     //TODO Revisar PreloadService, no se muestra cuando se realiza recarga forzada de la página "F5"
     public partial class Todo

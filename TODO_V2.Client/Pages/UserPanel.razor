@@ -1,5 +1,10 @@
 ﻿@page "/user/{Id}"
 
+@inject HttpClient Http
+@inject NavigationManager NavManager
+@inject IJSRuntime JS
+@inject ILocalStorageService storageService
+
 <div class="container">
     <div class="todoContainer">
         <Todo Id="@Id" />

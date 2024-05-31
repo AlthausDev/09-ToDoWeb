@@ -9,7 +9,7 @@ using TODO_V2.Client.Shared.Modals;
 using TODO_V2.Shared.Models;
 using Microsoft.IdentityModel.Tokens;
 
-namespace TODO_V2.Client.Pages
+namespace TODO_V2.Client.Pages.Components
 {
     //TODO Implementar opcion entre eliminación definitiva de usuario y desactivación
     partial class UsersMannager
