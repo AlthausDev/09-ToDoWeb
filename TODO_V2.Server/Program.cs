@@ -9,8 +9,15 @@ using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Server.Services.Impl;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using NLog;
+using NLog.Web;
+
+
+var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+logger.Debug("Init Main");
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseNLog();
 
 #region Configuración de JWT
 var jwtKey = builder.Configuration["JWT:Key"];

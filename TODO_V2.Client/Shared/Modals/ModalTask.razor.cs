@@ -11,6 +11,7 @@ using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Client.Shared.Modals
 {
+    //TODO controlar que la fecha de expiración no sea anterior a la fecha actual
     public partial class ModalTask
     {
         [Parameter]

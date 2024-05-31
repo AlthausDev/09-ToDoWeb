@@ -10,7 +10,7 @@
 @inject ILocalStorageService storageService
 
 
-<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true"/>
+<Modal @ref="ModalInstance" Size="ModalSize.Regular" ShowCloseButton="false" UseStaticBackdrop="true" IsVerticallyCentered="true" />
 
 <ConfirmDialog @ref="dialog" />
 
@@ -22,53 +22,53 @@
         <button type="button" id="logout-button" class="button-style" @onclick="OnClickLogOut">Logout</button>
     </nav>
 
-@RenderLoadingIndicator() 
+    @RenderLoadingIndicator()
 
-@if (!isLoading) 
-{
+    @if (!isLoading)
+    {
 
-<Grid TItem="TaskItem"    
-    AllowFiltering="false"
-    AllowPaging="true"
-    PageSize="15"
-    AllowRowClick="true"
-    AllowSorting="true"
-    HeaderRowCssClass="bg-black text-black"    
-    DataProvider="UsersDataProvider"
-    OnRowClick="SelectTaskItem"    
-    Responsive="true"
-    class="table rounded-grid"
-    @ref="DataGrid">
+        <Grid TItem="TaskItem"
+              AllowFiltering="false"
+              AllowPaging="true"
+              PageSize="15"
+              AllowRowClick="true"
+              AllowSorting="true"
+              HeaderRowCssClass="bg-black text-black"
+              DataProvider="UsersDataProvider"
+              OnRowClick="SelectTaskItem"
+              Responsive="true"
+              class="table rounded-grid"
+              @ref="DataGrid">
 
-    <GridColumn TItem="TaskItem" HeaderText="Tarea" PropertyName="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true">
-        @context.Name
-    </GridColumn>
+            <GridColumn TItem="TaskItem" HeaderText="Tarea" PropertyName="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true">
+                @context.Name
+            </GridColumn>
 
-    <GridColumn TItem="TaskItem" HeaderText="Categoria" PropertyName="CategoryId" SortKeySelector="item => item.CategoryId">
-        @CategoryDictionary.GetCategoryName(@context.CategoryId)
-    </GridColumn>
+            <GridColumn TItem="TaskItem" HeaderText="Categoria" PropertyName="CategoryId" SortKeySelector="item => item.CategoryId">
+                @CategoryDictionary.GetCategoryName(@context.CategoryId)
+            </GridColumn>
 
-    <GridColumn TItem="TaskItem" HeaderText="Fecha Creacion" PropertyName="Nombre" SortKeySelector="item => item.CreatedAt">
-        @context.CreatedAt.ToString("dd/MM/yyyy")
-    </GridColumn>
+            <GridColumn TItem="TaskItem" HeaderText="Fecha Creacion" PropertyName="Nombre" SortKeySelector="item => item.CreatedAt" TextNoWrap="true">
+                @context.CreatedAt.ToString("dd/MM/yyyy")
+            </GridColumn>
 
-    <GridColumn TItem="TaskItem" HeaderText="Fecha Vencimiento" PropertyName="Fecha Vencimiento" SortKeySelector="item => item.ExpirationDate">
-        @context.ExpirationDate?.ToString("dd/MM/yyyy")
-    </GridColumn>
+            <GridColumn TItem="TaskItem" HeaderText="Fecha Vencimiento" PropertyName="Fecha Vencimiento" SortKeySelector="item => item.ExpirationDate" TextNoWrap="true">
+                @context.ExpirationDate?.ToString("dd/MM/yyyy")
+            </GridColumn>
 
-  <GridColumn TItem="TaskItem" HeaderText="Estado" PropertyName="Estado" SortKeySelector="item => item.StateId">
-    @((TaskStateEnum)@context.StateId)
-</GridColumn>
+            <GridColumn TItem="TaskItem" HeaderText="Estado" PropertyName="Estado" SortKeySelector="item => item.StateId">
+                @((TaskStateEnum)@context.StateId)
+            </GridColumn>
 
 
-    <GridColumn TItem="TaskItem" HeaderText="Opciones" PropertyName="Opciones">
-        <div class="options-container">
-            <button class="option-button" @onclick="() => OnClickTaskForm(context)">Editar</button>
-            <button class="option-button" @onclick="() => DeleteTaskAsync(context)">Eliminar</button>
-        </div>
-    </GridColumn>
-</Grid>
-}
+            <GridColumn TItem="TaskItem" HeaderText="Opciones" PropertyName="Opciones">
+                <div class="options-container">
+                    <button class="option-button" @onclick="() => OnClickTaskForm(context)">Editar</button>
+                    <button class="option-button" @onclick="() => DeleteTaskAsync(context)">Eliminar</button>
+                </div>
+            </GridColumn>
+        </Grid>
+    }
 </div>
 
 

@@ -1,6 +1,8 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using NLog;
 using System.Diagnostics;
 using TODO_V2.Client.DTO;
 using TODO_V2.Server.Services.Interfaces;
@@ -15,6 +17,7 @@ namespace TODO_V2.Server.Controllers.Impl
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
+        private readonly Logger LoggerN = LogManager.GetCurrentClassLogger();
         private readonly IUserService _userService;  
 
         public UserController(ILogger<UserController> logger, IUserService userService)
@@ -26,6 +29,7 @@ namespace TODO_V2.Server.Controllers.Impl
         [HttpGet]
         public async Task<IEnumerable<User>> GetAll([FromBody] GetRequest<User>? request = null)
         {
+            LoggerN.Info("dasfas");
             return await _userService.GetAll(request);
         }
 

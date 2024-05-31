@@ -113,7 +113,6 @@ namespace TODO_V2.Client.Pages.Components
 
         #endregion SelectRow        
 
-
         #region Modal  
         #region Category Item Form    
 
@@ -226,8 +225,6 @@ namespace TODO_V2.Client.Pages.Components
             }
         }
         #endregion
-
-
 
         #region Toast
         private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));

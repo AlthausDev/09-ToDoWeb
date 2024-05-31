@@ -17,7 +17,7 @@
 
     .rounded-grid th,
     .rounded-grid td {
-        padding: 10px;
+        padding: 6px;
         border-radius: 8px;
     }
 
@@ -48,3 +48,23 @@
 .options-container {  
     display: inline;    
 }
+
+
+::-webkit-scrollbar {
+    width: 13px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #03e9f4;
+    border-radius: 20px;
+    border: 3px solid white;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #028090;
+    }
+
