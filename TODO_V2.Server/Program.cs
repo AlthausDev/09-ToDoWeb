@@ -12,9 +12,8 @@ using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 
-
-var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-logger.Debug("Init Main");
+//var logger = NLogBuilder.ConfigureNLog("NLog.config").GetCurrentClassLogger();
+var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseNLog();
@@ -111,6 +110,8 @@ else
 #endregion
 
 #region Configuración de middleware
+app.UseMiddleware<RequestLoggingMiddleware>();
+
 app.UseCors("corsPolicy");
 app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
@@ -118,6 +119,13 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.Use(async (context, next) =>
+{
+    logger.Info($"Handling request: {context.Request.Method} {context.Request.Path}");
+    await next.Invoke();
+    logger.Info($"Finished handling request: {context.Request.Method} {context.Request.Path}");
+});
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>

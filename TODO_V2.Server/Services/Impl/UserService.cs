@@ -220,9 +220,7 @@ namespace TODO_V2.Server.Services.Impl
         public async Task<bool> Logout()
         {
             try
-            {
-                await localStorageService.ClearAsync();
-                await localStorageService.RemoveItemAsync("token");
+            {                
                 return true;
             }
             catch (Exception ex)
