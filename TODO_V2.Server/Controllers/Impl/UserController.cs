@@ -111,6 +111,21 @@ namespace TODO_V2.Server.Controllers.Impl
             return result == null ? (ActionResult<User>)NotFound() : (ActionResult<User>)result;
         }
 
+        [HttpPut("toggleIsDeleted/{id}")]
+        public async Task<ActionResult<User>> ToggleIsDeleted(int id)
+        {
+            var user = await _userService.GetById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.IsDeleted = !user.IsDeleted;
+            var result = await _userService.Update(user, null);
+
+            return result == null ? (ActionResult<User>)NotFound() : (ActionResult<User>)result;
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
@@ -124,6 +139,7 @@ namespace TODO_V2.Server.Controllers.Impl
             return NoContent();
         }
 
+
         [HttpGet("credentials/{id}")]
         public async Task<ActionResult<LoginCredentials>> GetCredentials(int id)
         {
@@ -132,11 +148,5 @@ namespace TODO_V2.Server.Controllers.Impl
         }
 
 
-        //[HttpDelete("{id}")]
-        //public ActionResult Delete(int id)
-        //{
-        //    _userService.Delete(id);
-        //    return NoContent();
-        //}
     }
 }

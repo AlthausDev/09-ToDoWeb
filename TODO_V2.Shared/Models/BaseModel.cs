@@ -14,7 +14,7 @@
 
         //Delete
         public bool IsDeleted { get; set; } = false;
-        public DateOnly? DeletedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
         public int? DeletedBy { get; set; }
     }
 }

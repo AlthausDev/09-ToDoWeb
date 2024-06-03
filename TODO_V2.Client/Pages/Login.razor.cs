@@ -27,10 +27,11 @@ namespace TODO_V2.Client.Pages
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
-            {
-                await JS.InvokeVoidAsync("addEnterEventListener", "loginButton", IsRegistering);
+            { 
+               await JS.InvokeVoidAsync("addEnterEventListener", "loginButton", IsRegistering);
             }
         }
+
 
         #region Login     
         private async Task OnClickLogin()
@@ -62,10 +63,10 @@ namespace TODO_V2.Client.Pages
             switch (user.UserType)
             {
                 case "USUARIO":
-                    NavManager.NavigateTo($"/user/{user.Id}");
+                    NavManager.NavigateTo($"/user/{user.Id}");                   
                     break;
                 case "ADMINISTRADOR":
-                    NavManager.NavigateTo($"/admin/{user.Id}");
+                    NavManager.NavigateTo($"/admin/{user.Id}");                   
                     break;
                 default:
                     ShowMessage(ToastType.Danger, $"Tipo de usuario desconocido: {user.UserType}");

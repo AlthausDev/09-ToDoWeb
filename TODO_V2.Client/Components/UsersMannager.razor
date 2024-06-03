@@ -57,11 +57,12 @@
             </div>
         </GridColumn>
 
-        <GridColumn TItem="User" PropertyName="IsDeleted" HeaderText="Activo" Filterable="false" Sortable="false">          
-            <ChildContent>
-                <Switch @bind-Value="@context.IsDeleted" />
+        <GridColumn TItem="User" PropertyName="IsDeleted" HeaderText="Activo" Filterable="false" Sortable="false">
+            <ChildContent>             
+                <Switch @bind-Value="@context.IsDeleted" @oninput="@(async (e) => await OnIsDeletedChanged(e))" />
             </ChildContent>
         </GridColumn>
+
     </Grid>
 }
 

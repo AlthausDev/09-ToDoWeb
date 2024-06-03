@@ -47,11 +47,11 @@ namespace TODO_V2.Server.Repository.Impl
             using (var dbConnection = CreateConnection())
             {
                 _ = await dbConnection.ExecuteAsync(@"
-            UPDATE Users SET Name = @Name, Surname = @Surname, UserName = @UserName, UserType = @UserType, UpdatedAt = GETDATE() 
+            UPDATE Users SET Name = @Name, Surname = @Surname, UserName = @UserName, UserType = @UserType, UpdatedAt = GETDATE(), IsDeleted = @IsDeleted
             WHERE Id = @Id", user);
 
                 _ = await dbConnection.ExecuteAsync(@"
-            UPDATE UserCredentials SET UserName = @UserName, EncryptedPassword = @EncryptedPassword, UpdatedAt = GETDATE() WHERE UserId = @UserId", userCredentials);
+            UPDATE UserCredentials SET UserName = @UserName, EncryptedPassword = @EncryptedPassword, UpdatedAt = GETDATE(), IsDeleted = @IsDeleted WHERE UserId = @UserId", userCredentials);
             }
             return user;
         }
@@ -98,7 +98,7 @@ namespace TODO_V2.Server.Repository.Impl
             using (var dbConnection = CreateConnection())
             {
                 return await dbConnection.QueryFirstOrDefaultAsync<User>(
-                    $"SELECT * FROM Users WHERE Id = {id} AND IsDeleted = 0");
+                    $"SELECT * FROM Users WHERE Id = {id}");
             }
         }
 
@@ -126,7 +126,7 @@ namespace TODO_V2.Server.Repository.Impl
             using (var dbConnection = CreateConnection())
             {
                 return await dbConnection.QueryFirstOrDefaultAsync<UserCredentials>(
-                    "SELECT * FROM UserCredentials WHERE UserId = @userId AND IsDeleted = 0",
+                    "SELECT * FROM UserCredentials WHERE UserId = @userId",
                     new { UserId = userId });
             }
         }

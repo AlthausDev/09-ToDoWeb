@@ -61,11 +61,22 @@ namespace TODO_V2.Server.Services.Impl
         /// <param name="user">El usuario a actualizar.</param>
         /// <param name="credentials">Las credenciales de inicio de sesión del usuario.</param>
         /// <returns>Devuelve el usuario actualizado.</returns>
-        public async Task<User> Update(User user, LoginCredentials credentials)
+        public async Task<User> Update(User user, LoginCredentials? credentials)
         {
-
             UserCredentials userCredentials = await UserRepository.GetUserCredentialsById(user.Id);
-            userCredentials.UserName = credentials.Username;
+
+            if(credentials != null)
+            {
+                userCredentials.EncryptedPassword = EncryptionUtil.Encrypt(credentials.Password);
+                userCredentials.UserName = credentials.Username;
+            }
+            else
+            {
+                user.DeletedAt = DateTime.Now;
+
+                userCredentials.IsDeleted = user.IsDeleted;
+                userCredentials.DeletedAt = user.DeletedAt;
+            }       
 
             return await UserRepository.Update(user, userCredentials);
         }

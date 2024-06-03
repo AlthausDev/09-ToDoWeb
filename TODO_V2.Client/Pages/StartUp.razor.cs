@@ -13,7 +13,7 @@ namespace TODO_V2.Client.Pages
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await LoadTestDataIfNeeded();
-            await CategoryDictionary.LoadCategoryDictionary(Http);
+            //await CategoryDictionary.LoadCategoryDictionary(Http);
             await CheckToken();
         }
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http.Json;
@@ -73,12 +74,6 @@ namespace TODO_V2.Client.Components
                 builder.CloseElement();
             }
         };
-
-        private bool IsAllChecked
-        {
-            get => UserList.All(e => e.IsDeleted);
-            set => Array.ForEach(UserList.ToArray(), e => e.IsDeleted = value);
-        }
 
 
         #region StartUp       
@@ -197,8 +192,40 @@ namespace TODO_V2.Client.Components
 
             ShowMessage(ToastType.Success, "Usuario eliminado con éxito.");
         }
-        #endregion
 
+        private async Task OnIsDeletedChanged(ChangeEventArgs e)
+        {
+            bool newValue = (bool)e.Value;
+            User user = selectedUser;
+
+            user.IsDeleted = newValue; 
+
+            var response = await Http.PutAsJsonAsync($"/api/User/toggleIsDeleted/{user.Id}", user.Id);
+            if (response.IsSuccessStatusCode)
+            {
+                var updatedUser = await response.Content.ReadFromJsonAsync<User>();
+                if (updatedUser != null)
+                { 
+                    var userIndex = UserList.IndexOf(user);
+                    if (userIndex >= 0)
+                    {
+                        UserList[userIndex] = updatedUser;
+                    }
+                    Console.WriteLine($"El nuevo valor de IsDeleted es: {updatedUser.IsDeleted}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Error al actualizar el estado de IsDeleted para el usuario con ID {user.Id}");   
+                user.IsDeleted = !newValue;
+            }
+        }
+
+
+
+
+
+        #endregion
 
         #region Toast
         private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));

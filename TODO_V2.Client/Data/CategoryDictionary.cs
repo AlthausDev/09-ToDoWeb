@@ -21,8 +21,7 @@ namespace TODO_V2.Client.Data
                             categoryDictionary.Add(category.Id, category.Name);
                         }
                     }
-                }
-                PrintDictionary();
+                }    
             }
             catch (Exception)
             {
@@ -34,15 +33,6 @@ namespace TODO_V2.Client.Data
         public static string GetCategoryName(int categoryId)
         {
             return categoryDictionary.ContainsKey(categoryId) ? categoryDictionary[categoryId] : "Categoría Desconocida";
-        }
-
-        public static void PrintDictionary()
-        {
-            // Debug.WriteLine("Category Dictionary Contents:");
-            foreach (var kvp in categoryDictionary)
-            {
-                // Debug.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}");
-            }
-        }
+        }      
     }
 }
