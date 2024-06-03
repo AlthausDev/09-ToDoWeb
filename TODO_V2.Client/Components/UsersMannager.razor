@@ -48,7 +48,7 @@
 
         <GridColumn TItem="User" HeaderText="Tipo Usuario" PropertyName="TipoUsuario" SortKeySelector="item => item.UserType">
             @context.UserType
-        </GridColumn>       
+        </GridColumn>
 
         <GridColumn TItem="User" HeaderText="Opciones" PropertyName="Opciones">
             <div class="options-container">
@@ -57,9 +57,9 @@
             </div>
         </GridColumn>
 
-        <GridColumn TItem="User" PropertyName="IsDeleted" HeaderText="Activo" Filterable="false" Sortable="false">
-            <ChildContent>             
-                <Switch @bind-Value="@context.IsDeleted" @oninput="@(async (e) => await OnIsDeletedChanged(e))" />
+        <GridColumn TItem="User" PropertyName="IsActive" HeaderText="Activo" Filterable="false" Sortable="false">
+            <ChildContent>
+                <Switch @bind-Value="@context.IsActive" @oninput="@(async (e) => await OnIsActiveChanged(e))" />
             </ChildContent>
         </GridColumn>
 
@@ -67,7 +67,7 @@
 }
 
 <section id="bottom" />
- 
+
 <script>
     var mybutton = document.getElementById("scrollBtn");
     var mybuttonTop = document.getElementById("scrollBtnDown");
@@ -103,3 +103,16 @@
         document.getElementById('bottom').scrollIntoView({ behavior: 'smooth' });
     }
 </script>
+
+
+<style>
+    .form-check .form-check-input {
+        float: none !important;
+    }
+
+    .form-check-input:checked {
+        background-color: #03e9f4;
+        border: 2px solid white;
+        box-shadow: 0 8px 22px rgba(3,233,244,.5);
+    }
+</style>

@@ -47,11 +47,12 @@ namespace TODO_V2.Server.Repository.Impl
             using (var dbConnection = CreateConnection())
             {
                 _ = await dbConnection.ExecuteAsync(@"
-            UPDATE Users SET Name = @Name, Surname = @Surname, UserName = @UserName, UserType = @UserType, UpdatedAt = GETDATE(), IsDeleted = @IsDeleted
+            UPDATE Users SET Name = @Name, Surname = @Surname, UserName = @UserName, UserType = @UserType, UpdatedAt = GETDATE(), IsActive = @IsActive, DeletedAt = @DeletedAt
             WHERE Id = @Id", user);
 
                 _ = await dbConnection.ExecuteAsync(@"
-            UPDATE UserCredentials SET UserName = @UserName, EncryptedPassword = @EncryptedPassword, UpdatedAt = GETDATE(), IsDeleted = @IsDeleted WHERE UserId = @UserId", userCredentials);
+            UPDATE UserCredentials SET UserName = @UserName, EncryptedPassword = @EncryptedPassword, UpdatedAt = GETDATE(), IsActive = @IsActive , DeletedAt = @DeletedAt 
+            WHERE UserId = @UserId", userCredentials);
             }
             return user;
         }
@@ -71,8 +72,8 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (var dbConnection = CreateConnection())
             {
-                _ = await dbConnection.ExecuteAsync("UPDATE Users SET IsDeleted = 1, DeletedAt = GETDATE() WHERE Id = @Id", new { Id = id });
-                _ = await dbConnection.ExecuteAsync("UPDATE UserCredentials SET IsDeleted = 1, DeletedAt = GETDATE() WHERE UserId = @Id", new { Id = id });
+                _ = await dbConnection.ExecuteAsync("UPDATE Users SET IsActive = 0, DeletedAt = GETDATE() WHERE Id = @Id", new { Id = id });
+                _ = await dbConnection.ExecuteAsync("UPDATE UserCredentials SET IsActive = 0, DeletedAt = GETDATE() WHERE UserId = @Id", new { Id = id });
             }
             return true;
         }
@@ -89,7 +90,7 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (var dbConnection = CreateConnection())
             {
-                return await dbConnection.QueryAsync<User>("SELECT * FROM Users WHERE IsDeleted = 0");
+                return await dbConnection.QueryAsync<User>("SELECT * FROM Users WHERE IsActive = 1");
             }
         }
 
@@ -107,7 +108,7 @@ namespace TODO_V2.Server.Repository.Impl
             using (var dbConnection = CreateConnection())
             {
                 return await dbConnection.QueryFirstOrDefaultAsync<User>(
-                    "SELECT * FROM Users WHERE UserName = @UserName AND IsDeleted = 0", new { UserName = username });
+                    "SELECT * FROM Users WHERE UserName = @UserName AND IsActive = 1", new { UserName = username });
             }
         }
 
@@ -116,7 +117,7 @@ namespace TODO_V2.Server.Repository.Impl
             using (var dbConnection = CreateConnection())
             {
                 return await dbConnection.QueryFirstOrDefaultAsync<UserCredentials>(
-                    "SELECT * FROM UserCredentials WHERE UserName = @UserName AND IsDeleted = 0",
+                    "SELECT * FROM UserCredentials WHERE UserName = @UserName AND IsActive = 1",
                     new { UserName = username });
             }
         }

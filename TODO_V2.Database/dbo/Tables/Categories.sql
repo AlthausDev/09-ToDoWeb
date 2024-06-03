@@ -5,7 +5,7 @@
     CreatedAt DATE NOT NULL DEFAULT GETDATE(),
     UpdatedAt DATE NULL,
     UpdatedBy INT NULL,
-    IsDeleted BIT NOT NULL DEFAULT 0,
+    IsActive BIT NOT NULL DEFAULT 1,
     DeletedAt DATE NULL,
     DeletedBy INT NULL
 );

@@ -72,9 +72,11 @@ namespace TODO_V2.Server.Services.Impl
             }
             else
             {
-                user.DeletedAt = DateTime.Now;
+                if(user.IsActive == false) { 
+                    user.DeletedAt = DateTime.Now;
+                }
 
-                userCredentials.IsDeleted = user.IsDeleted;
+                userCredentials.IsActive = user.IsActive;
                 userCredentials.DeletedAt = user.DeletedAt;
             }       
 

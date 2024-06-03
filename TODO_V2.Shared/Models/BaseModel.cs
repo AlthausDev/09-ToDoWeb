@@ -13,7 +13,7 @@
 
 
         //Delete
-        public bool IsDeleted { get; set; } = false;
+        public bool IsActive { get; set; } = true;
         public DateTime? DeletedAt { get; set; }
         public int? DeletedBy { get; set; }
     }

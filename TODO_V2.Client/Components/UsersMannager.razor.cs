@@ -11,8 +11,7 @@ using TODO_V2.Client.Pages;
 using TODO_V2.Shared.Models;
 
 namespace TODO_V2.Client.Components
-{
-    //TODO Implementar opcion entre eliminación definitiva de usuario y desactivación
+{   
     public partial class UsersMannager
     {
         [Parameter]
@@ -193,14 +192,11 @@ namespace TODO_V2.Client.Components
             ShowMessage(ToastType.Success, "Usuario eliminado con éxito.");
         }
 
-        private async Task OnIsDeletedChanged(ChangeEventArgs e)
-        {
-            bool newValue = (bool)e.Value;
+        private async Task OnIsActiveChanged(ChangeEventArgs e)
+        {            
             User user = selectedUser;
 
-            user.IsDeleted = newValue; 
-
-            var response = await Http.PutAsJsonAsync($"/api/User/toggleIsDeleted/{user.Id}", user.Id);
+            var response = await Http.PutAsJsonAsync($"/api/User/toggleIsActive/{user.Id}", user.Id);
             if (response.IsSuccessStatusCode)
             {
                 var updatedUser = await response.Content.ReadFromJsonAsync<User>();
@@ -210,14 +206,12 @@ namespace TODO_V2.Client.Components
                     if (userIndex >= 0)
                     {
                         UserList[userIndex] = updatedUser;
-                    }
-                    Console.WriteLine($"El nuevo valor de IsDeleted es: {updatedUser.IsDeleted}");
+                    }             
                 }
             }
             else
             {
-                Console.WriteLine($"Error al actualizar el estado de IsDeleted para el usuario con ID {user.Id}");   
-                user.IsDeleted = !newValue;
+                Debug.WriteLine($"Error al actualizar el estado de IsActive para el usuario con ID {user.Id}");                  
             }
         }
 

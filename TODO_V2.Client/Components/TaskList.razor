@@ -47,11 +47,11 @@
                 @CategoryDictionary.GetCategoryName(@context.CategoryId)
             </GridColumn>
 
-            <GridColumn TItem="TaskItem" HeaderText="Fecha Creacion" PropertyName="Nombre" SortKeySelector="item => item.CreatedAt" TextNoWrap="true">
+            <GridColumn TItem="TaskItem" HeaderText="Alta" PropertyName="Nombre" SortKeySelector="item => item.CreatedAt" TextNoWrap="true">
                 @context.CreatedAt.ToString("dd/MM/yyyy")
             </GridColumn>
 
-            <GridColumn TItem="TaskItem" HeaderText="Fecha Vencimiento" PropertyName="Fecha Vencimiento" SortKeySelector="item => item.ExpirationDate" TextNoWrap="true">
+            <GridColumn TItem="TaskItem" HeaderText="Vencimiento" PropertyName="Fecha Vencimiento" SortKeySelector="item => item.ExpirationDate" TextNoWrap="true">
                 @context.ExpirationDate?.ToString("dd/MM/yyyy")
             </GridColumn>
 

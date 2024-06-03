@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using TODO_V2.Client.Data;
 using TODO_V2.Shared.Data;
+using TODO_V2.Shared.Models;
 
 
 namespace TODO_V2.Client.Pages
@@ -13,7 +14,6 @@ namespace TODO_V2.Client.Pages
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await LoadTestDataIfNeeded();
-            //await CategoryDictionary.LoadCategoryDictionary(Http);
             await CheckToken();
         }
 
@@ -65,6 +65,9 @@ namespace TODO_V2.Client.Pages
 
         private async Task CheckToken()
         {
+            int? userId = null;
+            string? UserType = null;
+
             try
             {
                 string getToken = await storageService.GetItemAsStringAsync("token");
@@ -79,19 +82,20 @@ namespace TODO_V2.Client.Pages
                 var jwtSecurityToken = handler.ReadJwtToken(getToken);
                 List<Claim> claims = jwtSecurityToken.Claims.ToList();
 
-                int userId = int.Parse(claims.ElementAt(0).Value);
-                string UserType = claims.ElementAt(2).Value;
-
-                NavigateBasedOnUserType(UserType, userId);
+                userId = int.Parse(claims.ElementAt(0).Value);
+                UserType = claims.ElementAt(2).Value;                
             }
             catch (Exception)
             {
-                _ = Http.DefaultRequestHeaders.Remove("Authorization");
-                NavManager.NavigateTo("/login");
+                _ = Http.DefaultRequestHeaders.Remove("Authorization");               
+            }
+            finally
+            {
+                await NavigateBasedOnUserType(UserType, userId);
             }
         }
 
-        private void NavigateBasedOnUserType(string UserType, int Id)
+        private async Task NavigateBasedOnUserType(string? UserType, int? Id)
         {
             switch (UserType)
             {
@@ -102,6 +106,7 @@ namespace TODO_V2.Client.Pages
                     NavManager.NavigateTo($"/admin/{Id}");
                     break;
                 default:
+                    NavManager.NavigateTo("/login");
                     break;
             }
         }

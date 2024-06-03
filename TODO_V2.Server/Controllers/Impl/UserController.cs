@@ -25,7 +25,6 @@ namespace TODO_V2.Server.Controllers.Impl
         [HttpGet]
         public async Task<IEnumerable<User>> GetAll([FromBody] GetRequest<User>? request = null)
         {
-            LoggerN.Info("dasfas");
             return await _userService.GetAll(request);
         }
 
@@ -111,8 +110,8 @@ namespace TODO_V2.Server.Controllers.Impl
             return result == null ? (ActionResult<User>)NotFound() : (ActionResult<User>)result;
         }
 
-        [HttpPut("toggleIsDeleted/{id}")]
-        public async Task<ActionResult<User>> ToggleIsDeleted(int id)
+        [HttpPut("toggleIsActive/{id}")]
+        public async Task<ActionResult<User>> ToggleIsActive(int id)
         {
             var user = await _userService.GetById(id);
             if (user == null)
@@ -120,7 +119,7 @@ namespace TODO_V2.Server.Controllers.Impl
                 return NotFound();
             }
 
-            user.IsDeleted = !user.IsDeleted;
+            user.IsActive = !user.IsActive;
             var result = await _userService.Update(user, null);
 
             return result == null ? (ActionResult<User>)NotFound() : (ActionResult<User>)result;

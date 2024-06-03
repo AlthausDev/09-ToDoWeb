@@ -4,6 +4,7 @@
     {
         Alphabetical,
         AlphaNumeric,
-        All
+        All,
+        Date
     }
 }

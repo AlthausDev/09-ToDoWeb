@@ -72,7 +72,7 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
             {
-                return await dbConnection.QueryAsync<Category>("SELECT * FROM Categories WHERE IsDeleted = 0");
+                return await dbConnection.QueryAsync<Category>("SELECT * FROM Categories WHERE IsActive = 1");
             }
         }
 
@@ -90,7 +90,7 @@ namespace TODO_V2.Server.Repository.Impl
             {
                 using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
                 {
-                    _ = await dbConnection.ExecuteAsync("UPDATE Categories SET IsDeleted = 1 WHERE Id = @Id", new { Id = entityId });
+                    _ = await dbConnection.ExecuteAsync("UPDATE Categories SET IsActive = 0 WHERE Id = @Id", new { Id = entityId });
                 }
                 return true;
             }

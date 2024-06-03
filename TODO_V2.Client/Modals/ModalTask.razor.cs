@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Net.Http.Json;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Models.Enum;
+using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Client.Modals
 {
@@ -25,6 +26,7 @@ namespace TODO_V2.Client.Modals
         private TaskItem? NewTaskItem;
 
         private string DescripcionColor = "#03e9f4";
+        private string ExpirationDateColor = "#03e9f4";
 
         private bool IsInputValid = false;
         public bool IsEditing { get; private set; } = false;
@@ -53,43 +55,77 @@ namespace TODO_V2.Client.Modals
             await base.OnParametersSetAsync();
         }
 
-
         #region OnClick     
         protected async Task OnClickAceptar()
         {
-            if (IsInputValid)
+            bool isTaskNameValid = CheckTaskNameHandler();
+            bool isExpirationDateValid = CheckExpirationDateHandler();
+
+            if (isTaskNameValid && isExpirationDateValid)
             {
+                IsInputValid = true;
+
                 if (IsEditing)
                 {
-                    NewTaskItem.Name = TaskName;
-                    NewTaskItem.CategoryId = TaskCategory;
-                    NewTaskItem.StateId = StateId;
-                    NewTaskItem.ExpirationDate = ExpirationDate;
-
+                    UpdateTaskItem();
                     await EditItem();
                 }
                 else
                 {
-                    NewTaskItem = new(TaskCategory, UserId, StateId, TaskName, ExpirationDate);
-
+                    CreateNewTaskItem();
                     await NewItem();
                 }
-
-                // Debug.WriteLine($"Nombre de la tarea: {NewTaskItem.Name}");
-                // Debug.WriteLine($"Categoría de la tarea: {NewTaskItem.CategoryId}");
-                // Debug.WriteLine($"Fecha de expiración: {NewTaskItem.ExpirationDate}");
-                // Debug.WriteLine($"Estado de la tarea: {NewTaskItem.StateId}");
 
                 ClearFields();
                 await Aceptar.InvokeAsync();
             }
             else
             {
-                ShowMessage(ToastType.Danger, "Introduzca la descripción de su tarea");
-                DescripcionColor = ColorsEnum.crimson.ToString();
-                return;
+                HandleInvalidInput(isTaskNameValid, isExpirationDateValid);
             }
         }
+
+        private void UpdateTaskItem()
+        {
+            NewTaskItem.Name = TaskName;
+            NewTaskItem.CategoryId = TaskCategory;
+            NewTaskItem.StateId = StateId;
+            NewTaskItem.ExpirationDate = ExpirationDate;
+        }
+
+        private void CreateNewTaskItem()
+        {
+            NewTaskItem = new TaskItem(TaskCategory, UserId, StateId, TaskName, ExpirationDate);
+        }
+
+        private void HandleInvalidInput(bool isTaskNameValid, bool isExpirationDateValid)
+        {
+            ShowMessage(ToastType.Danger, GetErrorMessage(isTaskNameValid, isExpirationDateValid));
+            SetInvalidFieldColors(isTaskNameValid, isExpirationDateValid);
+        }
+
+        private string GetErrorMessage(bool isTaskNameValid, bool isExpirationDateValid)
+        {
+            if (!isTaskNameValid && !isExpirationDateValid)
+            {
+                return "El nombre de la tarea es inválido y la fecha de expiración es anterior a hoy.";
+            }
+            else if (!isTaskNameValid)
+            {
+                return "El nombre de la tarea es inválido. Por favor, introduzca un nombre válido.";
+            }
+            else // if (!isExpirationDateValid)
+            {
+                return "La fecha de expiración es anterior a hoy. Por favor, introduzca una fecha válida.";
+            }
+        }
+
+        private void SetInvalidFieldColors(bool isTaskNameValid, bool isExpirationDateValid)
+        {
+            DescripcionColor = isTaskNameValid ? string.Empty : ColorsEnum.crimson.ToString();
+            ExpirationDateColor = isExpirationDateValid ? string.Empty : ColorsEnum.crimson.ToString();
+        }
+
 
         protected void OnClickClose()
         {
@@ -102,10 +138,30 @@ namespace TODO_V2.Client.Modals
         #region Handlers
         private void ValueChangeHandler()
         {
-            DescripcionColor = "#03e9f4";
-            IsInputValid = !TaskName.IsNullOrEmpty();
+            bool isTaskNameValid = CheckTaskNameHandler();
+            bool isExpirationDate = CheckExpirationDateHandler();
+
+            IsInputValid = isTaskNameValid && isExpirationDate;
         }
 
+        private bool CheckTaskNameHandler()
+        {
+            return CheckFieldFormat(TaskName, FieldTypeEnum.AlphaNumeric.ToString(), ref DescripcionColor);
+        }
+
+        private bool CheckExpirationDateHandler()
+        {
+            ExpirationDateColor = "#03e9f4";
+            return ExpirationDate.Date >= DateTime.Now.Date;
+        }
+
+        private bool CheckFieldFormat(string fieldValue, string fieldType, ref string fieldColor)
+        {
+            bool isValid = Validation.CheckFormat(fieldValue, fieldType);            
+            
+            fieldColor = isValid ? ColorsEnum.lime.ToString() : "#03e9f4";
+            return isValid;
+        }
         #endregion Handlers
 
         #region Api
@@ -162,7 +218,8 @@ namespace TODO_V2.Client.Modals
         }
         #endregion Toast
 
-        #region Aux
+        #region Aux    
+
         private void ClearFields()
         {
             TaskName = string.Empty;

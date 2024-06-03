@@ -9,7 +9,7 @@
     UpdatedAt DATE NULL,
     UpdatedBy INT NULL,
     ExpirationDate DATE NULL,
-    IsDeleted BIT NOT NULL DEFAULT 0,
+    IsActive BIT NOT NULL DEFAULT 1,
     DeletedAt DATE NULL,
     DeletedBy INT NULL,
     FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
