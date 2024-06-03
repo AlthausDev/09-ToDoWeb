@@ -1,8 +1,5 @@
-﻿using System.Net.Http.Json;
-using System.Threading.Tasks;
-using TODO_V2.Client.DTO;
+﻿using TODO_V2.Client.ClienteModels;
 using TODO_V2.Server.Models;
-using TODO_V2.Shared.Models;
 
 namespace TODO_V2.Shared.Data
 {
@@ -13,7 +10,7 @@ namespace TODO_V2.Shared.Data
 
         public static async Task LoadTestCredentials(HttpClient http)
         {
-            UsersCredentials =[            
+            UsersCredentials = [
                 new(1,"Admin", "111"),
                 new(2,"jane", "111"),
                 new(3,"mike", "222"),
@@ -59,7 +56,7 @@ namespace TODO_V2.Shared.Data
                 new("amelia", "9012"),
                 new("mia", "0123"),
                 new("aaa", "aaa")
-           ];          
+           ];
         }
     }
 }

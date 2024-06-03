@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using TODO_V2.Shared.Models.Enum;
+﻿using System.Diagnostics;
 
 namespace TODO_V2.Shared.Models
 {
@@ -13,7 +11,7 @@ namespace TODO_V2.Shared.Models
             set => _userName = value.ToUpper();
         }
 
-        public string Surname { get; set; }        
+        public string Surname { get; set; }
         public string UserType { get; set; }
 
 

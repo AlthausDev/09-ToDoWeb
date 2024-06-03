@@ -1,8 +1,5 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using TODO_V2.Shared.Models;
-using TODO_V2.Shared.Models.Enum;
 
 namespace TODO_V2.Shared.Data
 {

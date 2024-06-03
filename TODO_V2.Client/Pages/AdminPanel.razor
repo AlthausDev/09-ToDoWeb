@@ -1,5 +1,5 @@
 ﻿@page "/admin/{Id}"
-@using TODO_V2.Client.Pages.Components
+@using TODO_V2.Client.Components
 @inject HttpClient Http
 @inject IJSRuntime JS
 @inject NavigationManager NavManager
@@ -14,7 +14,7 @@
         <button type="button" class="button-style @(activeButton == "Categories" ? "active" : "")" @onclick="OnClickShowCategories">Gestión Categorias</button>
         <button type="button" class="button-style @(activeButton == "Users" ? "active" : "")" @onclick="OnClickShowUsers">Gestión Usuarios</button>
         <button type="button" class="button-style @(activeButton == "TodoList" ? "active" : "")" @onclick="OnClickShowTodoList">Tareas</button>
-        <button type="button" class="button-style @(activeButton == "LogOut" ? "active" : "")" @onclick="OnClickLogOut">Cerrar Sesion</button>
+        <Logout/>       
     </div>
 
 
@@ -28,7 +28,7 @@
         </div>
 
         <div class="todoContainer">
-            <Todo Id="@Id" />
+            <TaskList Id="@Id" />
         </div>
     </div>
 </div>

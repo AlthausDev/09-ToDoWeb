@@ -1,7 +1,4 @@
-﻿using BlazorBootstrap;
-using System;
-
-namespace TODO_V2.Shared.Models
+﻿namespace TODO_V2.Shared.Models
 {
     public class TaskItem : BaseModel
     {
@@ -18,9 +15,9 @@ namespace TODO_V2.Shared.Models
         {
             CategoryId = categoryId;
             UserId = userId;
-            StateId = stateId; 
+            StateId = stateId;
             Name = name;
             ExpirationDate = expirationDate;
-        }        
+        }
     }
 }

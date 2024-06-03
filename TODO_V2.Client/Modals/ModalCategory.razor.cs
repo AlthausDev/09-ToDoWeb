@@ -1,21 +1,20 @@
 ﻿using BlazorBootstrap;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.IdentityModel.Tokens;
-using static System.Net.WebRequestMethods;
-using TODO_V2.Shared.Models.Enum;
-using TODO_V2.Shared.Models;
 using System.Net.Http.Json;
+using TODO_V2.Shared.Models;
+using TODO_V2.Shared.Models.Enum;
 
-namespace TODO_V2.Client.Shared.Modals
+namespace TODO_V2.Client.Modals
 {
     partial class ModalCategory
-    {     
+    {
         [Parameter]
         public int? CategoryId { get; set; }
         [Parameter]
         public string? CategoryName { get; set; } = string.Empty;
-       
+
 
         private Category? NewCategory = new();
 
@@ -36,7 +35,7 @@ namespace TODO_V2.Client.Shared.Modals
             if (CategoryId.HasValue)
             {
                 IsEditing = true;
-                IsInputValid = true;               
+                IsInputValid = true;
             }
             else
             {
@@ -125,7 +124,7 @@ namespace TODO_V2.Client.Shared.Modals
         private void ClearFields()
         {
             CategoryId = null;
-            CategoryName = string.Empty;            
+            CategoryName = string.Empty;
             IsInputValid = false;
             IsEditing = false;
             DescripcionColor = "#03e9f4";

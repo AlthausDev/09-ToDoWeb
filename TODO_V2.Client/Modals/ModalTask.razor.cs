@@ -2,24 +2,21 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.IdentityModel.Tokens;
-using System.Diagnostics;
 using System.Net.Http.Json;
-using TODO_V2.Client.Pages;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Models.Enum;
-using TODO_V2.Shared.Utils;
 
-namespace TODO_V2.Client.Shared.Modals
+namespace TODO_V2.Client.Modals
 {
     //TODO controlar que la fecha de expiración no sea anterior a la fecha actual
     public partial class ModalTask
     {
         [Parameter]
-        public int UserId {  get; set; }
+        public int UserId { get; set; }
         [Parameter]
         public int? TaskId { get; set; }
 
-        public string TaskName { get; set; } = string.Empty;    
+        public string TaskName { get; set; } = string.Empty;
         public int TaskCategory { get; set; } = 1;
         public DateTime ExpirationDate { get; set; } = DateTime.Now.Date;
         public int StateId { get; set; } = 1;
@@ -62,9 +59,9 @@ namespace TODO_V2.Client.Shared.Modals
         protected async Task OnClickAceptar()
         {
             if (IsInputValid)
-            {               
+            {
                 if (IsEditing)
-                {                    
+                {
                     NewTaskItem.Name = TaskName;
                     NewTaskItem.CategoryId = TaskCategory;
                     NewTaskItem.StateId = StateId;
@@ -84,10 +81,11 @@ namespace TODO_V2.Client.Shared.Modals
                 // Debug.WriteLine($"Fecha de expiración: {NewTaskItem.ExpirationDate}");
                 // Debug.WriteLine($"Estado de la tarea: {NewTaskItem.StateId}");
 
-                ClearFields();            
+                ClearFields();
                 await Aceptar.InvokeAsync();
             }
-            else {
+            else
+            {
                 ShowMessage(ToastType.Danger, "Introduzca la descripción de su tarea");
                 DescripcionColor = ColorsEnum.crimson.ToString();
                 return;
@@ -114,7 +112,7 @@ namespace TODO_V2.Client.Shared.Modals
         #region Api
         private async Task LoadTaskById(int taskId)
         {
-            if (taskId != 0) 
+            if (taskId != 0)
             {
                 try
                 {
@@ -123,7 +121,7 @@ namespace TODO_V2.Client.Shared.Modals
                     if (task != null)
                     {
                         NewTaskItem = task;
-                        
+
                         TaskName = NewTaskItem.Name;
                         TaskCategory = NewTaskItem.CategoryId;
                         ExpirationDate = (DateTime)NewTaskItem.ExpirationDate;
@@ -132,11 +130,11 @@ namespace TODO_V2.Client.Shared.Modals
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error al cargar la tarea por Id: {ex.Message}");                  
+                    Console.WriteLine($"Error al cargar la tarea por Id: {ex.Message}");
                 }
             }
             else
-            {               
+            {
                 NewTaskItem = new TaskItem();
             }
         }

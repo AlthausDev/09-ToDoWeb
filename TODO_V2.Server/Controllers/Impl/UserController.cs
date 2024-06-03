@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using NLog;
 using System.Diagnostics;
-using TODO_V2.Client.DTO;
+using TODO_V2.Client.ClienteModels;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Models.Request;

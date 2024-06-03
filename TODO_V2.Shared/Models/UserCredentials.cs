@@ -11,7 +11,7 @@ namespace TODO_V2.Server.Models
         public string UserName
         {
             get => _userName;
-            set => _userName = value.ToUpper(); 
+            set => _userName = value.ToUpper();
         }
         public string EncryptedPassword { get; set; }
 

@@ -14,7 +14,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using TODO_V2.Client.DTO;
+using TODO_V2.Client.ClienteModels;
 using TODO_V2.Server.Models;
 using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Server.Services.Interfaces;

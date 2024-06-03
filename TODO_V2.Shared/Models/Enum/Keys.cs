@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TODO_V2.Shared.Models.Enum
+﻿namespace TODO_V2.Shared.Models.Enum
 {
     //Incluir claves en tabla MySQL
     public enum Keys

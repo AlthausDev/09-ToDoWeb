@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Json;
 using TODO_V2.Shared.Models;
 
 namespace TODO_V2.Client.Data
 {
     public static class CategoryDictionary
     {
-        public static Dictionary<int, string> categoryDictionary = new Dictionary<int, string>();
+        public static Dictionary<int, string> categoryDictionary = new();
 
         public static async Task LoadCategoryDictionary(HttpClient http)
         {
@@ -22,7 +19,7 @@ namespace TODO_V2.Client.Data
                         if (!categoryDictionary.ContainsKey(category.Id))
                         {
                             categoryDictionary.Add(category.Id, category.Name);
-                        }                       
+                        }
                     }
                 }
                 PrintDictionary();
@@ -36,14 +33,7 @@ namespace TODO_V2.Client.Data
 
         public static string GetCategoryName(int categoryId)
         {
-            if (categoryDictionary.ContainsKey(categoryId))
-            {
-                return categoryDictionary[categoryId];
-            }
-            else
-            {
-                return "Categoría Desconocida";
-            }
+            return categoryDictionary.ContainsKey(categoryId) ? categoryDictionary[categoryId] : "Categoría Desconocida";
         }
 
         public static void PrintDictionary()

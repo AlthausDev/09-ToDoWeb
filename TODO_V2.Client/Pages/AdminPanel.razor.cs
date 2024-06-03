@@ -1,7 +1,5 @@
 ﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
-using System.Diagnostics;
 
 namespace TODO_V2.Client.Pages
 {
@@ -23,7 +21,7 @@ namespace TODO_V2.Client.Pages
             activeButton = "Users";
 
             ShowUsersMannager = "block";
-            ShowCategoriesMannager = "none";            
+            ShowCategoriesMannager = "none";
             ShowTodoList = "none";
         }
 
@@ -43,19 +41,10 @@ namespace TODO_V2.Client.Pages
             ShowUsersMannager = "none";
             ShowCategoriesMannager = "none";
             ShowTodoList = "block";
-        }
-
-        private async Task OnClickLogOut()
-        {   
-                var response = await Http.DeleteAsync("/api/User/logout");
-
-                await storageService.RemoveItemAsync("token");
-                NavManager.NavigateTo("/");
-                Http.DefaultRequestHeaders.Remove("Authorization");
-        }
-
+        }      
+       
         public static async Task HideModal()
-        {       
+        {
             await ModalInstance.HideAsync();
         }
     }

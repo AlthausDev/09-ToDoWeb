@@ -1,15 +1,16 @@
 ﻿using BlazorBootstrap;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.IdentityModel.Tokens;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using TODO_V2.Client.Data;
-using TODO_V2.Client.Shared.Modals;
+using TODO_V2.Client.Modals;
+using TODO_V2.Client.Pages;
 using TODO_V2.Shared.Models;
-using Microsoft.IdentityModel.Tokens;
 
-namespace TODO_V2.Client.Pages.Components
+namespace TODO_V2.Client.Components
 {
     partial class CategoryMannager
     {
@@ -28,7 +29,7 @@ namespace TODO_V2.Client.Pages.Components
 
         Grid<Category> DataGrid = default!;
         private ObservableCollection<Category> CategoryList { get; set; } = new ObservableCollection<Category>();
-            
+
         private Category? selectedCategory { get; set; } = null;
         public Category? SelectedCategory
         {
@@ -122,7 +123,7 @@ namespace TODO_V2.Client.Pages.Components
             var parameters = new Dictionary<string, object>
              {
                 { "CategoryId", SelectedCategory?.Id },
-                { "CategoryName", SelectedCategory?.Name},                
+                { "CategoryName", SelectedCategory?.Name},
                 { "Aceptar", EventCallback.Factory.Create<MouseEventArgs>(this, CategoryFormResult) },
                 { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, AdminPanel.HideModal) }
             };

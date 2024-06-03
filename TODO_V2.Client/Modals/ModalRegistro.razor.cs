@@ -1,27 +1,23 @@
 ﻿using BlazorBootstrap;
-using TODO_V2.Client.Pages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using TODO_V2.Shared.Models.Enum;
-using TODO_V2.Shared.Utils;
-using static System.Net.WebRequestMethods;
-using TODO_V2.Shared.Models;
-using System.Net.Http.Json;
 using System.Diagnostics;
-using TODO_V2.Client.DTO;
+using System.Net.Http.Json;
+using TODO_V2.Client.ClienteModels;
+using TODO_V2.Client.Pages;
+using TODO_V2.Shared.Models;
+using TODO_V2.Shared.Models.Enum;
 using TODO_V2.Shared.Models.Request;
-using System.Threading.Tasks;
-using Fare;
-using Microsoft.JSInterop;
+using TODO_V2.Shared.Utils;
 
-namespace TODO_V2.Client.Shared.Modals
+namespace TODO_V2.Client.Modals
 {
     partial class ModalRegistro
     {
         [Parameter]
-        public int? Id { get; set; }  
+        public int? Id { get; set; }
         public string CheckPassword { get; set; } = string.Empty;
-        public string Clave { get; set; } = string.Empty;   
+        public string Clave { get; set; } = string.Empty;
         public string UserType { get; set; } = UserTypeEnum.USUARIO.ToString();
 
 
@@ -38,7 +34,7 @@ namespace TODO_V2.Client.Shared.Modals
         public bool IsEditing { get; private set; } = false;
 
         [Parameter]
-        public bool IsAdminDisplay {get; set; } = false;
+        public bool IsAdminDisplay { get; set; } = false;
 
 
         List<ToastMessage> messages = new();
@@ -53,7 +49,7 @@ namespace TODO_V2.Client.Shared.Modals
             {
                 IsEditing = true;
                 IsInputValid = true;
-                await LoadUserById(Id.Value);                
+                await LoadUserById(Id.Value);
             }
             else
             {
@@ -98,7 +94,7 @@ namespace TODO_V2.Client.Shared.Modals
                 await Aceptar.InvokeAsync();
             }
             else
-            { 
+            {
                 Credentials = new(NewUser.UserName, Credentials.Password);
 
                 if (await RegisterUser())
@@ -113,11 +109,11 @@ namespace TODO_V2.Client.Shared.Modals
                     UserNameColor = ColorsEnum.crimson.ToString();
                 }
             }
-           
+
         }
 
         protected void OnClickClose()
-        { 
+        {
             ClearFields();
             Cerrar.InvokeAsync();
         }
@@ -152,7 +148,7 @@ namespace TODO_V2.Client.Shared.Modals
                     return false;
                 }
             }
-           
+
             Debug.WriteLine(Credentials.Password);
             Debug.WriteLine(CheckPassword);
 
@@ -206,7 +202,7 @@ namespace TODO_V2.Client.Shared.Modals
                 HttpResponseMessage response = await Http.PostAsJsonAsync("api/User", request);
                 response.EnsureSuccessStatusCode();
 
-                var data = await response.Content.ReadAsStringAsync();               
+                var data = await response.Content.ReadAsStringAsync();
                 return data.Equals("true");
             }
             catch (HttpRequestException)
@@ -242,13 +238,13 @@ namespace TODO_V2.Client.Shared.Modals
             {
                 try
                 {
-                    User user = await Http.GetFromJsonAsync<User>($"api/User/{UserId}");                     
+                    User user = await Http.GetFromJsonAsync<User>($"api/User/{UserId}");
 
                     if (user != null)
                     {
                         await LoadCredentialsById(user.Id);
                         Debug.WriteLine(Credentials.Password);
-                        NewUser = user;   
+                        NewUser = user;
                     }
                 }
                 catch (Exception ex)
@@ -270,9 +266,9 @@ namespace TODO_V2.Client.Shared.Modals
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al cargar las credenciales del usuario: {ex.Message}");              
+                Console.WriteLine($"Error al cargar las credenciales del usuario: {ex.Message}");
             }
-        } 
+        }
 
         #region Toast
         private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));

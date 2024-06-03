@@ -5,17 +5,16 @@ using Microsoft.IdentityModel.Tokens;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http.Json;
-using TODO_V2.Client.Shared.Modals;
+using TODO_V2.Client.Data;
+using TODO_V2.Client.Modals;
 using TODO_V2.Shared.Models;
 using ToastType = BlazorBootstrap.ToastType;
-using TODO_V2.Client.Data;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
-namespace TODO_V2.Client.Pages.Components
+namespace TODO_V2.Client.Components
 {
     //TODO Revisar PreloadService, no se muestra cuando se realiza recarga forzada de la página "F5"
-    public partial class Todo
+    public partial class TaskList
     {
         /// <summary>
         /// Parámetro que recibe el ID del usuario.
@@ -96,18 +95,18 @@ namespace TODO_V2.Client.Pages.Components
         /// Carga los datos del usuario y sus tareas.
         /// </summary>
         protected override async Task OnInitializedAsync()
-        {           
+        {
             try
             {
                 isLoading = true;
                 PreloadService.Show(SpinnerColor.Light, "Cargando...");
 
-                await CategoryDictionary.LoadCategoryDictionary(Http);       
-                await GetUserData();            
+                await CategoryDictionary.LoadCategoryDictionary(Http);
+                await GetUserData();
                 await GetTaskData();
             }
             finally
-            {                
+            {
                 isLoading = false;
                 await Task.Delay(1000);
                 PreloadService.Hide();
@@ -117,7 +116,7 @@ namespace TODO_V2.Client.Pages.Components
         private RenderFragment RenderLoadingIndicator() => builder =>
         {
             if (isLoading)
-            {               
+            {
                 builder.OpenElement(0, "div");
                 builder.AddAttribute(1, "class", "loading-indicator");
                 builder.AddContent(2, "Cargando...");
@@ -151,14 +150,14 @@ namespace TODO_V2.Client.Pages.Components
 
         private async Task GetTaskData()
         {
-            TaskItemList = new ObservableCollection<TaskItem>(await Http.GetFromJsonAsync<List<TaskItem>>($"api/TaskItem/user/{Id}/tasks"));            
+            TaskItemList = new ObservableCollection<TaskItem>(await Http.GetFromJsonAsync<List<TaskItem>>($"api/TaskItem/user/{Id}/tasks"));
         }
         #endregion
 
         #region SelectRow    
         private async Task SelectTaskItem(GridRowEventArgs<TaskItem> args)
         {
-                SelectedTaskItem = args.Item;                 
+            SelectedTaskItem = args.Item;
         }
 
         #endregion SelectRow        
@@ -202,7 +201,7 @@ namespace TODO_V2.Client.Pages.Components
         {
             SelectedTaskItem = taskItem;
             if (SelectedTaskItem == null)
-            {               
+            {
                 ToastService.Notify(new ToastMessage(ToastType.Warning, "Ninguna tarea seleccionada."));
                 return;
             }
@@ -214,16 +213,16 @@ namespace TODO_V2.Client.Pages.Components
             };
 
             var options = new ConfirmDialogOptions
-            {                
-                YesButtonColor = ButtonColor.Danger, 
-                YesButtonText = "Eliminar", 
-                NoButtonText = "Cancelar",      
+            {
+                YesButtonColor = ButtonColor.Danger,
+                YesButtonText = "Eliminar",
+                NoButtonText = "Cancelar",
                 IsVerticallyCentered = true,
                 Dismissable = true
             };
 
-            var response = await dialog.ShowAsync<ModalDelete>(                
-                title: "Confirmar Eliminación", 
+            var response = await dialog.ShowAsync<ModalDelete>(
+                title: "Confirmar Eliminación",
                 parameters,
                 confirmDialogOptions: options);
 
@@ -242,7 +241,7 @@ namespace TODO_V2.Client.Pages.Components
         {
             SelectedTaskItem = null;
 
-            await Http.DeleteAsync($"api/TaskItem/{Id}");            
+            await Http.DeleteAsync($"api/TaskItem/{Id}");
             await GetTaskData();
             await DataGrid.RefreshDataAsync();
 
@@ -274,5 +273,5 @@ namespace TODO_V2.Client.Pages.Components
         }
         #endregion Toast    
 
-    }    
+    }
 }

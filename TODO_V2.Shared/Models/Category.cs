@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TODO_V2.Shared.Models
+﻿namespace TODO_V2.Shared.Models
 {
     public class Category : BaseModel
     {

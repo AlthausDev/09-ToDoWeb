@@ -1,26 +1,19 @@
 ﻿using BlazorBootstrap;
-using Blazored.Modal;
-using TODO_V2.Shared.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.JSInterop;
-using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
-using System.Security.Claims;
-using TODO_V2.Client.DTO;
-using TODO_V2.Client.Layout;
-using TODO_V2.Client.Shared.Modals;
+using TODO_V2.Client.ClienteModels;
+using TODO_V2.Client.Modals;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Utils;
-using TODO_V2.Shared.Models.Enum;
 
 namespace TODO_V2.Client.Pages
-{    
-    public partial class Login 
+{
+    public partial class Login
     {
-        
+
         public static User user = new();
 
         public Modal ModalInstance = default!;
@@ -94,7 +87,7 @@ namespace TODO_V2.Client.Pages
                 { "Cerrar", EventCallback.Factory.Create<MouseEventArgs>(this, HideModal) }
             };
             await ModalInstance.ShowAsync<ModalRegistro>(title: "Registrarse", parameters: parameters);
-            
+
         }
 
 
@@ -120,14 +113,14 @@ namespace TODO_V2.Client.Pages
         private async Task<ActionResult<User>> LoginUser(string Username, string Password)
         {
             try
-            {         
-                var credentials = new LoginCredentials(Username, Password );
+            {
+                var credentials = new LoginCredentials(Username, Password);
                 var response = await Http.PostAsJsonAsync("api/User/login", credentials);
 
                 if (response.IsSuccessStatusCode)
                 {
                     LoginResponse loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
-                    await GenerateTokenAsync(loginResponse.Token);                    
+                    await GenerateTokenAsync(loginResponse.Token);
                     return new ActionResult<User>(loginResponse.User);
                 }
                 else

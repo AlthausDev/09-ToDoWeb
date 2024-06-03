@@ -23,8 +23,7 @@ public class RequestLoggingMiddleware
             try
             {
                 _logger.Info($"Request: {context.Request.Method} {context.Request.Path}");
-                await _next(context);
-                //_logger.Info($"Response: {context.Response.StatusCode}");
+                await _next(context);               
                 _logger.Info($"Response: {context.Response.StatusCode} - {GetStatusCodeDescription(context.Response.StatusCode)}");
             }
             catch (Exception ex)

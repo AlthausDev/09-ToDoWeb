@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TODO_V2.Client.DTO;
+﻿using TODO_V2.Client.ClienteModels;
 
 namespace TODO_V2.Shared.Models.Request
 {

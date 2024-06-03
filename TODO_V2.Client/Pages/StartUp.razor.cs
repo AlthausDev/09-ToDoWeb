@@ -1,13 +1,8 @@
-﻿using BlazorBootstrap;
-using TODO_V2.Shared.Data;
-using Microsoft.JSInterop;
-using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Security.Claims;
-using TODO_V2.Shared.Data;
 using TODO_V2.Client.Data;
-using TODO_V2.Shared.Models;
+using TODO_V2.Shared.Data;
 
 
 namespace TODO_V2.Client.Pages
@@ -72,7 +67,7 @@ namespace TODO_V2.Client.Pages
         {
             try
             {
-                string getToken = await storageService.GetItemAsStringAsync("token");               
+                string getToken = await storageService.GetItemAsStringAsync("token");
 
                 if (string.IsNullOrEmpty(getToken))
                 {

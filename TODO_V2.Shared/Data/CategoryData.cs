@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TODO_V2.Shared.Models.Enum;
+﻿using System.Net.Http.Json;
 using TODO_V2.Shared.Models;
-using System.Net.Http.Json;
 
 namespace TODO_V2.Shared.Data
 {
@@ -14,7 +10,7 @@ namespace TODO_V2.Shared.Data
         public static async Task LoadTestCategories(HttpClient http)
         {
             Categories = [
-              
+
                 new("Informe"),
                 new("Presentación"),
                 new("Reunión"),
@@ -26,7 +22,7 @@ namespace TODO_V2.Shared.Data
             ];
 
             foreach (Category category in Categories)
-            {                
+            {
                 await http.PostAsJsonAsync("api/Category", category);
             }
         }

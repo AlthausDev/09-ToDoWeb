@@ -1,7 +1,5 @@
 ﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
-using static System.Net.WebRequestMethods;
-using TODO_V2.Client.Pages.Components;
 
 namespace TODO_V2.Client.Pages
 {
@@ -12,19 +10,9 @@ namespace TODO_V2.Client.Pages
         [Parameter]
         public string Id { get; set; }
 
-
-        private async Task OnClickLogOut()
-        {
-            var response = await Http.DeleteAsync("/api/User/logout");
-
-            await storageService.RemoveItemAsync("token");
-            NavManager.NavigateTo("/");
-            Http.DefaultRequestHeaders.Remove("Authorization");
-        }
-
         public static async Task HideModal()
         {
             await ModalInstance.HideAsync();
-        }   
+        }
     }
 }

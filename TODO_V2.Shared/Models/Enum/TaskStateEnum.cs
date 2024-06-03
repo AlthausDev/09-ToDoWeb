@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TODO_V2.Shared.Models.Enum
+﻿namespace TODO_V2.Shared.Models.Enum
 {
     public enum TaskStateEnum
     {
@@ -12,7 +10,7 @@ namespace TODO_V2.Shared.Models.Enum
 
     public static class TaskStateEnumExtensions
     {
-        private static readonly Dictionary<int, string> TaskStateNames = new Dictionary<int, string>
+        private static readonly Dictionary<int, string> TaskStateNames = new()
         {
             { (int)TaskStateEnum.Pendiente, "Pendiente" },
             { (int)TaskStateEnum.EnProceso, "En proceso" },

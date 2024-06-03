@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TODO_V2.Shared.Models
+﻿namespace TODO_V2.Shared.Models
 {
     public abstract class BaseModel
     {
