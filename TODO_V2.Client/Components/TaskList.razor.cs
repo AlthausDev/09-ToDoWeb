@@ -40,7 +40,7 @@ namespace TODO_V2.Client.Components
         /// <summary>
         /// Servicio para mostrar notificaciones tipo Toast.
         /// </summary>
-        [Inject] ToastService ToastService { get; set; } = default!;
+        [Inject] private ToastService ToastService { get; set; } = default!;
 
         /// <summary>
         /// Servicio para mostrar indicadores de precarga.
@@ -55,7 +55,7 @@ namespace TODO_V2.Client.Components
         /// <summary>
         /// Componente Grid para mostrar la lista de tareas.
         /// </summary>
-        Grid<TaskItem> DataGrid = default!;
+        private Grid<TaskItem> DataGrid = default!;
 
         /// <summary>
         /// Colección observable de tareas del usuario.
@@ -241,7 +241,7 @@ namespace TODO_V2.Client.Components
         {
             SelectedTaskItem = null;
 
-            await Http.DeleteAsync($"api/TaskItem/{Id}");
+            _ = await Http.DeleteAsync($"api/TaskItem/{Id}");
             await GetTaskData();
             await DataGrid.RefreshDataAsync();
 
@@ -252,11 +252,11 @@ namespace TODO_V2.Client.Components
         #region LogOut
         private async Task OnClickLogOut()
         {
-            var response = await Http.DeleteAsync("/api/User/logout");
+            _ = await Http.DeleteAsync("/api/User/logout");
             await storageService.RemoveItemAsync("token");
             await storageService.ClearAsync();
             NavManager.NavigateTo("/login");
-            Http.DefaultRequestHeaders.Remove("Authorization");
+            _ = Http.DefaultRequestHeaders.Remove("Authorization");
         }
         #endregion
 

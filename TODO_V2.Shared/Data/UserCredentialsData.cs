@@ -1,4 +1,4 @@
-﻿using TODO_V2.Client.ClienteModels;
+﻿using TODO_V2.Client.ClientModels;
 using TODO_V2.Server.Models;
 
 namespace TODO_V2.Shared.Data

@@ -5,7 +5,7 @@
     using System.Net.Http;
     using System.Threading.Tasks;
 
-    partial class Logout : ComponentBase
+    public partial class Logout : ComponentBase
     {
         [Inject] protected HttpClient HttpClient { get; set; }
         [Inject] protected NavigationManager NavigationManager { get; set; }
@@ -18,7 +18,7 @@
             {
                 await LocalStorageService.RemoveItemAsync("token");
                 NavigationManager.NavigateTo("/");
-                HttpClient.DefaultRequestHeaders.Remove("Authorization");
+                _ = HttpClient.DefaultRequestHeaders.Remove("Authorization");
             }
         }
     }

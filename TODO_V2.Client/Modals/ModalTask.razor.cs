@@ -29,8 +29,7 @@ namespace TODO_V2.Client.Modals
         private bool IsInputValid = false;
         public bool IsEditing { get; private set; } = false;
 
-
-        List<ToastMessage> messages = new();
+        private List<ToastMessage> messages = new();
 
         [Parameter] public EventCallback<MouseEventArgs> Aceptar { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> Cerrar { get; set; }
@@ -95,7 +94,7 @@ namespace TODO_V2.Client.Modals
         protected void OnClickClose()
         {
             ClearFields();
-            Cerrar.InvokeAsync();
+            _ = Cerrar.InvokeAsync();
         }
 
         #endregion OnClick
@@ -141,12 +140,12 @@ namespace TODO_V2.Client.Modals
 
         private async Task NewItem()
         {
-            await Http.PostAsJsonAsync("api/TaskItem", NewTaskItem);
+            _ = await Http.PostAsJsonAsync("api/TaskItem", NewTaskItem);
         }
 
         private async Task EditItem()
         {
-            await Http.PutAsJsonAsync($"api/TaskItem/{TaskId}", NewTaskItem);
+            _ = await Http.PutAsJsonAsync($"api/TaskItem/{TaskId}", NewTaskItem);
         }
         #endregion Api
 

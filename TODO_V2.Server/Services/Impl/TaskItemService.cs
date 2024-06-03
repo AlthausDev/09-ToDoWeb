@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TODO_V2.Server.Repository.Impl;
-using TODO_V2.Server.Repository.Interfaces;
+﻿using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Shared.Models;
 
@@ -18,7 +14,7 @@ namespace TODO_V2.Server.Services.Impl
             this.configuration = configuration;
             TaskRepository = categoryRepository;
         }
-       
+
 
         public async Task<bool> Add(TaskItem entity, object? secondEntity)
         {
@@ -52,7 +48,7 @@ namespace TODO_V2.Server.Services.Impl
         {
             try
             {
-                TaskRepository.Delete(entityId);
+                _ = TaskRepository.Delete(entityId);
             }
             catch (Exception ex)
             {
@@ -108,7 +104,7 @@ namespace TODO_V2.Server.Services.Impl
         {
             try
             {
-                await TaskRepository.LogicDelete(entityId);
+                _ = await TaskRepository.LogicDelete(entityId);
             }
             catch (Exception ex)
             {

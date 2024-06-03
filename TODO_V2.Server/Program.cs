@@ -1,16 +1,16 @@
-﻿using TODO_V2.Server.Components;
-using Blazored.LocalStorage;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using TODO_V2.Server.Repository.Impl;
-using TODO_V2.Server.Repository.Interfaces;
-using TODO_V2.Server.Utils;
-using TODO_V2.Server.Services.Interfaces;
-using TODO_V2.Server.Services.Impl;
+﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
+using System.Text;
+using TODO_V2.Server.Components;
+using TODO_V2.Server.Repository.Impl;
+using TODO_V2.Server.Repository.Interfaces;
+using TODO_V2.Server.Services.Impl;
+using TODO_V2.Server.Services.Interfaces;
+using TODO_V2.Server.Utils;
 
 //var logger = NLogBuilder.ConfigureNLog("NLog.config").GetCurrentClassLogger();
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -26,9 +26,9 @@ var jwtExpirationHours = int.Parse(builder.Configuration["JWT:ExpirationHours"])
 #endregion
 
 #region Añadir servicios
-builder.Services.AddBlazorBootstrap(); 
+builder.Services.AddBlazorBootstrap();
 builder.Services.AddHttpClient();
-builder.Services.AddControllers(); 
+builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddEndpointsApiExplorer();
@@ -43,12 +43,12 @@ builder.Services.AddSwaggerGen(c =>
 #region Configuración de CORS
 builder.Services.AddCors(options => options.AddPolicy("corsPolicy", builder =>
 {
-    builder.AllowAnyMethod()
+    _ = builder.AllowAnyMethod()
            .AllowAnyHeader()
            .SetIsOriginAllowed(origin => true)
-           .AllowAnyOrigin();        
-           
-})); 
+           .AllowAnyOrigin();
+
+}));
 #endregion
 
 #region Configura componentes de Blazor
@@ -58,8 +58,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped(client => new HttpClient
 {
-    BaseAddress = new Uri("https://localhost:7216/"), 
-}); 
+    BaseAddress = new Uri("https://localhost:7216/"),
+});
 #endregion
 
 #region Configura autenticación
@@ -104,8 +104,8 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    app.UseHsts();
+    _ = app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    _ = app.UseHsts();
 }
 #endregion
 
@@ -141,7 +141,7 @@ app.UseAntiforgery();
 app.MapRazorPages();
 app.MapControllers();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode() 
+    .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(TODO_V2.Client._Imports).Assembly);
 #endregion

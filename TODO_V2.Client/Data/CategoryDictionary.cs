@@ -24,7 +24,7 @@ namespace TODO_V2.Client.Data
                 }
                 PrintDictionary();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Debug.WriteLine($"Error loading category dictionary: {ex.Message}");
             }

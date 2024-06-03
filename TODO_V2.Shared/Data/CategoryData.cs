@@ -23,7 +23,7 @@ namespace TODO_V2.Shared.Data
 
             foreach (Category category in Categories)
             {
-                await http.PostAsJsonAsync("api/Category", category);
+                _ = await http.PostAsJsonAsync("api/Category", category);
             }
         }
     }

@@ -54,7 +54,7 @@ namespace TODO_V2.Client.Pages
                 int elementCount = await Http.GetFromJsonAsync<int>(endpoint);
                 return elementCount > 0;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Debug.WriteLine($"Error al verificar la existencia de {elementName}: {ex.Message}");
                 return false;
@@ -86,7 +86,7 @@ namespace TODO_V2.Client.Pages
             }
             catch (Exception)
             {
-                Http.DefaultRequestHeaders.Remove("Authorization");
+                _ = Http.DefaultRequestHeaders.Remove("Authorization");
                 NavManager.NavigateTo("/login");
             }
         }

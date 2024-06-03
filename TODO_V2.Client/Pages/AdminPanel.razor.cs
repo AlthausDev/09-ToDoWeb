@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace TODO_V2.Client.Pages
 {
-    partial class AdminPanel
+    public partial class AdminPanel
     {
         public static Modal ModalInstance = default!;
 
@@ -41,8 +41,8 @@ namespace TODO_V2.Client.Pages
             ShowUsersMannager = "none";
             ShowCategoriesMannager = "none";
             ShowTodoList = "block";
-        }      
-       
+        }
+
         public static async Task HideModal()
         {
             await ModalInstance.HideAsync();

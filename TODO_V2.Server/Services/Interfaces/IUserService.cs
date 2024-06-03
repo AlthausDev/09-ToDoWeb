@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TODO_V2.Client.ClienteModels;
-using TODO_V2.Server.Models;
-using TODO_V2.Shared;
+using TODO_V2.Client.ClientModels;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Utils;
 

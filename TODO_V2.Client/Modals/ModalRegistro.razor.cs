@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Diagnostics;
 using System.Net.Http.Json;
-using TODO_V2.Client.ClienteModels;
+using TODO_V2.Client.ClientModels;
 using TODO_V2.Client.Pages;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Models.Enum;
@@ -12,7 +12,7 @@ using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Client.Modals
 {
-    partial class ModalRegistro
+    public partial class ModalRegistro
     {
         [Parameter]
         public int? Id { get; set; }
@@ -36,8 +36,7 @@ namespace TODO_V2.Client.Modals
         [Parameter]
         public bool IsAdminDisplay { get; set; } = false;
 
-
-        List<ToastMessage> messages = new();
+        private List<ToastMessage> messages = new();
 
         [Parameter] public EventCallback<MouseEventArgs> Aceptar { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> Cerrar { get; set; }
@@ -90,7 +89,7 @@ namespace TODO_V2.Client.Modals
             if (IsEditing)
             {
                 Credentials.Username = NewUser.UserName;
-                await EditUser();
+                _ = await EditUser();
                 await Aceptar.InvokeAsync();
             }
             else
@@ -115,7 +114,7 @@ namespace TODO_V2.Client.Modals
         protected void OnClickClose()
         {
             ClearFields();
-            Cerrar.InvokeAsync();
+            _ = Cerrar.InvokeAsync();
         }
 
         #endregion OnClick
@@ -130,7 +129,7 @@ namespace TODO_V2.Client.Modals
             bool isSurnameValid = CheckSurnameHandler();
 
             IsInputValid = isPasswordValid && isUserNameValid && isNameValid && isSurnameValid;
-            CheckClaveHandler();
+            _ = CheckClaveHandler();
         }
 
         private bool CheckPasswordHandler()
@@ -200,7 +199,7 @@ namespace TODO_V2.Client.Modals
                 UserCredentialsRequest request = new(NewUser, Credentials);
 
                 HttpResponseMessage response = await Http.PostAsJsonAsync("api/User", request);
-                response.EnsureSuccessStatusCode();
+                _ = response.EnsureSuccessStatusCode();
 
                 var data = await response.Content.ReadAsStringAsync();
                 return data.Equals("true");
@@ -219,7 +218,7 @@ namespace TODO_V2.Client.Modals
                 UserCredentialsRequest request = new(NewUser, Credentials);
 
                 HttpResponseMessage response = await Http.PutAsJsonAsync($"api/User", request);
-                response.EnsureSuccessStatusCode();
+                _ = response.EnsureSuccessStatusCode();
 
                 var data = await response.Content.ReadAsStringAsync();
                 return data.Equals("true");

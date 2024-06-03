@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TODO_V2.Server.Repository.Impl;
-using TODO_V2.Server.Services.Impl;
 using TODO_V2.Server.Services.Interfaces;
-using TODO_V2.Shared;
 using TODO_V2.Shared.Models;
 
-namespace TODO_V2.Server.Controllers
+namespace TODO_V2.Server.Controllers.Impl
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -62,11 +56,7 @@ namespace TODO_V2.Server.Controllers
             try
             {
                 var task = await _TaskItemService.GetById(id);
-                if (task == null)
-                {
-                    return NotFound();
-                }
-                return Ok(task);
+                return task == null ? NotFound() : Ok(task);
             }
             catch (Exception ex)
             {

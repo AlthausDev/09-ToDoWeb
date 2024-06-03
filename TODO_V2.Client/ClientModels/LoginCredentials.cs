@@ -1,4 +1,4 @@
-﻿namespace TODO_V2.Client.ClienteModels
+﻿namespace TODO_V2.Client.ClientModels
 {
     public class LoginCredentials
     {

@@ -1,11 +1,8 @@
-﻿using Azure.Core;
-using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using NLog;
-using System.Diagnostics;
-using TODO_V2.Client.ClienteModels;
+using TODO_V2.Client.ClientModels;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Models.Request;
@@ -16,13 +13,13 @@ namespace TODO_V2.Server.Controllers.Impl
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
-    {        
+    {
         private readonly Logger LoggerN = LogManager.GetCurrentClassLogger();
-        private readonly IUserService _userService;  
+        private readonly IUserService _userService;
 
         public UserController(IUserService userService)
         {
-            _userService = userService;        
+            _userService = userService;
         }
 
         [HttpGet]
@@ -36,22 +33,14 @@ namespace TODO_V2.Server.Controllers.Impl
         public async Task<ActionResult<User>> Get(int id)
         {
             var user = await _userService.GetById(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return user;
+            return user == null ? (ActionResult<User>)NotFound() : (ActionResult<User>)user;
         }
 
         [HttpGet("{username}")]
         public async Task<ActionResult<User>> Get(string username)
         {
             var user = await _userService.GetByUserName(username);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return user;
+            return user == null ? (ActionResult<User>)NotFound() : (ActionResult<User>)user;
         }
 
         [HttpPost("login")]
@@ -87,7 +76,7 @@ namespace TODO_V2.Server.Controllers.Impl
                 var success = await _userService.Logout();
                 if (success)
                 {
-                    HttpContext.Response.Headers.Remove("Authorization");             
+                    _ = HttpContext.Response.Headers.Remove("Authorization");
                     return Ok();
                 }
                 else
@@ -108,7 +97,7 @@ namespace TODO_V2.Server.Controllers.Impl
         {
             User user = request.user;
             LoginCredentials credentials = request.Credentials;
-            
+
             return await _userService.Add(user, credentials);
         }
 
@@ -119,11 +108,7 @@ namespace TODO_V2.Server.Controllers.Impl
             LoginCredentials credentials = request.Credentials;
 
             var result = await _userService.Update(user, credentials);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return result;
+            return result == null ? (ActionResult<User>)NotFound() : (ActionResult<User>)result;
         }
 
         [HttpDelete("{id}")]
@@ -143,11 +128,7 @@ namespace TODO_V2.Server.Controllers.Impl
         public async Task<ActionResult<LoginCredentials>> GetCredentials(int id)
         {
             var credentials = await _userService.GetCredentialsByUserId(id);
-            if (credentials == null)
-            {
-                return NotFound();
-            }
-            return credentials;
+            return credentials == null ? (ActionResult<LoginCredentials>)NotFound() : (ActionResult<LoginCredentials>)credentials;
         }
 
 

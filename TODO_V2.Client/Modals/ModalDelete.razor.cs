@@ -2,7 +2,7 @@
 
 namespace TODO_V2.Client.Modals
 {
-    partial class ModalDelete
+    public partial class ModalDelete
     {
 
         [Parameter] public string Name { get; set; }

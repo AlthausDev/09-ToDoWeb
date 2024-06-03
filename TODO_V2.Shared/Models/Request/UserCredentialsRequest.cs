@@ -1,4 +1,4 @@
-﻿using TODO_V2.Client.ClienteModels;
+﻿using TODO_V2.Client.ClientModels;
 
 namespace TODO_V2.Shared.Models.Request
 {

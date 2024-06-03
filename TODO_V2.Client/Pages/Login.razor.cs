@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.JSInterop;
 using System.Net.Http.Json;
-using TODO_V2.Client.ClienteModels;
+using TODO_V2.Client.ClientModels;
 using TODO_V2.Client.Modals;
 using TODO_V2.Shared.Models;
 using TODO_V2.Shared.Utils;
@@ -17,7 +17,7 @@ namespace TODO_V2.Client.Pages
         public static User user = new();
 
         public Modal ModalInstance = default!;
-        List<ToastMessage> messages = new();
+        private List<ToastMessage> messages = new();
 
         private string UserName { get; set; } = string.Empty;
         private string Password { get; set; } = string.Empty;

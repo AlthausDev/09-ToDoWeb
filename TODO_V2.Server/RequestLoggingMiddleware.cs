@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using NLog;
-using System;
+﻿using NLog;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 public class RequestLoggingMiddleware
 {
@@ -23,7 +20,7 @@ public class RequestLoggingMiddleware
             try
             {
                 _logger.Info($"Request: {context.Request.Method} {context.Request.Path}");
-                await _next(context);               
+                await _next(context);
                 _logger.Info($"Response: {context.Response.StatusCode} - {GetStatusCodeDescription(context.Response.StatusCode)}");
             }
             catch (Exception ex)
@@ -45,55 +42,55 @@ public class RequestLoggingMiddleware
 
     private string GetStatusCodeDescription(int statusCode)
     {
-        switch (statusCode)
+        return statusCode switch
         {
-            case 100: return "Continuar";
-            case 101: return "Cambiando Protocolos";
-            case 200: return "OK";
-            case 201: return "Creado";
-            case 202: return "Aceptado";
-            case 203: return "Información No Autorizada";
-            case 204: return "Sin Contenido";
-            case 205: return "Contenido Reiniciado";
-            case 206: return "Contenido Parcial";
-            case 300: return "Múltiples Opciones";
-            case 301: return "Movido Permanentemente";
-            case 302: return "Encontrado";
-            case 303: return "Ver Otro";
-            case 304: return "No Modificado";
-            case 305: return "Usar Proxy";
-            case 307: return "Redirección Temporal";
-            case 308: return "Redirección Permanente";
-            case 400: return "Solicitud Incorrecta";
-            case 401: return "No Autorizado";
-            case 402: return "Pago Requerido";
-            case 403: return "Prohibido";
-            case 404: return "No Encontrado";
-            case 405: return "Método No Permitido";
-            case 406: return "No Aceptable";
-            case 407: return "Autenticación de Proxy Requerida";
-            case 408: return "Tiempo de Solicitud Agotado";
-            case 409: return "Conflicto";
-            case 410: return "Ya no está Disponible";
-            case 411: return "Longitud Requerida";
-            case 412: return "Falló la Precondición";
-            case 413: return "Solicitud Demasiado Grande";
-            case 414: return "URI Demasiado Largo";
-            case 415: return "Tipo de Medios No Soportado";
-            case 416: return "Rango No Satisfactorio";
-            case 417: return "Expectativa Fallida";
-            case 426: return "Requiere Actualización";
-            case 428: return "Precondición Requerida";
-            case 429: return "Demasiadas Solicitudes";
-            case 431: return "Campos de Encabezado de Solicitud Demasiado Grandes";
-            case 500: return "Error Interno del Servidor";
-            case 501: return "No Implementado";
-            case 502: return "Puerta de Enlace Incorrecta";
-            case 503: return "Servicio No Disponible";
-            case 504: return "Tiempo de Espera de la Puerta de Enlace Expirado";
-            case 505: return "Versión de HTTP No Soportada";
-            case 511: return "Autenticación de Red Requerida";
-            default: return $"Código de Estado Desconocido: {statusCode}";
-        }
+            100 => "Continuar",
+            101 => "Cambiando Protocolos",
+            200 => "OK",
+            201 => "Creado",
+            202 => "Aceptado",
+            203 => "Información No Autorizada",
+            204 => "Sin Contenido",
+            205 => "Contenido Reiniciado",
+            206 => "Contenido Parcial",
+            300 => "Múltiples Opciones",
+            301 => "Movido Permanentemente",
+            302 => "Encontrado",
+            303 => "Ver Otro",
+            304 => "No Modificado",
+            305 => "Usar Proxy",
+            307 => "Redirección Temporal",
+            308 => "Redirección Permanente",
+            400 => "Solicitud Incorrecta",
+            401 => "No Autorizado",
+            402 => "Pago Requerido",
+            403 => "Prohibido",
+            404 => "No Encontrado",
+            405 => "Método No Permitido",
+            406 => "No Aceptable",
+            407 => "Autenticación de Proxy Requerida",
+            408 => "Tiempo de Solicitud Agotado",
+            409 => "Conflicto",
+            410 => "Ya no está Disponible",
+            411 => "Longitud Requerida",
+            412 => "Falló la Precondición",
+            413 => "Solicitud Demasiado Grande",
+            414 => "URI Demasiado Largo",
+            415 => "Tipo de Medios No Soportado",
+            416 => "Rango No Satisfactorio",
+            417 => "Expectativa Fallida",
+            426 => "Requiere Actualización",
+            428 => "Precondición Requerida",
+            429 => "Demasiadas Solicitudes",
+            431 => "Campos de Encabezado de Solicitud Demasiado Grandes",
+            500 => "Error Interno del Servidor",
+            501 => "No Implementado",
+            502 => "Puerta de Enlace Incorrecta",
+            503 => "Servicio No Disponible",
+            504 => "Tiempo de Espera de la Puerta de Enlace Expirado",
+            505 => "Versión de HTTP No Soportada",
+            511 => "Autenticación de Red Requerida",
+            _ => $"Código de Estado Desconocido: {statusCode}",
+        };
     }
 }

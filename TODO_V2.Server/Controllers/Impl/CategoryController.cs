@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TODO_V2.Server.Controllers.Impl;
-using TODO_V2.Server.Services.Impl;
 using TODO_V2.Server.Services.Interfaces;
-using TODO_V2.Shared;
 using TODO_V2.Shared.Models;
 
-namespace TODO_V2.Server.Controllers
+namespace TODO_V2.Server.Controllers.Impl
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -24,7 +18,7 @@ namespace TODO_V2.Server.Controllers
             _categoryService = categoryService;
         }
 
-       
+
         [HttpPost]
         public async Task<IActionResult> Post(Category category)
         {
@@ -63,11 +57,7 @@ namespace TODO_V2.Server.Controllers
             try
             {
                 var category = await _categoryService.GetById(id);
-                if (category == null)
-                {
-                    return NotFound();
-                }
-                return Ok(category);
+                return category == null ? NotFound() : Ok(category);
             }
             catch (Exception ex)
             {

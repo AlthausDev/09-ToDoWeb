@@ -1,17 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-using Dapper;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Threading.Tasks;
+using TODO_V2.Server.Models;
 using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Shared.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using TODO_V2.Server.Models;
 
 namespace TODO_V2.Server.Repository.Impl
 {
     public class UserRepository : IUserRepository
-    { 
+    {
         private readonly IConfiguration _configuration;
         private string ConnectionString => _configuration.GetConnectionString("TODO_V2DB");
 
@@ -37,7 +34,7 @@ namespace TODO_V2.Server.Repository.Impl
 
                 userCredentials.UserId = userId;
 
-                await dbConnection.ExecuteAsync(@"
+                _ = await dbConnection.ExecuteAsync(@"
                     INSERT INTO UserCredentials (UserId, UserName, EncryptedPassword) 
                     VALUES (@UserId, @UserName, @EncryptedPassword)", userCredentials);
             }
@@ -49,11 +46,11 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (var dbConnection = CreateConnection())
             {
-                await dbConnection.ExecuteAsync(@"
+                _ = await dbConnection.ExecuteAsync(@"
             UPDATE Users SET Name = @Name, Surname = @Surname, UserName = @UserName, UserType = @UserType, UpdatedAt = GETDATE() 
             WHERE Id = @Id", user);
 
-                await dbConnection.ExecuteAsync(@"
+                _ = await dbConnection.ExecuteAsync(@"
             UPDATE UserCredentials SET UserName = @UserName, EncryptedPassword = @EncryptedPassword, UpdatedAt = GETDATE() WHERE UserId = @UserId", userCredentials);
             }
             return user;
@@ -63,9 +60,9 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (var dbConnection = CreateConnection())
             {
-                await dbConnection.ExecuteAsync($"DELETE FROM UserCredentials WHERE UserId = {id}");
-                await dbConnection.ExecuteAsync($"DELETE FROM Users WHERE Id = {id}");
-                
+                _ = await dbConnection.ExecuteAsync($"DELETE FROM UserCredentials WHERE UserId = {id}");
+                _ = await dbConnection.ExecuteAsync($"DELETE FROM Users WHERE Id = {id}");
+
             }
             return true;
         }
@@ -74,8 +71,8 @@ namespace TODO_V2.Server.Repository.Impl
         {
             using (var dbConnection = CreateConnection())
             {
-                await dbConnection.ExecuteAsync("UPDATE Users SET IsDeleted = 1, DeletedAt = GETDATE() WHERE Id = @Id", new { Id = id });
-                await dbConnection.ExecuteAsync("UPDATE UserCredentials SET IsDeleted = 1, DeletedAt = GETDATE() WHERE UserId = @Id", new { Id = id });
+                _ = await dbConnection.ExecuteAsync("UPDATE Users SET IsDeleted = 1, DeletedAt = GETDATE() WHERE Id = @Id", new { Id = id });
+                _ = await dbConnection.ExecuteAsync("UPDATE UserCredentials SET IsDeleted = 1, DeletedAt = GETDATE() WHERE UserId = @Id", new { Id = id });
             }
             return true;
         }

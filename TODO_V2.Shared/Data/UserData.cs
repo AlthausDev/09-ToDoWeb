@@ -41,7 +41,7 @@ namespace TODO_V2.Shared.Data
             for (int i = 0; i < Users.Length; i++)
             {
                 UserCredentialsRequest request = new(Users[i], UserCredentialsData.Credentials[i]);
-                HttpResponseMessage response = await http.PostAsJsonAsync("api/User", request);
+                _ = await http.PostAsJsonAsync("api/User", request);
             }
         }
     }

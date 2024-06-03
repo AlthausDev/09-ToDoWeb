@@ -117,7 +117,7 @@ namespace TODO_V2.Shared.Data
 
             foreach (TaskItem taskItem in Tasks)
             {
-                await http.PostAsJsonAsync("api/TaskItem", taskItem);
+                _ = await http.PostAsJsonAsync("api/TaskItem", taskItem);
             }
         }
     }

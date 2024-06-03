@@ -2,7 +2,7 @@
 
 namespace TODO_V2.Server.Controllers.Interfaces
 {
-    public interface IGenericController <T> where T: BaseModel
+    public interface IGenericController<T> where T : BaseModel
     {
         //public Task<IEnumerable<T>>? GetAll(GetRequest<T>? request);
         //public T Get(int id);

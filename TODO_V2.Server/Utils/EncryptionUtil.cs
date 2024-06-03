@@ -4,8 +4,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using TODO_V2.Shared.Models;
-using static System.Net.WebRequestMethods;
-using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Server.Utils
 {
@@ -82,7 +80,7 @@ namespace TODO_V2.Server.Utils
             SigningCredentials credentials = new(securityKey, SecurityAlgorithms.HmacSha256);
 
             var principal = new ClaimsPrincipal(new ClaimsIdentity(null, "Basic"));
-            var isAuthenticated = principal.Identity.IsAuthenticated;
+            _ = principal.Identity.IsAuthenticated;
 
             Claim[] claims =
            {

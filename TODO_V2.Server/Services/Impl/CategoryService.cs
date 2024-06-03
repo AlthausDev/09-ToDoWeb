@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TODO_V2.Server.Repository.Impl;
-using TODO_V2.Server.Repository.Interfaces;
+﻿using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Shared.Models;
 
@@ -26,7 +22,7 @@ namespace TODO_V2.Server.Services.Impl
                 return await CategoryRepository.Add(category, secondEntity);
             }
             catch (Exception ex)
-            {                
+            {
                 Console.WriteLine($"Error al agregar la categoría: {ex.Message}");
                 throw;
             }
@@ -40,7 +36,7 @@ namespace TODO_V2.Server.Services.Impl
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine($"Error al contar las categorías: {ex.Message}");
                 throw;
             }
@@ -50,11 +46,11 @@ namespace TODO_V2.Server.Services.Impl
         {
             try
             {
-                CategoryRepository.Delete(entityId);
+                _ = CategoryRepository.Delete(entityId);
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine($"Error al eliminar la categoría: {ex.Message}");
                 throw;
             }
@@ -68,7 +64,7 @@ namespace TODO_V2.Server.Services.Impl
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine($"Error al obtener todas las categorías: {ex.Message}");
                 throw;
             }
@@ -82,7 +78,7 @@ namespace TODO_V2.Server.Services.Impl
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine($"Error al obtener todas las categorías lógicas: {ex.Message}");
                 throw;
             }
@@ -96,7 +92,7 @@ namespace TODO_V2.Server.Services.Impl
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine($"Error al obtener la categoría por Id: {ex.Message}");
                 throw;
             }
@@ -106,11 +102,11 @@ namespace TODO_V2.Server.Services.Impl
         {
             try
             {
-                CategoryRepository.LogicDelete(entityId);
+                _ = CategoryRepository.LogicDelete(entityId);
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine($"Error al eliminar lógicamente la categoría: {ex.Message}");
                 throw;
             }
@@ -124,7 +120,7 @@ namespace TODO_V2.Server.Services.Impl
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine($"Error al actualizar la categoría: {ex.Message}");
                 throw;
             }

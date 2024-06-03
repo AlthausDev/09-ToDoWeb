@@ -12,7 +12,7 @@ using TODO_V2.Shared.Models;
 namespace TODO_V2.Client.Components
 {
     //TODO Implementar opcion entre eliminación definitiva de usuario y desactivación
-    partial class UsersMannager
+    public partial class UsersMannager
     {
         [Parameter]
         public string Id { get; set; }
@@ -21,12 +21,11 @@ namespace TODO_V2.Client.Components
 
         private ConfirmDialog dialog = default!;
 
-        [Inject] ToastService ToastService { get; set; } = default!;
+        [Inject] private ToastService ToastService { get; set; } = default!;
         [Inject] protected PreloadService PreloadService { get; set; }
 
         private List<ToastMessage> messages = new();
-
-        Grid<User> DataGrid = default!;
+        private Grid<User> DataGrid = default!;
         private ObservableCollection<User> UserList { get; set; } = new ObservableCollection<User>();
 
         private User? selectedUser { get; set; } = null;
@@ -191,9 +190,9 @@ namespace TODO_V2.Client.Components
         {
             SelectedUser = null;
 
-            await Http.DeleteAsync($"api/User/{Id}");
+            _ = await Http.DeleteAsync($"api/User/{Id}");
 
-            UserList.Remove(UserList.FirstOrDefault(u => u.Id == Id));
+            _ = UserList.Remove(UserList.FirstOrDefault(u => u.Id == Id));
             await DataGrid.RefreshDataAsync();
 
             ShowMessage(ToastType.Success, "Usuario eliminado con éxito.");

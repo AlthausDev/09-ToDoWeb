@@ -4,24 +4,12 @@
  */
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using TODO_V2.Client.ClienteModels;
+using TODO_V2.Client.ClientModels;
 using TODO_V2.Server.Models;
 using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Server.Services.Interfaces;
 using TODO_V2.Server.Utils;
-using TODO_V2.Shared;
 using TODO_V2.Shared.Models;
-using TODO_V2.Shared.Models.Enum;
 using TODO_V2.Shared.Utils;
 
 namespace TODO_V2.Server.Services.Impl
@@ -75,8 +63,8 @@ namespace TODO_V2.Server.Services.Impl
         /// <returns>Devuelve el usuario actualizado.</returns>
         public async Task<User> Update(User user, LoginCredentials credentials)
         {
-       
-            UserCredentials userCredentials = await UserRepository.GetUserCredentialsById(user.Id); 
+
+            UserCredentials userCredentials = await UserRepository.GetUserCredentialsById(user.Id);
             userCredentials.UserName = credentials.Username;
 
             return await UserRepository.Update(user, userCredentials);
@@ -88,7 +76,7 @@ namespace TODO_V2.Server.Services.Impl
         /// <param name="userId">El ID del usuario a eliminar.</param>
         public void Delete(int userId)
         {
-            UserRepository.Delete(userId);
+            _ = UserRepository.Delete(userId);
         }
 
         /// <summary>
@@ -97,7 +85,7 @@ namespace TODO_V2.Server.Services.Impl
         /// <param name="userId">El ID del usuario a eliminar lógicamente.</param>
         public void LogicDelete(int userId)
         {
-            UserRepository.LogicDelete(userId);
+            _ = UserRepository.LogicDelete(userId);
         }
 
         /// <summary>
@@ -220,7 +208,7 @@ namespace TODO_V2.Server.Services.Impl
         public async Task<bool> Logout()
         {
             try
-            {                
+            {
                 return true;
             }
             catch (Exception ex)

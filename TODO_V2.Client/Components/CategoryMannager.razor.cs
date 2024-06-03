@@ -12,7 +12,7 @@ using TODO_V2.Shared.Models;
 
 namespace TODO_V2.Client.Components
 {
-    partial class CategoryMannager
+    public partial class CategoryMannager
     {
         [Parameter]
         public string Id { get; set; }
@@ -22,12 +22,11 @@ namespace TODO_V2.Client.Components
         private Modal ModalInstance = default!;
         private ConfirmDialog dialog = default!;
 
-        [Inject] ToastService ToastService { get; set; } = default!;
+        [Inject] private ToastService ToastService { get; set; } = default!;
         [Inject] protected PreloadService PreloadService { get; set; }
 
         private List<ToastMessage> messages = new();
-
-        Grid<Category> DataGrid = default!;
+        private Grid<Category> DataGrid = default!;
         private ObservableCollection<Category> CategoryList { get; set; } = new ObservableCollection<Category>();
 
         private Category? selectedCategory { get; set; } = null;
@@ -187,7 +186,7 @@ namespace TODO_V2.Client.Components
                     return;
                 }
 
-                await Http.DeleteAsync($"api/Category/{categoryId}");
+                _ = await Http.DeleteAsync($"api/Category/{categoryId}");
                 await GetCategoryData();
                 await DataGrid.RefreshDataAsync();
                 ShowMessage(ToastType.Success, "Categoría eliminada con éxito.");

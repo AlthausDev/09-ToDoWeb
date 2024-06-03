@@ -1,10 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
 using TODO_V2.Server.Repository.Interfaces;
 using TODO_V2.Shared.Models;
 
@@ -26,7 +22,7 @@ namespace TODO_V2.Server.Repository.Impl
             {
                 using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
                 {
-                    await dbConnection.ExecuteAsync(@"
+                    _ = await dbConnection.ExecuteAsync(@"
                         INSERT INTO Categories (Name) 
                         VALUES (@Name)", category);
                 }
@@ -53,7 +49,7 @@ namespace TODO_V2.Server.Repository.Impl
             {
                 using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
                 {
-                    await dbConnection.ExecuteAsync("DELETE FROM Categories WHERE Id = @Id", new { Id = entityId });
+                    _ = await dbConnection.ExecuteAsync("DELETE FROM Categories WHERE Id = @Id", new { Id = entityId });
                 }
                 return true;
             }
@@ -94,7 +90,7 @@ namespace TODO_V2.Server.Repository.Impl
             {
                 using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
                 {
-                    await dbConnection.ExecuteAsync("UPDATE Categories SET IsDeleted = 1 WHERE Id = @Id", new { Id = entityId });
+                    _ = await dbConnection.ExecuteAsync("UPDATE Categories SET IsDeleted = 1 WHERE Id = @Id", new { Id = entityId });
                 }
                 return true;
             }
@@ -111,7 +107,7 @@ namespace TODO_V2.Server.Repository.Impl
             {
                 using (IDbConnection dbConnection = new SqlConnection(ConnectionString))
                 {
-                    await dbConnection.ExecuteAsync(@"
+                    _ = await dbConnection.ExecuteAsync(@"
                         UPDATE Categories 
                         SET Name = @Name, UpdatedAt = GETDATE(), UpdatedBy = @UpdatedBy
                         WHERE Id = @Id", new

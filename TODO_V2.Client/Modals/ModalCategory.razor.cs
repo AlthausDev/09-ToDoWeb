@@ -8,7 +8,7 @@ using TODO_V2.Shared.Models.Enum;
 
 namespace TODO_V2.Client.Modals
 {
-    partial class ModalCategory
+    public partial class ModalCategory
     {
         [Parameter]
         public int? CategoryId { get; set; }
@@ -23,8 +23,7 @@ namespace TODO_V2.Client.Modals
         private bool IsInputValid = false;
         public bool IsEditing { get; private set; } = false;
 
-
-        List<ToastMessage> messages = new();
+        private List<ToastMessage> messages = new();
 
         [Parameter] public EventCallback<MouseEventArgs> Aceptar { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> Cerrar { get; set; }
@@ -80,7 +79,7 @@ namespace TODO_V2.Client.Modals
         protected void OnClickClose()
         {
             ClearFields();
-            Cerrar.InvokeAsync();
+            _ = Cerrar.InvokeAsync();
         }
 
         #endregion OnClick
@@ -97,12 +96,12 @@ namespace TODO_V2.Client.Modals
         #region Api    
         private async Task NewItem()
         {
-            await Http.PostAsJsonAsync("api/Category", NewCategory);
+            _ = await Http.PostAsJsonAsync("api/Category", NewCategory);
         }
 
         private async Task EditItem()
         {
-            await Http.PutAsJsonAsync($"api/Category/{CategoryId}", NewCategory);
+            _ = await Http.PutAsJsonAsync($"api/Category/{CategoryId}", NewCategory);
         }
         #endregion Api
 
