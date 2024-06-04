@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 using System.Text;
+using TODO_V2.Server;
 using TODO_V2.Server.Components;
 using TODO_V2.Server.Repository.Impl;
 using TODO_V2.Server.Repository.Interfaces;
@@ -110,6 +111,7 @@ else
 #endregion
 
 #region Configuración de middleware
+app.UseMiddleware<JwtSessionMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.UseCors("corsPolicy");
