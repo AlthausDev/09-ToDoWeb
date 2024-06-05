@@ -56,7 +56,6 @@ namespace TODO_V2.Client.Pages
             }
             catch (Exception)
             {
-                // Debug.WriteLine($"Error al verificar la existencia de {elementName}: {ex.Message}");
                 return false;
             }
         }
@@ -82,8 +81,8 @@ namespace TODO_V2.Client.Pages
                 var jwtSecurityToken = handler.ReadJwtToken(getToken);
                 List<Claim> claims = jwtSecurityToken.Claims.ToList();
 
-                userId = int.Parse(claims.ElementAt(0).Value);
-                UserType = claims.ElementAt(2).Value;                
+                userId = int.Parse(claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+                UserType = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;                
             }
             catch (Exception)
             {
