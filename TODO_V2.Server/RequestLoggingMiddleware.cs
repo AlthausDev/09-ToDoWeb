@@ -15,11 +15,11 @@ public class RequestLoggingMiddleware
     {
         if (context.Request.Path.StartsWithSegments("/api"))
         {
-            var sw = Stopwatch.StartNew();
+            //var sw = Stopwatch.StartNew();
 
             try
             {
-                _logger.Info($"Request: {context.Request.Method} {context.Request.Path}");
+                _logger.Info($"Request: {context.Request.Method} {context.Request.Path}");                
                 await _next(context);
                 _logger.Info($"Response: {context.Response.StatusCode} - {GetStatusCodeDescription(context.Response.StatusCode)}");
             }
@@ -28,11 +28,11 @@ public class RequestLoggingMiddleware
                 _logger.Error(ex, "An unhandled exception occurred while processing the request.");
                 throw;
             }
-            finally
-            {
-                sw.Stop();
-                _logger.Info($"Request duration: {sw.Elapsed.TotalMilliseconds} ms\n");
-            }
+            //finally
+            //{
+            //    sw.Stop();
+            //    _logger.Info($"Request duration: {sw.Elapsed.TotalMilliseconds} ms\n");
+            //}
         }
         else
         {

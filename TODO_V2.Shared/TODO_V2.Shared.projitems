@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\BaseModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Category.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Enum\TaskStateEnum.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Log.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Request\UserCredentialsRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\UserCredentials.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TaskItem.cs" />

@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog;
@@ -60,7 +61,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped(client => new HttpClient
 {
-    BaseAddress = new Uri("https://localhost:7216/"),
+    BaseAddress = new Uri("https://localhost:7217/"),
 });
 #endregion
 
@@ -112,7 +113,7 @@ else
 #endregion
 
 #region Configuración de middleware
-app.UseMiddleware<JwtSessionMiddleware>();
+//app.UseMiddleware<JwtSessionMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.UseCors("corsPolicy");
