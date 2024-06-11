@@ -15,44 +15,9 @@ namespace TODO_V2.Client.Pages
     {
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            //await InsertLog();
+        {           
             await LoadTestDataIfNeeded();
             await CheckToken();
-        }
-
-        private async Task InsertLog()
-        {
-            var log = new Log();
-            log.MachineName = Environment.MachineName;
-            log.Logged = DateTime.Now;
-            log.Level = "Information";
-            log.Message = "Application started";
-            log.Logger = "TODO_V2.Client.Pages.StartUp";
-            log.Request_method = "GET";
-            log.Stacktrace = null;
-            log.File_name = "StartUp.razor.cs";
-            log.All_event_properties = null;
-
-            try
-            {
-                Debug.WriteLine("Sending log to server...");
-                var response = await Http.PostAsJsonAsync("https://localhost:7216/api/log", log);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    Debug.WriteLine("Log inserted successfully.");
-                }
-                else
-                {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    Debug.WriteLine($"Error inserting log: {response.StatusCode} - {errorContent}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Exception: {ex.Message}");
-            }
         }
 
 
