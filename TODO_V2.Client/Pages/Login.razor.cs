@@ -135,8 +135,6 @@ namespace TODO_V2.Client.Pages
                 return new ActionResult<User>(new StatusCodeResult(500));
             }
         }
-
-
         #endregion Api     
 
         #region Toast
